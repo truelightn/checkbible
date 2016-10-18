@@ -2,6 +2,7 @@ package cba.org.checkbible.db;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -14,15 +15,35 @@ import cba.org.checkbible.context.AppContext;
 public class DBUtil {
     CheckBibleDBOpenHelper mOpenHelper;
     SQLiteDatabase mDB;
+    private static DBUtil sInstance;
 
-    public DBUtil() {
-        mOpenHelper = new CheckBibleDBOpenHelper(AppContext.get());
-        mDB = mOpenHelper.getWritableDatabase();
+    public static DBUtil getInstance() {
+        if (sInstance == null) {
+            sInstance = new DBUtil();
+        }
+        return sInstance;
+    }
+    private DBUtil() {
+        if (mOpenHelper == null) {
+            mOpenHelper = new CheckBibleDBOpenHelper(AppContext.get());
+            mDB = mOpenHelper.getWritableDatabase();
+        }
     }
 
-    public void insert(){
-        ContentValues addRowValue = new ContentValues();
-//        addRowValue.put();
+    public long insert(String table, ContentValues value) {
+        return mDB.insert(table, null, value);
+    }
+
+    public int update(String table, ContentValues value, String where) {
+        return mDB.update(table, value, where, null);
+    }
+
+    public int delete(String table, String where) {
+        return mDB.delete(table, where, null);
+    }
+
+    public Cursor query(String table, String[] columns, String selection) {
+        return mDB.query(table, columns, selection, null, null, null, null);
     }
 
     /**
