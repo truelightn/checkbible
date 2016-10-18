@@ -11,41 +11,51 @@
     tools:context="cba.org.checkbible.activity.MainActivity">
 
     <TextView
-        android:text="TextView"
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/textView"
-        android:layout_alignTop="@+id/progressBar"
         android:layout_alignParentStart="true"
-        android:layout_marginStart="13dp" />
+        android:layout_alignTop="@+id/progressBar"
+        android:layout_marginStart="13dp"
+        android:text="TextView1" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="17dp"
+        android:text="TextView2" />
 
     <ProgressBar
+        android:id="@+id/progressBar"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/progressBar"
-        android:layout_marginTop="83dp"
-        android:layout_alignParentTop="true"
         android:layout_alignEnd="@+id/button"
-        android:layout_marginEnd="14dp" />
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="14dp"
+        android:layout_marginTop="83dp" />
 
     <Button
-        android:text="Button2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="80dp"
         android:id="@+id/button2"
-        android:layout_below="@+id/textView"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="62dp" />
-
-    <Button
-        android:text="Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/button"
+        android:layout_alignParentEnd="true"
         android:layout_below="@+id/textView"
+        android:layout_marginEnd="62dp"
+        android:layout_marginTop="80dp"
+        android:text="Button2" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignStart="@+id/textView"
-        android:layout_marginTop="24dp" />
+        android:layout_below="@+id/textView"
+        android:layout_marginTop="24dp"
+        android:text="Button" />
+
 
 </RelativeLayout>

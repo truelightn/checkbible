@@ -9,11 +9,13 @@ import android.widget.TextView;
 
 import cba.org.checkbible.R;
 import cba.org.checkbible.db.SettingDBUtil;
+import cba.org.checkbible.enums.Bible;
 
 public class MainActivity extends AppCompatActivity {
     private Button mBtn;
     private Button mBtn2;
     private TextView mText;
+    private TextView mText2;
     private ProgressBar mProgress;
     private int mCount = 0;
 
@@ -25,10 +27,19 @@ public class MainActivity extends AppCompatActivity {
         mBtn = (Button)findViewById(R.id.button);
         mBtn2 = (Button)findViewById(R.id.button2);
         mText = (TextView)findViewById(R.id.textView);
+        mText2 = (TextView)findViewById(R.id.textView2);
         mProgress = (ProgressBar)findViewById(R.id.progressBar);
 //        mText.setText(String.valueOf(mCount));
         mBtn.setOnClickListener(onClickListener);
         mBtn2.setOnClickListener(onClickListener);
+
+
+//        String test = Bible.GENESIS.getTitle() + "은 총 " + Bible.GENESIS.getCount() + "장 이다. 순서는 ["
+//                + Bible.GENESIS.ordinal() + "] 번째 이다.";
+        String test = Bible.EXODUS.getTitle() + "은 총 " + Bible.EXODUS.getCount() + "장 이다. 순서는 ["
+                + Bible.EXODUS.ordinal() + "] 번째 이다.";
+
+        mText2.setText(test);
     }
 
     @Override
