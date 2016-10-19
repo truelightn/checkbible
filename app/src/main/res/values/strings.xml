@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">CheckBible</string>
+    <string name="app_name">TEST</string>
+    <string name="action_settings">setting</string>
+
 </resources>

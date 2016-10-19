@@ -6,6 +6,7 @@ package cba.org.checkbible.db;
 
 public class DB {
     // Table
+    static final String TABLE_BIBLE = "bible";
     static final String TABLE_SETTING = "setting";
 
     // Settings Database columns
@@ -13,6 +14,9 @@ public class DB {
     public static final String COL_SETTING_VALUE = "value";
 
     // SQL
+    public final static String CREATE_TABLE_BIBLE = "CREATE TABLE " + DB.TABLE_BIBLE + " ("
+            + "_id INTEGER PRIMARY KEY, " + DB.COL_SETTING_KEY + " TEXT, " + DB.COL_SETTING_VALUE
+            + " TEXT); ";
     public final static String CREATE_TABLE_SETTING = "CREATE TABLE " + DB.TABLE_SETTING + " ("
             + "_id INTEGER PRIMARY KEY, " + DB.COL_SETTING_KEY + " TEXT, " + DB.COL_SETTING_VALUE
             + " TEXT); ";

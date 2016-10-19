@@ -5,12 +5,12 @@ package cba.org.checkbible.enums;
  */
 
 public enum Bible {
-    GENESIS("Genesis", "Gen",50),
+    GENESIS("Genesis",50),
     EXODUS("Exodus", 40);
     private String mTitle;
     private int mCount;
 
-    Bible(String title, String abb, int count) {
+    Bible(String title, int count) {
         this.mTitle = title;
         this.mCount = count;
 
