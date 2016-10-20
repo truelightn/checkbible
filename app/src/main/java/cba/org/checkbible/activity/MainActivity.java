@@ -6,11 +6,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.GridView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import cba.org.checkbible.R;
+import cba.org.checkbible.afw.V;
 import cba.org.checkbible.db.SettingDBUtil;
 import cba.org.checkbible.enums.Bible;
 
@@ -20,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView mText;
     private TextView mText2;
     private ProgressBar mProgress;
+    private LinearLayout mLayout;
     private int mCount = 0;
 
     @Override
@@ -27,24 +33,23 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mBtn = (Button)findViewById(R.id.button);
-        mBtn2 = (Button)findViewById(R.id.button2);
-        mText = (TextView)findViewById(R.id.textView);
-        mText2 = (TextView)findViewById(R.id.textView2);
-        mProgress = (ProgressBar)findViewById(R.id.progressBar);
-//        mText.setText(String.valueOf(mCount));
+        mLayout = V.get(this,R.id.layout);
+        mBtn = V.get(this,R.id.button);
+        mBtn2 = V.get(this,R.id.button2);
+        mText = V.get(this,R.id.textView);
+        mText2 = V.get(this,R.id.textView2);
+        mProgress = V.get(this,R.id.progressBar);
+        mText.setText(String.valueOf(mCount));
         mBtn.setOnClickListener(onClickListener);
         mBtn2.setOnClickListener(onClickListener);
 
-
-//        String test = Bible.GENESIS.getTitle() + "은 총 " + Bible.GENESIS.getCount() + "장 이다. 순서는 ["
-//                + Bible.GENESIS.ordinal() + "] 번째 이다.";
-        String test = Bible.EXODUS.getTitle() + "은 총 " + Bible.EXODUS.getCount() + "장 이다. 순서는 ["
-                + Bible.EXODUS.ordinal() + "] 번째 이다.";
-
-        mText2.setText(test);
     }
+    @Override
+    protected void onStart() {
+        super.onStart();
 
+        prepareDisplay();
+    }
     @Override
     public void onResume() {
         super.onResume();
@@ -84,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
         public void onClick(View v) {
             switch (v.getId()) {
             case R.id.button:
+                mLayout.setVisibility(View.GONE);
                 mCount = mCount + 5;
                 mProgress.setProgress(mCount);
                 SettingDBUtil.setSettingValue("test", String.valueOf(mCount));
@@ -92,6 +98,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
 
             case R.id.button2:
+                mLayout.setVisibility(View.VISIBLE);
                 mCount = mCount - 5;
                 mProgress.setProgress(mCount);
                 SettingDBUtil.setSettingValue("test", String.valueOf(mCount));
@@ -103,4 +110,8 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     };
+
+    public void prepareDisplay() {
+        mLayout.setVisibility(View.GONE);
+    }
 }

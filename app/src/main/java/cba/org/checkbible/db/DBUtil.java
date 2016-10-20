@@ -6,7 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import cba.org.checkbible.context.AppContext;
+import cba.org.checkbible.CheckBibleApp;
+
 
 /**
  * Created by jinhwan.na on 2016-10-14.
@@ -25,7 +26,7 @@ public class DBUtil {
     }
     private DBUtil() {
         if (mOpenHelper == null) {
-            mOpenHelper = new CheckBibleDBOpenHelper(AppContext.get());
+            mOpenHelper = new CheckBibleDBOpenHelper(CheckBibleApp.getContext());
             mDB = mOpenHelper.getWritableDatabase();
         }
     }

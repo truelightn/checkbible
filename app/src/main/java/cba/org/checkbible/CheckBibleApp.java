@@ -1,8 +1,8 @@
 package cba.org.checkbible;
 
 import android.app.Application;
+import android.content.Context;
 
-import cba.org.checkbible.context.AppContext;
 import cba.org.checkbible.db.DBUtil;
 
 /**
@@ -10,12 +10,17 @@ import cba.org.checkbible.db.DBUtil;
  */
 
 public class CheckBibleApp extends Application {
+    public static Context mContext;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        new AppContext(getApplicationContext());
+        mContext = getApplicationContext();
         DBUtil.getInstance();
 
+    }
+
+    public static Context getContext(){
+        return mContext;
     }
 }
