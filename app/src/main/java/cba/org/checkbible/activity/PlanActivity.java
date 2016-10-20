@@ -203,6 +203,7 @@ public class PlanActivity extends AppCompatActivity {
         }
 
         // create a new ImageView for each item referenced by the Adapter
+        @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             TextView label = (TextView)convertView;
 //            CheckedTextView chview =

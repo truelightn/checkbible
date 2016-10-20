@@ -101,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
                 mLayout.setVisibility(View.VISIBLE);
                 mCount = mCount - 5;
                 mProgress.setProgress(mCount);
+                mProgress.setSecondaryProgress(mCount + 10);
                 SettingDBUtil.setSettingValue("test", String.valueOf(mCount));
                 String s = SettingDBUtil.getSettingValue("test");
                 mText.setText(s);
