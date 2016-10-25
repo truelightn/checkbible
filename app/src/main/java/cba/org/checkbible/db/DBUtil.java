@@ -61,6 +61,7 @@ public class DBUtil {
 
         @Override
         public void onCreate(SQLiteDatabase db) {
+            db.execSQL(DB.CREATE_TABLE_READINGPLAN);
             db.execSQL(DB.CREATE_TABLE_SETTING);
         }
 

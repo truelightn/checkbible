@@ -33,27 +33,29 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mLayout = V.get(this,R.id.layout);
-        mBtn = V.get(this,R.id.button);
-        mBtn2 = V.get(this,R.id.button2);
-        mText = V.get(this,R.id.textView);
-        mText2 = V.get(this,R.id.textView2);
-        mProgress = V.get(this,R.id.progressBar);
+        mLayout = V.get(this, R.id.layout);
+        mBtn = V.get(this, R.id.button);
+        mBtn2 = V.get(this, R.id.button2);
+        mText = V.get(this, R.id.textView);
+        mText2 = V.get(this, R.id.textView2);
+        mProgress = V.get(this, R.id.progressBar);
         mText.setText(String.valueOf(mCount));
         mBtn.setOnClickListener(onClickListener);
         mBtn2.setOnClickListener(onClickListener);
 
     }
+
     @Override
     protected void onStart() {
         super.onStart();
 
         prepareDisplay();
     }
+
     @Override
     public void onResume() {
         super.onResume();
-        if(!SettingDBUtil.getSettingValue("test").isEmpty()) {
+        if (!SettingDBUtil.getSettingValue("test").isEmpty()) {
             mCount = Integer.parseInt(SettingDBUtil.getSettingValue("test"));
             mText.setText(String.valueOf(mCount));
             mProgress.setProgress(mCount);
@@ -74,15 +76,19 @@ public class MainActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        // noinspection SimplifiableIfStatement
+        switch (id) {
+        case R.id.menu_reading_plan:
             PlanActivity.start(this);
-            return true;
+            break;
+        case R.id.menu_settings:
+            break;
+        default:
+            break;
         }
 
         return super.onOptionsItemSelected(item);
     }
-
 
     private View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override

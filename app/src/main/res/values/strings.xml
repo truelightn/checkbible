@@ -1,5 +1,80 @@
 <resources>
     <string name="app_name">TEST</string>
-    <string name="action_settings">setting</string>
+    <string name="settings">Setting</string>
+    <string name="reading_plan">Reading Plan</string>
+
+
+    <!-- Bible !-->
+    <string name="bible_gen">Genesis</string>
+    <string name="bible_ex">Exodus</string>
+    <string name="bible_lev">Leviticus</string>
+    <string name="bible_num">Numbers</string>
+    <string name="bible_deut">Deuteronomy</string>
+    <string name="bible_Josh">Joshua</string>
+    <string name="bible_judg">Judges</string>
+    <string name="bible_ruth">Ruth</string>
+    <string name="bible_1sam">1 Samuel</string>
+    <string name="bible_2sam">2 Samuel</string>
+    <string name="bible_1kgs">1 Kings</string>
+    <string name="bible_2kgs">2 Kings</string>
+    <string name="bible_1chr">1 Chronicles</string>
+    <string name="bible_2chr">2 Chronicles</string>
+    <string name="bible_ezra">Ezra</string>
+    <string name="bible_neh">Nehemiah</string>
+    <string name="bible_esh">Esther</string>
+    <string name="bible_job">Job</string>
+    <string name="bible_ps">Psalms</string>
+    <string name="bible_prov">Proverbs</string>
+    <string name="bible_eccl">Ecclesiastes</string>
+    <string name="bible_song">Song of Songs</string>
+    <string name="bible_ls">Isaiah</string>
+    <string name="bible_jer">Jeremiah</string>
+    <string name="bible_lam">Lamentations</string>
+    <string name="bible_ezek">Ezekiel</string>
+    <string name="bible_dan">Daniel</string>
+    <string name="bible_hos">Hosea</string>
+    <string name="bible_joel">joel</string>
+    <string name="bible_amos">amos</string>
+    <string name="bible_obad">Obadiah</string>
+    <string name="bible_jon">Jonah</string>
+    <string name="bible_mic">Micah</string>
+    <string name="bible_nah">Nahum</string>
+    <string name="bible_hab">Habakkuk</string>
+    <string name="bible_zeph">Zephaniah</string>
+    <string name="bible_hag">Haggai</string>
+    <string name="bible_zech">Zechariah</string>
+    <string name="bible_mal">Malachi</string>
+
+
+    <string name="bible_mt">Matthew</string>
+    <string name="bible_mk">Mark</string>
+    <string name="bible_lk">Luke</string>
+    <string name="bible_jn">John</string>
+    <string name="bible_acts">Acts</string>
+    <string name="bible_rom">Romans</string>
+    <string name="bible_1cor">1 Corinthians</string>
+    <string name="bible_2cor">2 Corinthians</string>
+    <string name="bible_gal">Galatians</string>
+    <string name="bible_eph">Ephesians</string>
+    <string name="bible_phi">Philippians</string>
+    <string name="bible_col">Colossians</string>
+    <string name="bible_1the">1 Thessalonians</string>
+    <string name="bible_2the">2 Thessalonians</string>
+    <string name="bible_1timo">1 Timothy</string>
+    <string name="bible_2timo">2 Timothy</string>
+    <string name="bible_tit">Titus</string>
+    <string name="bible_philm">Philemon</string>
+    <string name="bible_heb">Hebrews</string>
+    <string name="bible_jas">James</string>
+    <string name="bible_1pet">1 Peter</string>
+    <string name="bible_2pet">2 Peter</string>
+    <string name="bible_1jn">1 John</string>
+    <string name="bible_2jn">2 John</string>
+    <string name="bible_3jn">3 john</string>
+    <string name="bible_jude">Jude</string>
+    <string name="bible_rev">Revelation</string>
+
+
+
 
 </resources>

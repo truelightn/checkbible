@@ -66,6 +66,7 @@
             android:verticalSpacing="10dp"
             android:horizontalSpacing="10dp"
             android:stretchMode="columnWidth"
+            android:choiceMode="multipleChoice"
             android:gravity="center"
             android:layout_weight="1"/>
 

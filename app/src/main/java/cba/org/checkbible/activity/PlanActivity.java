@@ -5,23 +5,25 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.SparseBooleanArray;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import cba.org.checkbible.R;
+import cba.org.checkbible.afw.V;
 import cba.org.checkbible.db.SettingDBUtil;
+import cba.org.checkbible.enums.Bible;
 
 /**
  * Created by jinhwan.na on 2016-10-19.
@@ -32,19 +34,16 @@ public class PlanActivity extends AppCompatActivity {
     private Button mEndBtn;
     private Button mConfrimBtn;
     int mYear, mMonth, mDay;
-    private ArrayList<CheckBox> mCheckboxlist = new ArrayList<CheckBox>();
+    int mPlanedCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_plan);
 
-//        initializeArray();
-//        initializeCheckBox();
-
-        mStartBtn = (Button)findViewById(R.id.startBtn);
-        mEndBtn = (Button)findViewById(R.id.endBtn);
-        mConfrimBtn = (Button)findViewById(R.id.confrimBtn);
+        mStartBtn = V.get(this, R.id.startBtn);
+        mEndBtn = V.get(this, R.id.endBtn);
+        mConfrimBtn = V.get(this, R.id.confrimBtn);
 
         GregorianCalendar calendar = new GregorianCalendar();
         mYear = calendar.get(Calendar.YEAR);
@@ -64,23 +63,32 @@ public class PlanActivity extends AppCompatActivity {
             mEndBtn.setText(endT);
         }
 
+        final GridView gridview = V.get(this, R.id.gridview);
+        final GridAdapter adapter = new GridAdapter();
+        gridview.setAdapter(adapter);
 
-        GridView gridview = (GridView) findViewById(R.id.gridview);
-        gridview.setAdapter(new TextAdapter(this));
-        gridview.setChoiceMode(GridView.CHOICE_MODE_MULTIPLE);
 
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View v,
-                                    int position, long id) {
-                Toast.makeText(PlanActivity.this, "" + position,
-                        Toast.LENGTH_SHORT).show();
+            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                mPlanedCount = mPlanedCount + Bible.getCount(position);
+                Toast.makeText(PlanActivity.this, "" + mPlanedCount, Toast.LENGTH_SHORT).show();
             }
         });
 
         mConfrimBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                confirmCheckedValue();
+                SparseBooleanArray checkedItems = gridview.getCheckedItemPositions();
+                int count = adapter.getCount();
+                int planedCount = 0;
+                String msg = "";
+                for (int i = count - 1; i >= 0; i--) {
+                    if (checkedItems.get(i)) {
+                        planedCount = planedCount + Bible.getCount(i);
+//                        msg = msg + String.valueOf(i) + "/";
+                    }
+                }
+                Toast.makeText(PlanActivity.this, "total : " + planedCount, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -136,89 +144,43 @@ public class PlanActivity extends AppCompatActivity {
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         context.startActivity(intent);
     }
-//
-//    private void initializeArray() {
-//        // Must obey input order
-//        mCheckBox2 = (CheckBox)findViewById(R.id.checkBox2);
-//        mCheckBox3 = (CheckBox)findViewById(R.id.checkBox3);
-//        mCheckboxlist.clear();
-//        mCheckboxlist.add(mCheckBox2);
-//        mCheckboxlist.add(mCheckBox3);
-//    }
-//
-//    private void initializeCheckBox() {
-//        for (int count = 0; count < mCheckboxlist.size(); count++) {
-//            if (!mCheckboxlist.get(count).isChecked()) {
-//                mCheckboxlist.get(count).setOnCheckedChangeListener(mCheckListener);
-//            }
-//        }
-//    }
-//
-//    CompoundButton.OnCheckedChangeListener mCheckListener = new CompoundButton.OnCheckedChangeListener() {
-//        @Override
-//        public void onCheckedChanged(CompoundButton view, boolean isChecked) {
-//            String msg = view.toString() + " / " + isChecked;
-//            Toast.makeText(PlanActivity.this, msg, Toast.LENGTH_SHORT).show();
-//            if (isChecked) {
-//                ((ViewGroup)view.getParent()).getChildAt(1).setEnabled(true);
-//            } else {
-//                ((ViewGroup)view.getParent()).getChildAt(1).setEnabled(false);
-//            }
-//        }
-//    };
-//
-//    private void confirmCheckedValue() {
-//        for (CheckBox checkbox : mCheckboxlist) {
-//            if (checkbox.isChecked()) {
-//                String msg = checkbox.toString() + " / " + checkbox.isChecked();
-//                Toast.makeText(PlanActivity.this, msg, Toast.LENGTH_SHORT).show();
-//            }
-//        }
-//
-//    }
-//
-//    private void resetCheckedValue() {
-//        for (CheckBox checkbox : mCheckboxlist) {
-//            checkbox.setChecked(false);
-//        }
-//    }
 
-    public class TextAdapter extends BaseAdapter {
-        private Context mContext;
+    public class GridAdapter extends BaseAdapter {
+        private String[] mBible = getResources().getStringArray(R.array.bible);
 
-        public TextAdapter(Context c) {
-            mContext = c;
+        public GridAdapter() {
         }
 
+        @Override
         public int getCount() {
             return mBible.length;
         }
 
+        @Override
         public Object getItem(int position) {
-            return null;
+            return mBible[position];
         }
 
+        @Override
         public long getItemId(int position) {
-            return 0;
+            return position;
         }
 
         // create a new ImageView for each item referenced by the Adapter
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            TextView label = (TextView)convertView;
-//            CheckedTextView chview =
+            final Context context = parent.getContext();
             if (convertView == null) {
-                convertView = new TextView(mContext);
-                label = (TextView)convertView;
+                LayoutInflater inflater = (LayoutInflater)context
+                        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                convertView = inflater.inflate(R.layout.grid, parent, false);
             }
+            TextView textTextView = V.get(convertView, R.id.textView1);
 
-            label.setText(mBible[position]);
+            textTextView.setText(mBible[position]);
 
             return convertView;
         }
 
-        // references to our images
-        private Integer[] mBible = { R.string.action_settings, R.string.app_name,
-                R.string.appbar_scrolling_view_behavior, R.string.bottom_sheet_behavior };
     }
 }

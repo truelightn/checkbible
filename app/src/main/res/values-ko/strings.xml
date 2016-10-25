@@ -1,5 +1,76 @@
 <resources>
     <string name="app_name">테스트</string>
-    <string name="action_settings">셋팅</string>
+    <string name="settings">설정</string>
+    <string name="reading_plan">계획</string>
+
+
+    <string name="bible_gen">창세기</string>
+    <string name="bible_ex">출애굽기</string>
+    <string name="bible_lev">레위기</string>
+    <string name="bible_num">민수기</string>
+    <string name="bible_deut">신명기</string>
+    <string name="bible_Josh">여호수아</string>
+    <string name="bible_judg">사사기</string>
+    <string name="bible_ruth">룻기</string>
+    <string name="bible_1sam">사무엘상</string>
+    <string name="bible_2sam">사무엘하</string>
+    <string name="bible_1kgs">열왕기상</string>
+    <string name="bible_2kgs">열왕기하</string>
+    <string name="bible_1chr">역대상</string>
+    <string name="bible_2chr">역대하</string>
+    <string name="bible_ezra">에스라</string>
+    <string name="bible_neh">느헤미야</string>
+    <string name="bible_esh">에스더</string>
+    <string name="bible_job">욥기</string>
+    <string name="bible_ps">시편</string>
+    <string name="bible_prov">잠언</string>
+    <string name="bible_eccl">전도서</string>
+    <string name="bible_song">아가</string>
+    <string name="bible_ls">이사야</string>
+    <string name="bible_jer">예레미아</string>
+    <string name="bible_lam">예리미아 애가</string>
+    <string name="bible_ezek">에스겔</string>
+    <string name="bible_dan">다니엘</string>
+    <string name="bible_hos">호세아</string>
+    <string name="bible_joel">요엘</string>
+    <string name="bible_amos">아모스</string>
+    <string name="bible_obad">오바댜</string>
+    <string name="bible_jon">요나</string>
+    <string name="bible_mic">미가</string>
+    <string name="bible_nah">나훔</string>
+    <string name="bible_hab">하박국</string>
+    <string name="bible_zeph">스바냐</string>
+    <string name="bible_hag">학개</string>
+    <string name="bible_zech">스가랴</string>
+    <string name="bible_mal">말라기</string>
+
+
+    <string name="bible_mt">마태복음</string>
+    <string name="bible_mk">마가복음</string>
+    <string name="bible_lk">누가복음</string>
+    <string name="bible_jn">요한복음</string>
+    <string name="bible_acts">사도행전</string>
+    <string name="bible_rom">로마서</string>
+    <string name="bible_1cor">고린도전서</string>
+    <string name="bible_2cor">고린도후서</string>
+    <string name="bible_gal">갈라디아서</string>
+    <string name="bible_eph">에베소서</string>
+    <string name="bible_phi">빌립보서</string>
+    <string name="bible_col">골로새서</string>
+    <string name="bible_1the">데살로니가전서</string>
+    <string name="bible_2the">데살로니가후서</string>
+    <string name="bible_1timo">디모데전서</string>
+    <string name="bible_2timo">디모데후서</string>
+    <string name="bible_tit">디도서</string>
+    <string name="bible_philm">빌레몬서</string>
+    <string name="bible_heb">히브리서</string>
+    <string name="bible_jas">야고보서</string>
+    <string name="bible_1pet">베드로전서</string>
+    <string name="bible_2pet">베드로후서</string>
+    <string name="bible_1jn">요한1서</string>
+    <string name="bible_2jn">요한2서</string>
+    <string name="bible_3jn">요한3서</string>
+    <string name="bible_jude">유다서</string>
+    <string name="bible_rev">요한계시록</string>
 
 </resources>
