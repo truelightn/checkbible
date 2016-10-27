@@ -12,8 +12,12 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +37,9 @@ public class PlanActivity extends AppCompatActivity {
     private Button mStartBtn;
     private Button mEndBtn;
     private Button mConfrimBtn;
+    private CheckBox mMyCheck;
+    private EditText mTitle;
+    private LinearLayout mBibleGrid;
     int mYear, mMonth, mDay;
     int mPlanedCount;
 
@@ -41,9 +48,14 @@ public class PlanActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_plan);
 
+        mTitle = V.get(this,R.id.title);
         mStartBtn = V.get(this, R.id.startBtn);
         mEndBtn = V.get(this, R.id.endBtn);
         mConfrimBtn = V.get(this, R.id.confrimBtn);
+        mBibleGrid = V.get(this,R.id.bible_grid);
+        mBibleGrid.setVisibility(View.GONE);
+        mMyCheck = V.get(this,R.id.checkBox3);
+
 
         GregorianCalendar calendar = new GregorianCalendar();
         mYear = calendar.get(Calendar.YEAR);
@@ -65,6 +77,7 @@ public class PlanActivity extends AppCompatActivity {
 
         final GridView gridview = V.get(this, R.id.gridview);
         final GridAdapter adapter = new GridAdapter();
+        gridview.setChoiceMode(GridView.CHOICE_MODE_MULTIPLE);
         gridview.setAdapter(adapter);
 
 
@@ -105,6 +118,17 @@ public class PlanActivity extends AppCompatActivity {
             public void onClick(View v) {
                 new DatePickerDialog(PlanActivity.this, endDateSetListener, mYear, mMonth, mDay)
                         .show();
+            }
+        });
+
+        mMyCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    mBibleGrid.setVisibility(View.VISIBLE);
+                }else{
+                    mBibleGrid.setVisibility(View.GONE);
+                }
             }
         });
     }
@@ -170,13 +194,13 @@ public class PlanActivity extends AppCompatActivity {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             final Context context = parent.getContext();
+            TextView tv;
             if (convertView == null) {
                 LayoutInflater inflater = (LayoutInflater)context
                         .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                convertView = inflater.inflate(R.layout.grid, parent, false);
+                convertView = inflater.inflate(R.layout.grid_layout, parent, false);
             }
             TextView textTextView = V.get(convertView, R.id.textView1);
-
             textTextView.setText(mBible[position]);
 
             return convertView;
