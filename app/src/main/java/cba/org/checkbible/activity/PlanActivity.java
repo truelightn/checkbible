@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.SparseBooleanArray;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -83,8 +82,13 @@ public class PlanActivity extends AppCompatActivity {
 
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                mPlanedCount = mPlanedCount + Bible.getCount(position);
-                Toast.makeText(PlanActivity.this, "" + mPlanedCount, Toast.LENGTH_SHORT).show();
+                if(gridview.isItemChecked(position)){
+                    mPlanedCount = mPlanedCount + Bible.getCount(position);
+                    Toast.makeText(PlanActivity.this, "" + mPlanedCount, Toast.LENGTH_SHORT).show();
+                }else{
+                    mPlanedCount = mPlanedCount - Bible.getCount(position);
+                    Toast.makeText(PlanActivity.this, "" + mPlanedCount, Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -187,21 +191,17 @@ public class PlanActivity extends AppCompatActivity {
 
         @Override
         public long getItemId(int position) {
-            return position;
+            return mBible[position].hashCode();
         }
 
         // create a new ImageView for each item referenced by the Adapter
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            final Context context = parent.getContext();
-            TextView tv;
             if (convertView == null) {
-                LayoutInflater inflater = (LayoutInflater)context
-                        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                convertView = inflater.inflate(R.layout.grid_layout, parent, false);
+                convertView = getLayoutInflater().inflate(R.layout.grid_bible_item, parent, false);
             }
             TextView textTextView = V.get(convertView, R.id.textView1);
-            textTextView.setText(mBible[position]);
+            textTextView.setText((String)getItem(position));
 
             return convertView;
         }
