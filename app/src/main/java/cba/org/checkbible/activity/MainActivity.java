@@ -95,7 +95,6 @@ public class MainActivity extends AppCompatActivity {
         public void onClick(View v) {
             switch (v.getId()) {
             case R.id.button:
-                mLayout.setVisibility(View.GONE);
                 mCount = mCount + 5;
                 mProgress.setProgress(mCount);
                 SettingDBUtil.setSettingValue("test", String.valueOf(mCount));
@@ -104,7 +103,6 @@ public class MainActivity extends AppCompatActivity {
                 break;
 
             case R.id.button2:
-                mLayout.setVisibility(View.VISIBLE);
                 mCount = mCount - 5;
                 mProgress.setProgress(mCount);
                 mProgress.setSecondaryProgress(mCount + 10);
@@ -118,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    public void prepareDisplay() {
-        mLayout.setVisibility(View.GONE);
+    public void prepareDisplay(){
+
     }
 }

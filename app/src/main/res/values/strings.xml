@@ -3,6 +3,9 @@
     <string name="settings">Setting</string>
     <string name="reading_plan">Reading Plan</string>
 
+    <string name="oldtestament">Old Testament</string>
+    <string name="newtestament">New Testament</string>
+    <string name="choice">Your Choice</string>
 
     <!-- Bible !-->
     <string name="bible_gen">Genesis</string>

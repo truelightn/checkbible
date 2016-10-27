@@ -36,9 +36,14 @@ public class PlanActivity extends AppCompatActivity {
     private Button mStartBtn;
     private Button mEndBtn;
     private Button mConfrimBtn;
-    private CheckBox mMyCheck;
+    private CheckBox mOldTestamentChk;
+    private CheckBox mNewTestamentChk;
+    private CheckBox mMyChk;
     private EditText mTitle;
-    private LinearLayout mBibleGrid;
+    private LinearLayout mBibleGridLayout;
+    private GridView mBibleGridView;
+    private GridBibleAdapter mBibleGridBibleAdapter;
+
     int mYear, mMonth, mDay;
     int mPlanedCount;
 
@@ -47,14 +52,26 @@ public class PlanActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_plan);
 
-        mTitle = V.get(this,R.id.title);
+        mTitle = V.get(this, R.id.title);
+
         mStartBtn = V.get(this, R.id.startBtn);
         mEndBtn = V.get(this, R.id.endBtn);
         mConfrimBtn = V.get(this, R.id.confrimBtn);
-        mBibleGrid = V.get(this,R.id.bible_grid);
-        mBibleGrid.setVisibility(View.GONE);
-        mMyCheck = V.get(this,R.id.checkBox3);
+        mStartBtn.setOnClickListener(onClickListener);
+        mEndBtn.setOnClickListener(onClickListener);
+        mConfrimBtn.setOnClickListener(onClickListener);
 
+        mBibleGridLayout = V.get(this, R.id.bible_grid);
+        mBibleGridLayout.setVisibility(View.GONE);
+
+        mOldTestamentChk = V.get(this, R.id.OldTestamentChk);
+        mNewTestamentChk = V.get(this, R.id.NewTestamentChk);
+        mMyChk = V.get(this, R.id.MyChk);
+
+        mBibleGridView = V.get(this, R.id.gridview);
+        mBibleGridBibleAdapter = new GridBibleAdapter();
+        mBibleGridView.setChoiceMode(GridView.CHOICE_MODE_MULTIPLE);
+        mBibleGridView.setAdapter(mBibleGridBibleAdapter);
 
         GregorianCalendar calendar = new GregorianCalendar();
         mYear = calendar.get(Calendar.YEAR);
@@ -74,64 +91,58 @@ public class PlanActivity extends AppCompatActivity {
             mEndBtn.setText(endT);
         }
 
-        final GridView gridview = V.get(this, R.id.gridview);
-        final GridAdapter adapter = new GridAdapter();
-        gridview.setChoiceMode(GridView.CHOICE_MODE_MULTIPLE);
-        gridview.setAdapter(adapter);
-
-
-        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mBibleGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                if(gridview.isItemChecked(position)){
+                if (mBibleGridView.isItemChecked(position)) {
                     mPlanedCount = mPlanedCount + Bible.getCount(position);
                     Toast.makeText(PlanActivity.this, "" + mPlanedCount, Toast.LENGTH_SHORT).show();
-                }else{
+                } else {
                     mPlanedCount = mPlanedCount - Bible.getCount(position);
                     Toast.makeText(PlanActivity.this, "" + mPlanedCount, Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
-        mConfrimBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SparseBooleanArray checkedItems = gridview.getCheckedItemPositions();
-                int count = adapter.getCount();
-                int planedCount = 0;
-                String msg = "";
-                for (int i = count - 1; i >= 0; i--) {
-                    if (checkedItems.get(i)) {
-                        planedCount = planedCount + Bible.getCount(i);
-//                        msg = msg + String.valueOf(i) + "/";
-                    }
-                }
-                Toast.makeText(PlanActivity.this, "total : " + planedCount, Toast.LENGTH_SHORT).show();
-            }
-        });
 
-        mStartBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new DatePickerDialog(PlanActivity.this, startDateSetListener, mYear, mMonth, mDay)
-                        .show();
-            }
-        });
 
-        mEndBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new DatePickerDialog(PlanActivity.this, endDateSetListener, mYear, mMonth, mDay)
-                        .show();
-            }
-        });
-
-        mMyCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        mMyChk.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
-                    mBibleGrid.setVisibility(View.VISIBLE);
-                }else{
-                    mBibleGrid.setVisibility(View.GONE);
+                if (isChecked) {
+                    mBibleGridLayout.setVisibility(View.VISIBLE);
+                } else {
+                    mBibleGridLayout.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        mOldTestamentChk.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    for (int i = 0; i < 39; i++) {
+                        mBibleGridView.setItemChecked(i, true);
+                    }
+                } else {
+                    for (int i = 0; i < 39; i++) {
+                        mBibleGridView.setItemChecked(i, false);
+                    }
+                }
+            }
+        });
+        mNewTestamentChk.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    for (int i = 39; i < 66; i++) {
+                        mBibleGridView.setItemChecked(i, true);
+                    }
+                } else {
+                    for (int i = 39; i < 66; i++) {
+                        mBibleGridView.setItemChecked(i, false);
+                    }
                 }
             }
         });
@@ -143,27 +154,55 @@ public class PlanActivity extends AppCompatActivity {
 
     }
 
-    private DatePickerDialog.OnDateSetListener startDateSetListener = new DatePickerDialog.OnDateSetListener() {
-
+    private View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
-        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-            // TODO Auto-generated method stub
-            String msg = String.format("%d/%d/%d", year, monthOfYear + 1, dayOfMonth);
-            SettingDBUtil.setSettingValue("startdate", msg);
-            mStartBtn.setText(msg);
-            Toast.makeText(PlanActivity.this, msg, Toast.LENGTH_SHORT).show();
-        }
-    };
+        public void onClick(View v) {
+            switch (v.getId()) {
+            case R.id.startBtn:
+                new DatePickerDialog(PlanActivity.this, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                        // TODO Auto-generated method stub
+                        String msg = String.format("%d/%d/%d", year, monthOfYear + 1, dayOfMonth);
+                        SettingDBUtil.setSettingValue("startdate", msg);
+                        mStartBtn.setText(msg);
+                        Toast.makeText(PlanActivity.this, msg, Toast.LENGTH_SHORT).show();
+                    }
+                }, mYear, mMonth, mDay).show();
+                break;
 
-    private DatePickerDialog.OnDateSetListener endDateSetListener = new DatePickerDialog.OnDateSetListener() {
+            case R.id.endBtn:
+                new DatePickerDialog(PlanActivity.this, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                        // TODO Auto-generated method stub
+                        String msg = String.format("%d/%d/%d", year, monthOfYear + 1, dayOfMonth);
+                        SettingDBUtil.setSettingValue("enddate", msg);
+                        mEndBtn.setText(msg);
+                        Toast.makeText(PlanActivity.this, msg, Toast.LENGTH_SHORT).show();
+                    }
+                }, mYear, mMonth, mDay).show();
+                break;
 
-        @Override
-        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-            // TODO Auto-generated method stub
-            String msg = String.format("%d/%d/%d", year, monthOfYear + 1, dayOfMonth);
-            SettingDBUtil.setSettingValue("enddate", msg);
-            mEndBtn.setText(msg);
-            Toast.makeText(PlanActivity.this, msg, Toast.LENGTH_SHORT).show();
+            case R.id.confrimBtn:
+                SparseBooleanArray checkedItems = mBibleGridView.getCheckedItemPositions();
+                int count = mBibleGridBibleAdapter.getCount();
+                int planedCount = 0;
+                String msg = "";
+
+                for (int i = count - 1; i >= 0; i--) {
+                    if (checkedItems.get(i)) {
+                        planedCount = planedCount + Bible.getCount(i);
+                        msg = msg + String.valueOf(i) + "/";
+                    }
+                }
+
+                Toast.makeText(PlanActivity.this, "total : " + planedCount, Toast.LENGTH_SHORT)
+                        .show();
+                break;
+            default:
+                break;
+            }
         }
     };
 
@@ -173,10 +212,10 @@ public class PlanActivity extends AppCompatActivity {
         context.startActivity(intent);
     }
 
-    public class GridAdapter extends BaseAdapter {
+    public class GridBibleAdapter extends BaseAdapter {
         private String[] mBible = getResources().getStringArray(R.array.bible);
 
-        public GridAdapter() {
+        public GridBibleAdapter() {
         }
 
         @Override
