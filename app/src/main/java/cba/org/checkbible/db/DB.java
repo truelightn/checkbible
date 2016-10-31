@@ -18,8 +18,8 @@ public class DB {
     public static final String COL_READINGPLAN_TITLE = "title";
     public static final String COL_READINGPLAN_PLANED_CHAPTER = "palned_chapter";
     public static final String COL_READINGPLAN_COMPLETED_CHAPTER = "checked_chapter";
-    public static final String COL_READINGPLAN_REMAIN_TOTAL_COUNT = "total_count";
-    public static final String COL_READINGPLAN_REMAIN_TODAY_COUNT = "today_count";
+    public static final String COL_READINGPLAN_TOTAL_COUNT = "total_count";
+    public static final String COL_READINGPLAN_TODAY_COUNT = "today_count";
     public static final String COL_READINGPLAN_START_DATE = "start_date";
     public static final String COL_READINGPLAN_END_DATE = "end_date";
     public static final String COL_READINGPLAN_DURATION = "duration";
@@ -32,10 +32,10 @@ public class DB {
                     DB.COL_READINGPLAN_TITLE + " text, " +
                     DB.COL_READINGPLAN_PLANED_CHAPTER + " text, " +
                     DB.COL_READINGPLAN_COMPLETED_CHAPTER + " text, " +
-                    DB.COL_READINGPLAN_REMAIN_TOTAL_COUNT + " integer, " +
-                    DB.COL_READINGPLAN_REMAIN_TODAY_COUNT + " integer, " +
-                    DB.COL_READINGPLAN_START_DATE + " integer, " +
-                    DB.COL_READINGPLAN_END_DATE + " integer, " +
+                    DB.COL_READINGPLAN_TOTAL_COUNT + " integer, " +
+                    DB.COL_READINGPLAN_TODAY_COUNT + " integer, " +
+                    DB.COL_READINGPLAN_START_DATE + " text, " +
+                    DB.COL_READINGPLAN_END_DATE + " text, " +
                     DB.COL_READINGPLAN_DURATION + " integer " +
                     DB.COL_READINGPLAN_COMPLETE + " integer) " ;
 

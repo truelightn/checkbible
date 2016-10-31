@@ -16,12 +16,14 @@ import android.widget.Toast;
 
 import cba.org.checkbible.R;
 import cba.org.checkbible.afw.V;
+import cba.org.checkbible.db.DBUtil;
 import cba.org.checkbible.db.SettingDBUtil;
 import cba.org.checkbible.enums.Bible;
 
 public class MainActivity extends AppCompatActivity {
     private Button mBtn;
     private Button mBtn2;
+    private Button mBtn3;
     private TextView mText;
     private TextView mText2;
     private ProgressBar mProgress;
@@ -36,12 +38,15 @@ public class MainActivity extends AppCompatActivity {
         mLayout = V.get(this, R.id.layout);
         mBtn = V.get(this, R.id.button);
         mBtn2 = V.get(this, R.id.button2);
-        mText = V.get(this, R.id.textView);
-        mText2 = V.get(this, R.id.textView2);
+        mBtn3 = V.get(this, R.id.button3);
+
+        mText = V.get(this, R.id.title);
+        mText2 = V.get(this, R.id.today);
         mProgress = V.get(this, R.id.progressBar);
         mText.setText(String.valueOf(mCount));
         mBtn.setOnClickListener(onClickListener);
         mBtn2.setOnClickListener(onClickListener);
+        mBtn3.setOnClickListener(onClickListener);
 
     }
 
@@ -82,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
             PlanActivity.start(this);
             break;
         case R.id.menu_settings:
+
             break;
         default:
             break;
@@ -109,6 +115,8 @@ public class MainActivity extends AppCompatActivity {
                 SettingDBUtil.setSettingValue("test", String.valueOf(mCount));
                 String s = SettingDBUtil.getSettingValue("test");
                 mText.setText(s);
+                break;
+            case R.id.button3:
                 break;
             default:
                 break;

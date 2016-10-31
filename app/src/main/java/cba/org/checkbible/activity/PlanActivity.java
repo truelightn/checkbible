@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +26,9 @@ import java.util.GregorianCalendar;
 
 import cba.org.checkbible.R;
 import cba.org.checkbible.afw.V;
+import cba.org.checkbible.db.PlanDBUtil;
 import cba.org.checkbible.db.SettingDBUtil;
+import cba.org.checkbible.dto.PlanItem;
 import cba.org.checkbible.enums.Bible;
 
 /**
@@ -33,6 +36,8 @@ import cba.org.checkbible.enums.Bible;
  */
 
 public class PlanActivity extends AppCompatActivity {
+    private static final String TAG = PlanActivity.class.getSimpleName();
+
     private Button mStartBtn;
     private Button mEndBtn;
     private Button mConfrimBtn;
@@ -43,6 +48,7 @@ public class PlanActivity extends AppCompatActivity {
     private LinearLayout mBibleGridLayout;
     private GridView mBibleGridView;
     private GridBibleAdapter mBibleGridBibleAdapter;
+    PlanItem mPlanItem;
 
     int mYear, mMonth, mDay;
     int mPlanedCount;
@@ -52,7 +58,10 @@ public class PlanActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_plan);
 
-        mTitle = V.get(this, R.id.title);
+        mPlanItem = new PlanItem();
+//        mPlanItem = new PlanItem(0, "", "", "", 0, 0, 0, "", "", true);
+
+        mTitle = V.get(this, R.id.editTitle);
 
         mStartBtn = V.get(this, R.id.startBtn);
         mEndBtn = V.get(this, R.id.endBtn);
@@ -159,27 +168,31 @@ public class PlanActivity extends AppCompatActivity {
         public void onClick(View v) {
             switch (v.getId()) {
             case R.id.startBtn:
+                // DatePickerDialog로 가져온 날짜를 planItem에 String 형태로 저장한다.
+                // 나중에 DB에서 가져올때 /로 파싱해서 가져올예정
                 new DatePickerDialog(PlanActivity.this, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        // TODO Auto-generated method stub
-                        String msg = String.format("%d/%d/%d", year, monthOfYear + 1, dayOfMonth);
-                        SettingDBUtil.setSettingValue("startdate", msg);
-                        mStartBtn.setText(msg);
-                        Toast.makeText(PlanActivity.this, msg, Toast.LENGTH_SHORT).show();
+                        String startTime = String.format("%d/%d/%d", year, monthOfYear + 1, dayOfMonth);
+//                        SettingDBUtil.setSettingValue("startdate", msg);
+                        mStartBtn.setText(startTime);
+                        mPlanItem.startTime = startTime;
+//                        Toast.makeText(PlanActivity.this, msg, Toast.LENGTH_SHORT).show();
                     }
                 }, mYear, mMonth, mDay).show();
                 break;
 
             case R.id.endBtn:
                 new DatePickerDialog(PlanActivity.this, new DatePickerDialog.OnDateSetListener() {
+                    // DatePickerDialog로 가져온 날짜를 planItem에 String 형태로 저장한다.
+                    // 나중에 DB에서 가져올때 /로 파싱해서 가져올예정
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        // TODO Auto-generated method stub
-                        String msg = String.format("%d/%d/%d", year, monthOfYear + 1, dayOfMonth);
-                        SettingDBUtil.setSettingValue("enddate", msg);
-                        mEndBtn.setText(msg);
-                        Toast.makeText(PlanActivity.this, msg, Toast.LENGTH_SHORT).show();
+                        String endTime = String.format("%d/%d/%d", year, monthOfYear + 1, dayOfMonth);
+//                        SettingDBUtil.setSettingValue("enddate", msg);
+                        mEndBtn.setText(endTime);
+                        mPlanItem.endTime = endTime;
+//                        Toast.makeText(PlanActivity.this, msg, Toast.LENGTH_SHORT).show();
                     }
                 }, mYear, mMonth, mDay).show();
                 break;
@@ -188,17 +201,23 @@ public class PlanActivity extends AppCompatActivity {
                 SparseBooleanArray checkedItems = mBibleGridView.getCheckedItemPositions();
                 int count = mBibleGridBibleAdapter.getCount();
                 int planedCount = 0;
-                String msg = "";
+                String planedChapter = "";
+
 
                 for (int i = count - 1; i >= 0; i--) {
                     if (checkedItems.get(i)) {
                         planedCount = planedCount + Bible.getCount(i);
-                        msg = msg + String.valueOf(i) + "/";
+                        planedChapter = planedChapter + String.valueOf(i) + "/";
                     }
                 }
+                mPlanItem.totalCount = planedCount;
+                mPlanItem.planedChapter = planedChapter;
+                mPlanItem.title = String.valueOf(mTitle.getText());
+                Log.d(TAG,"total : " + planedCount + " - chapter: " + planedChapter);
+                PlanDBUtil.addPlan(mPlanItem);
 
-                Toast.makeText(PlanActivity.this, "total : " + planedCount, Toast.LENGTH_SHORT)
-                        .show();
+                Toast.makeText(PlanActivity.this, "total : " + planedCount + " - " + planedChapter,
+                        Toast.LENGTH_SHORT).show();
                 break;
             default:
                 break;

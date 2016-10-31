@@ -9,28 +9,27 @@ import cba.org.checkbible.dto.PlanItem;
  */
 
 public class PlanDBUtil {
-    public long id;
-    public String title;
-    public String planedChapter;
-    public String compeltedChapter;
-    public int totalCount;
-    public int remainCount;
-    public int duration;
-    public long startTime;
-    public long endTime;
-    public boolean complete;
 
-    public static void addPlan(PlanItem planItem){
+    public static boolean addPlan(PlanItem planItem){
+        boolean result=false;
+        if(planItem==null){
+            return result;
+        }
         final ContentValues values = new ContentValues();
         values.put(DB.COL_READINGPLAN_TITLE, planItem.title);
         values.put(DB.COL_READINGPLAN_PLANED_CHAPTER, planItem.planedChapter);
-        values.put(DB.COL_READINGPLAN_PLANED_CHAPTER, planItem.compeltedChapter);
-        values.put(DB.COL_READINGPLAN_PLANED_CHAPTER, planItem.totalCount);
-        values.put(DB.COL_READINGPLAN_PLANED_CHAPTER, planItem.remainCount);
-        values.put(DB.COL_READINGPLAN_PLANED_CHAPTER, planItem.duration);
-        values.put(DB.COL_READINGPLAN_PLANED_CHAPTER, planItem.startTime);
-        values.put(DB.COL_READINGPLAN_PLANED_CHAPTER, planItem.endTime);
-        values.put(DB.COL_READINGPLAN_PLANED_CHAPTER, planItem.complete);
+        values.put(DB.COL_READINGPLAN_COMPLETED_CHAPTER, planItem.compeltedChapter);
+        values.put(DB.COL_READINGPLAN_TOTAL_COUNT, planItem.totalCount);
+        values.put(DB.COL_READINGPLAN_TODAY_COUNT, planItem.todayCount);
+        values.put(DB.COL_READINGPLAN_DURATION, planItem.duration);
+        values.put(DB.COL_READINGPLAN_START_DATE, planItem.startTime);
+        values.put(DB.COL_READINGPLAN_END_DATE, planItem.endTime);
+//        values.put(DB.COL_READINGPLAN_COMPLETE, planItem.complete);
+
+        DBUtil.getInstance().insert(DB.TABLE_READINGPLAN, values);
+        result = true;
+
+        return result;
 
     }
 }
