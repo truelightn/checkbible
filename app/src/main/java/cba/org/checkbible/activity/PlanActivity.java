@@ -215,9 +215,6 @@ public class PlanActivity extends AppCompatActivity {
                 mPlanItem.title = String.valueOf(mTitle.getText());
                 Log.d(TAG,"total : " + planedCount + " - chapter: " + planedChapter);
                 PlanDBUtil.addPlan(mPlanItem);
-
-                Toast.makeText(PlanActivity.this, "total : " + planedCount + " - " + planedChapter,
-                        Toast.LENGTH_SHORT).show();
                 break;
             default:
                 break;

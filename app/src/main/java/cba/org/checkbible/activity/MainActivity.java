@@ -1,31 +1,35 @@
 package cba.org.checkbible.activity;
 
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
+import cba.org.checkbible.PlanManager;
 import cba.org.checkbible.R;
 import cba.org.checkbible.afw.V;
-import cba.org.checkbible.db.DBUtil;
+import cba.org.checkbible.db.DB;
+import cba.org.checkbible.db.PlanDBUtil;
 import cba.org.checkbible.db.SettingDBUtil;
-import cba.org.checkbible.enums.Bible;
 
 public class MainActivity extends AppCompatActivity {
-    private Button mBtn;
-    private Button mBtn2;
-    private Button mBtn3;
-    private TextView mText;
-    private TextView mText2;
+    private Button mPlusBtn;
+    private Button mMinusBtn;
+    private Button mCustomBtn;
+
+    private TextView mTitleTextView;
+    private TextView mTodayTextView;
+    private TextView mTotalTextView;
+    private TextView mChaterTextView;
+
     private ProgressBar mProgress;
     private LinearLayout mLayout;
     private int mCount = 0;
@@ -36,17 +40,22 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mLayout = V.get(this, R.id.layout);
-        mBtn = V.get(this, R.id.button);
-        mBtn2 = V.get(this, R.id.button2);
-        mBtn3 = V.get(this, R.id.button3);
 
-        mText = V.get(this, R.id.title);
-        mText2 = V.get(this, R.id.today);
+        mMinusBtn = V.get(this, R.id.minus_btn);
+        mPlusBtn = V.get(this, R.id.plus_btn);
+        mCustomBtn = V.get(this, R.id.custom_btn);
+
+        mTitleTextView = V.get(this, R.id.title);
+        mTodayTextView = V.get(this, R.id.today);
+        mTotalTextView = V.get(this, R.id.total);
+        mChaterTextView = V.get(this, R.id.chapter);
+
         mProgress = V.get(this, R.id.progressBar);
-        mText.setText(String.valueOf(mCount));
-        mBtn.setOnClickListener(onClickListener);
-        mBtn2.setOnClickListener(onClickListener);
-        mBtn3.setOnClickListener(onClickListener);
+
+        // mText.setText(String.valueOf(mCount));
+        mMinusBtn.setOnClickListener(onClickListener);
+        mPlusBtn.setOnClickListener(onClickListener);
+        mCustomBtn.setOnClickListener(onClickListener);
 
     }
 
@@ -60,11 +69,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        if (!SettingDBUtil.getSettingValue("test").isEmpty()) {
-            mCount = Integer.parseInt(SettingDBUtil.getSettingValue("test"));
-            mText.setText(String.valueOf(mCount));
-            mProgress.setProgress(mCount);
+        if (!PlanDBUtil.getTitle(2).isEmpty()) {
+            mTitleTextView.setText(PlanDBUtil.getTitle(2));
         }
+
+        if (PlanDBUtil.getPlanInt(DB.COL_READINGPLAN_TOTAL_COUNT, 2) != -1) {
+            mTotalTextView.setText(String.valueOf(PlanDBUtil.getPlanInt(
+                    DB.COL_READINGPLAN_TOTAL_COUNT, 2)));
+        }
+
+        mTodayTextView.setText(String.valueOf(PlanManager.calculateTodayCount(2)));
     }
 
     @Override
@@ -100,23 +114,24 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-            case R.id.button:
+            case R.id.minus_btn:
                 mCount = mCount + 5;
                 mProgress.setProgress(mCount);
                 SettingDBUtil.setSettingValue("test", String.valueOf(mCount));
                 String s1 = SettingDBUtil.getSettingValue("test");
-                mText.setText(String.valueOf(mCount));
+                // mText.setText(String.valueOf(mCount));
                 break;
 
-            case R.id.button2:
+            case R.id.plus_btn:
                 mCount = mCount - 5;
                 mProgress.setProgress(mCount);
                 mProgress.setSecondaryProgress(mCount + 10);
                 SettingDBUtil.setSettingValue("test", String.valueOf(mCount));
                 String s = SettingDBUtil.getSettingValue("test");
-                mText.setText(s);
+                // mText.setText(s);
                 break;
-            case R.id.button3:
+            case R.id.custom_btn:
+
                 break;
             default:
                 break;
@@ -124,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    public void prepareDisplay(){
+    public void prepareDisplay() {
 
     }
 }

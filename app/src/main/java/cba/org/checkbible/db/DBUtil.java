@@ -33,6 +33,7 @@ public class DBUtil {
         }
         return sInstance;
     }
+
     private DBUtil() {
         if (mOpenHelper == null) {
             mOpenHelper = new CheckBibleDBOpenHelper(CheckBibleApp.getContext());

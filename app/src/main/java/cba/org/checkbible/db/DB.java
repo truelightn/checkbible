@@ -15,6 +15,7 @@ public class DB {
     public static final String COL_SETTING_VALUE = "value";
 
     // Reading_Plan Database columns
+    public static final String COL_READINGPLAN_ID = "_id";
     public static final String COL_READINGPLAN_TITLE = "title";
     public static final String COL_READINGPLAN_PLANED_CHAPTER = "palned_chapter";
     public static final String COL_READINGPLAN_COMPLETED_CHAPTER = "checked_chapter";
@@ -36,7 +37,7 @@ public class DB {
                     DB.COL_READINGPLAN_TODAY_COUNT + " integer, " +
                     DB.COL_READINGPLAN_START_DATE + " text, " +
                     DB.COL_READINGPLAN_END_DATE + " text, " +
-                    DB.COL_READINGPLAN_DURATION + " integer " +
+                    DB.COL_READINGPLAN_DURATION + " integer, " +
                     DB.COL_READINGPLAN_COMPLETE + " integer) " ;
 
     public final static String CREATE_TABLE_SETTING =
