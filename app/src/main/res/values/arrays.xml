@@ -30,8 +30,8 @@
         <item>Ezekiel</item>
         <item>Daniel</item>
         <item>Hosea</item>
-        <item>joel</item>
-        <item>amos</item>
+        <item>Joel</item>
+        <item>Amos</item>
         <item>Obadiah</item>
         <item>Jonah</item>
         <item>Micah</item>
@@ -70,5 +70,147 @@
         <item>3 john</item>
         <item>Jude</item>
         <item>Revelation</item>
+    </string-array>
+
+    <string-array name="abbreviation_bible">
+        <item>Gen</item>
+        <item>Ex</item>
+        <item>Lev</item>
+        <item>Num</item>
+        <item>Deut</item>
+        <item>Josh</item>
+        <item>Judg</item>
+        <item>Ruth</item>
+        <item>1 Sam</item>
+        <item>2 Sam</item>
+        <item>1 Kgs</item>
+        <item>2 Kgs</item>
+        <item>1 Chr</item>
+        <item>2 Chr</item>
+        <item>Ezra</item>
+        <item>Neh</item>
+        <item>Esth</item>
+        <item>Job</item>
+        <item>Ps</item>
+        <item>Prov</item>
+        <item>Eccl</item>
+        <item>Song</item>
+        <item>Is</item>
+        <item>Jer</item>
+        <item>Lam</item>
+        <item>Ezek</item>
+        <item>Dan</item>
+        <item>Hos</item>
+        <item>Joel</item>
+        <item>Amos</item>
+        <item>Obad</item>
+        <item>Jon</item>
+        <item>Mic</item>
+        <item>Nah</item>
+        <item>Hab</item>
+        <item>Zeph</item>
+        <item>Hag</item>
+        <item>Zech</item>
+        <item>Mal</item>
+
+
+        <item>Mt</item>
+        <item>Mk</item>
+        <item>Lk</item>
+        <item>Jn</item>
+        <item>Acts</item>
+        <item>Rom</item>
+        <item>1 Cor</item>
+        <item>2 Cor</item>
+        <item>Gal</item>
+        <item>Eph</item>
+        <item>Phi</item>
+        <item>Col</item>
+        <item>1 The</item>
+        <item>2 The</item>
+        <item>1 Timo</item>
+        <item>2 Timoy</item>
+        <item>Tit</item>
+        <item>Philm</item>
+        <item>Heb</item>
+        <item>Jas</item>
+        <item>1 Pet</item>
+        <item>2 Pet</item>
+        <item>1 Jn</item>
+        <item>2 Jn</item>
+        <item>3 Jn</item>
+        <item>Jude</item>
+        <item>Rev</item>
+    </string-array>
+
+    <string-array name="bible_count">
+        <item>50</item>
+        <item>40</item>
+        <item>27</item>
+        <item>36</item>
+        <item>34</item>
+        <item>24</item>
+        <item>21</item>
+        <item>4</item>
+        <item>31</item>
+        <item>24</item>
+        <item>22</item>
+        <item>25</item>
+        <item>29</item>
+        <item>36</item>
+        <item>10</item>
+        <item>13</item>
+        <item>10</item>
+        <item>42</item>
+        <item>150</item>
+        <item>31</item>
+        <item>12</item>
+        <item>8</item>
+        <item>66</item>
+        <item>52</item>
+        <item>5</item>
+        <item>48</item>
+        <item>12</item>
+        <item>14</item>
+        <item>3</item>
+        <item>9</item>
+        <item>1</item>
+        <item>4</item>
+        <item>7</item>
+        <item>3</item>
+        <item>3</item>
+        <item>3</item>
+        <item>2</item>
+        <item>14</item>
+        <item>4</item>
+
+
+        <item>28</item>
+        <item>16</item>
+        <item>24</item>
+        <item>21</item>
+        <item>28</item>
+        <item>16</item>
+        <item>16</item>
+        <item>13</item>
+        <item>6</item>
+        <item>6</item>
+        <item>4</item>
+        <item>4</item>
+        <item>5</item>
+        <item>3</item>
+        <item>6</item>
+        <item>4</item>
+        <item>3</item>
+        <item>1</item>
+        <item>13</item>
+        <item>5</item>
+        <item>5</item>
+        <item>3</item>
+        <item>5</item>
+        <item>1</item>
+        <item>1</item>
+        <item>1</item>
+        <item>22</item>
     </string-array>
 </resources>

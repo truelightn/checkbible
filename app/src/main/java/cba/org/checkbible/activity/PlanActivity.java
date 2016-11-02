@@ -50,6 +50,8 @@ public class PlanActivity extends AppCompatActivity {
     private GridBibleAdapter mBibleGridBibleAdapter;
     PlanItem mPlanItem;
 
+    int[] mBibleCount;
+
     int mYear, mMonth, mDay;
     int mPlanedCount;
 
@@ -58,6 +60,7 @@ public class PlanActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_plan);
 
+        mBibleCount = getResources().getIntArray(R.array.bible_count);
         mPlanItem = new PlanItem();
 //        mPlanItem = new PlanItem(0, "", "", "", 0, 0, 0, "", "", true);
 
@@ -103,10 +106,10 @@ public class PlanActivity extends AppCompatActivity {
         mBibleGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                 if (mBibleGridView.isItemChecked(position)) {
-                    mPlanedCount = mPlanedCount + Bible.getCount(position);
+                    mPlanedCount = mPlanedCount + mBibleCount[position];
                     Toast.makeText(PlanActivity.this, "" + mPlanedCount, Toast.LENGTH_SHORT).show();
                 } else {
-                    mPlanedCount = mPlanedCount - Bible.getCount(position);
+                    mPlanedCount = mPlanedCount - mBibleCount[position];
                     Toast.makeText(PlanActivity.this, "" + mPlanedCount, Toast.LENGTH_SHORT).show();
                 }
             }
@@ -206,7 +209,7 @@ public class PlanActivity extends AppCompatActivity {
 
                 for (int i = count - 1; i >= 0; i--) {
                     if (checkedItems.get(i)) {
-                        planedCount = planedCount + Bible.getCount(i);
+                        planedCount = planedCount + mBibleCount[i];
                         planedChapter = planedChapter + String.valueOf(i) + "/";
                     }
                 }
@@ -214,6 +217,7 @@ public class PlanActivity extends AppCompatActivity {
                 mPlanItem.planedChapter = planedChapter;
                 mPlanItem.title = String.valueOf(mTitle.getText());
                 Log.d(TAG,"total : " + planedCount + " - chapter: " + planedChapter);
+                PlanDBUtil.setCurrentActiveRowToInActive();
                 PlanDBUtil.addPlan(mPlanItem);
                 break;
             default:

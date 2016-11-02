@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
@@ -17,9 +18,9 @@ import cba.org.checkbible.db.PlanDBUtil;
 
 public class PlanManager {
 
-    public static ArrayList<Integer> getCompeletChapterPosition(int id) {
+    public static ArrayList<Integer> getCompeletChapterPosition() {
         ArrayList<Integer> chapterList = new ArrayList<>();
-        String chapter = PlanDBUtil.getPlanString(DB.COL_READINGPLAN_COMPLETED_CHAPTER, id);
+        String chapter = PlanDBUtil.getPlanString(DB.COL_READINGPLAN_COMPLETED_CHAPTER);
         if (TextUtils.isEmpty(chapter)) {
             return null;
         }
@@ -30,35 +31,57 @@ public class PlanManager {
         return chapterList;
     }
 
-    public static ArrayList<Integer> getPlanedChapterPosition(int id) {
+    public static ArrayList<Integer> getPlanedChapterPosition() {
         ArrayList<Integer> chapterList = new ArrayList<>();
-        String chapter = PlanDBUtil.getPlanString(DB.COL_READINGPLAN_PLANED_CHAPTER, id);
+        String chapter = PlanDBUtil.getPlanString(DB.COL_READINGPLAN_PLANED_CHAPTER);
         if (TextUtils.isEmpty(chapter)) {
-            return null;
+            return chapterList;
         }
         String[] chapterString = chapter.split("/");
         for (String s : chapterString) {
             chapterList.add(Integer.parseInt(s));
         }
+        Collections.reverse(chapterList);
         return chapterList;
     }
 
-    public static int calculateTodayCount(int id) {
-        int totalCount = PlanDBUtil.getPlanInt(DB.COL_READINGPLAN_TOTAL_COUNT, id);
-        long during = getDuringDay(id);
+    public static int getCurrentChapterPosition() {
+        ArrayList<Integer> list = getPlanedChapterPosition();
+        if (list.isEmpty()) {
+            return 0;
+        }
+        return list.get(0);
+    }
+
+    public static int calculateTodayCount() {
+        int totalCount = PlanDBUtil.getPlanInt(DB.COL_READINGPLAN_TOTAL_COUNT);
+        long during = getDuringDay();
         return (int)(totalCount / during);
     }
 
-    public static long getDuringDay(int id) {
+    public static long getDuringDay() {
         long oneDay = 24 * 60 * 60 * 1000;
-        GregorianCalendar endCalendar = getEndDate(id);
+        GregorianCalendar endCalendar = getEndDate();
         GregorianCalendar todayCalendar = new GregorianCalendar();
 
         return (endCalendar.getTimeInMillis() - todayCalendar.getTimeInMillis()) / oneDay + 2;
     }
 
-    public static GregorianCalendar getEndDate(int id) {
-        String endDateString = PlanDBUtil.getPlanString(DB.COL_READINGPLAN_END_DATE, id);
+    public static GregorianCalendar getEndDate() {
+        String endDateString = PlanDBUtil.getPlanString(DB.COL_READINGPLAN_END_DATE);
+        GregorianCalendar calendar = new GregorianCalendar();
+        try {
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
+            Date endDate = formatter.parse(endDateString);
+            calendar.setTime(endDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return calendar;
+    }
+
+    public static GregorianCalendar getStartDate() {
+        String endDateString = PlanDBUtil.getPlanString(DB.COL_READINGPLAN_END_DATE);
         GregorianCalendar calendar = new GregorianCalendar();
         try {
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
