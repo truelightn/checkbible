@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 
 import cba.org.checkbible.R;
@@ -29,7 +30,6 @@ import cba.org.checkbible.afw.V;
 import cba.org.checkbible.db.PlanDBUtil;
 import cba.org.checkbible.db.SettingDBUtil;
 import cba.org.checkbible.dto.PlanItem;
-import cba.org.checkbible.enums.Bible;
 
 /**
  * Created by jinhwan.na on 2016-10-19.
@@ -52,7 +52,8 @@ public class PlanActivity extends AppCompatActivity {
 
     int[] mBibleCount;
 
-    int mYear, mMonth, mDay;
+    int mStartY, mStartM, mStartD;
+    int mEndY, mEndM, mEndD;
     int mPlanedCount;
 
     @Override
@@ -86,19 +87,29 @@ public class PlanActivity extends AppCompatActivity {
         mBibleGridView.setAdapter(mBibleGridBibleAdapter);
 
         GregorianCalendar calendar = new GregorianCalendar();
-        mYear = calendar.get(Calendar.YEAR);
-        mMonth = calendar.get(Calendar.MONTH);
-        mDay = calendar.get(Calendar.DAY_OF_MONTH);
+        calendar.setTime(new Date());
+        mStartY = calendar.get(Calendar.YEAR);
+        mStartM = calendar.get(Calendar.MONTH);
+        mStartD = calendar.get(Calendar.DAY_OF_MONTH);
+
+        calendar.add(Calendar.MONTH, 3);
+        mEndY = calendar.get(Calendar.YEAR);
+        mEndM = calendar.get(Calendar.MONTH);
+        mEndD = calendar.get(Calendar.DAY_OF_MONTH);
 
         String startT = SettingDBUtil.getSettingValue("startdate");
         String endT = SettingDBUtil.getSettingValue("enddate");
         if (startT.isEmpty()) {
-            mStartBtn.setText(String.format("%d/%d/%d", mYear, mMonth + 1, mDay));
+            String startTime = String.format("%d/%d/%d", mStartY, mStartM + 1, mStartD);
+            mStartBtn.setText(startTime);
+            mPlanItem.startTime = startTime;
         } else {
             mStartBtn.setText(startT);
         }
         if (endT.isEmpty()) {
-            mEndBtn.setText("");
+            String endTime = String.format("%d/%d/%d", mEndY, mEndM + 1, mEndD);
+            mEndBtn.setText(endTime);
+            mPlanItem.endTime = endTime;
         } else {
             mEndBtn.setText(endT);
         }
@@ -106,11 +117,14 @@ public class PlanActivity extends AppCompatActivity {
         mBibleGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                 if (mBibleGridView.isItemChecked(position)) {
+                    int i = mBibleCount[position];
                     mPlanedCount = mPlanedCount + mBibleCount[position];
-                    Toast.makeText(PlanActivity.this, "" + mPlanedCount, Toast.LENGTH_SHORT).show();
+                    mConfrimBtn.setText("총 " + mPlanedCount + "장 만들기");
+//
                 } else {
                     mPlanedCount = mPlanedCount - mBibleCount[position];
-                    Toast.makeText(PlanActivity.this, "" + mPlanedCount, Toast.LENGTH_SHORT).show();
+                    mConfrimBtn.setText("총 " + mPlanedCount + "장 만들기");
+//                    Toast.makeText(PlanActivity.this, "" + mPlanedCount, Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -136,10 +150,14 @@ public class PlanActivity extends AppCompatActivity {
                     for (int i = 0; i < 39; i++) {
                         mBibleGridView.setItemChecked(i, true);
                     }
+                    mPlanedCount = mPlanedCount + 929;
+                    mConfrimBtn.setText("총 " + mPlanedCount + "장 만들기");
                 } else {
                     for (int i = 0; i < 39; i++) {
                         mBibleGridView.setItemChecked(i, false);
                     }
+                    mPlanedCount = mPlanedCount - 929;
+                    mConfrimBtn.setText("총 " + mPlanedCount + "장 만들기");
                 }
             }
         });
@@ -151,10 +169,14 @@ public class PlanActivity extends AppCompatActivity {
                     for (int i = 39; i < 66; i++) {
                         mBibleGridView.setItemChecked(i, true);
                     }
+                    mPlanedCount = mPlanedCount + 260;
+                    mConfrimBtn.setText("총 " + mPlanedCount + "장 만들기");
                 } else {
                     for (int i = 39; i < 66; i++) {
                         mBibleGridView.setItemChecked(i, false);
                     }
+                    mPlanedCount = mPlanedCount - 260;
+                    mConfrimBtn.setText("총 " + mPlanedCount + "장 만들기");
                 }
             }
         });
@@ -176,13 +198,12 @@ public class PlanActivity extends AppCompatActivity {
                 new DatePickerDialog(PlanActivity.this, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        String startTime = String.format("%d/%d/%d", year, monthOfYear + 1, dayOfMonth);
-//                        SettingDBUtil.setSettingValue("startdate", msg);
+                        String startTime = String.format("%d/%d/%d", year, monthOfYear + 1,
+                                dayOfMonth);
                         mStartBtn.setText(startTime);
                         mPlanItem.startTime = startTime;
-//                        Toast.makeText(PlanActivity.this, msg, Toast.LENGTH_SHORT).show();
                     }
-                }, mYear, mMonth, mDay).show();
+                }, mStartY, mStartM, mStartD).show();
                 break;
 
             case R.id.endBtn:
@@ -191,13 +212,12 @@ public class PlanActivity extends AppCompatActivity {
                     // 나중에 DB에서 가져올때 /로 파싱해서 가져올예정
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        String endTime = String.format("%d/%d/%d", year, monthOfYear + 1, dayOfMonth);
-//                        SettingDBUtil.setSettingValue("enddate", msg);
+                        String endTime = String.format("%d/%d/%d", year, monthOfYear + 1,
+                                dayOfMonth);
                         mEndBtn.setText(endTime);
                         mPlanItem.endTime = endTime;
-//                        Toast.makeText(PlanActivity.this, msg, Toast.LENGTH_SHORT).show();
                     }
-                }, mYear, mMonth, mDay).show();
+                }, mEndY, mEndM, mEndD).show();
                 break;
 
             case R.id.confrimBtn:
@@ -219,6 +239,8 @@ public class PlanActivity extends AppCompatActivity {
                 Log.d(TAG,"total : " + planedCount + " - chapter: " + planedChapter);
                 PlanDBUtil.setCurrentActiveRowToInActive();
                 PlanDBUtil.addPlan(mPlanItem);
+                Toast.makeText(PlanActivity.this, "계획이 만들어 졌습니다.", Toast.LENGTH_SHORT).show();
+                finish();
                 break;
             default:
                 break;

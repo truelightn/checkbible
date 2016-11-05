@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
 
         mAbbreviationBible = getResources().getStringArray(R.array.abbreviation_bible);
         mBibleCount = getResources().getIntArray(R.array.bible_count);
-        mTodayReadCount = PlanDBUtil.getPlanInt(DB.COL_READINGPLAN_TODAY_READ_COUNT);
+
 
         initialView();
 
@@ -79,6 +79,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
+        mTodayReadCount = PlanDBUtil.getPlanInt(DB.COL_READINGPLAN_TODAY_READ_COUNT);
+        mTotalReadCount = PlanDBUtil.getPlanInt(DB.COL_READINGPLAN_TOTAL_READ_COUNT);
+        mChapterReadCount = PlanDBUtil.getPlanInt(DB.COL_READINGPLAN_CHAPTER_READ_COUNT);
         refreshView();
 
     }
@@ -93,18 +96,20 @@ public class MainActivity extends AppCompatActivity {
         mChaterTextView.setText(getChapterString());
 
         // setToday ex: 3장/10장
-        String todayMsg = mTodayReadCount + "장/" + PlanManager.calculateTodayCount() + "장";
+        String todayMsg = "Today " + mTodayReadCount + "장/" + PlanManager.calculateTodayCount()
+                + "장";
         mTodayTextView.setText(todayMsg);
 
         // setTotal ex: 34장/145장
-        String totalMsg = mTotalReadCount + "장/"
+        String totalMsg = "Total " + mTotalReadCount + "장/"
                 + PlanDBUtil.getPlanInt(DB.COL_READINGPLAN_TOTAL_COUNT) + "장";
         mTotalTextView.setText(totalMsg);
 
         // set progress
 
         // set during ex: 16.10.16~16.12.31
-//        String duringMsg = PlanManager.getStartDate() + "~" + PlanManager.getEndDate();
+        // String duringMsg = PlanManager.getStartDate() + "~" +
+        // PlanManager.getEndDate();
         mDuringTextView.setText("16.10.16~16.12.31");
 
         // set chaptergrid
@@ -146,14 +151,14 @@ public class MainActivity extends AppCompatActivity {
             case R.id.minus_btn:
                 decreaseCount(1);
                 mProgress.setProgress(mTodayReadCount);
-                mChaterTextView.setText(getChapterString());
+                refreshView();
                 break;
 
             case R.id.plus_btn:
                 increaseCount(1);
                 mProgress.setProgress(mTodayReadCount);
                 mProgress.setSecondaryProgress(mTodayReadCount + 10);
-//                mChaterTextView.setText(getChapterString());
+                // mChaterTextView.setText(getChapterString());
                 refreshView();
                 break;
             case R.id.custom_btn:
@@ -162,7 +167,8 @@ public class MainActivity extends AppCompatActivity {
                 // mChaterTextView.setText(a.toString());
                 // int todayCount = 0;
                 // String settext =
-                // mAbbreviationBible[PlanManager.getCurrentChapterPosition(2)] + " "
+                // mAbbreviationBible[PlanManager.getCurrentChapte rPosition(2)]
+                // + " "
                 // + todayCount + "/" +
                 // Bible.getCount(PlanManager.getCurrentChapterPosition(2));
                 // mChaterTextView.setText(settext);
@@ -177,16 +183,16 @@ public class MainActivity extends AppCompatActivity {
 
     @NonNull
     public String getChapterString() {
-        return mAbbreviationBible[PlanManager.getCurrentChapterPosition()] + " " + mTodayReadCount + "/"
-                + mBibleCount[PlanManager.getCurrentChapterPosition()]+"장";
+        return mAbbreviationBible[PlanManager.getCurrentChapterPosition()] + " " + mTodayReadCount
+                + "/" + mBibleCount[PlanManager.getCurrentChapterPosition()] + "장";
     }
 
     public void increaseCount(int i) {
         mChapterReadCount = mChapterReadCount + i;
         mTodayReadCount = mTodayReadCount + i;
         mTotalReadCount = mTotalReadCount + i;
-        PlanDBUtil.updateValue(DB.COL_READINGPLAN_TODAY_READ_COUNT, mTodayReadCount);
         PlanDBUtil.updateValue(DB.COL_READINGPLAN_CHAPTER_READ_COUNT, mChapterReadCount);
+        PlanDBUtil.updateValue(DB.COL_READINGPLAN_TODAY_READ_COUNT, mTodayReadCount);
         PlanDBUtil.updateValue(DB.COL_READINGPLAN_TOTAL_READ_COUNT, mTotalReadCount);
     }
 
@@ -194,8 +200,8 @@ public class MainActivity extends AppCompatActivity {
         mChapterReadCount = mChapterReadCount - i;
         mTodayReadCount = mTodayReadCount - i;
         mTotalReadCount = mTotalReadCount - i;
-        PlanDBUtil.updateValue(DB.COL_READINGPLAN_TODAY_READ_COUNT, mTodayReadCount);
         PlanDBUtil.updateValue(DB.COL_READINGPLAN_CHAPTER_READ_COUNT, mChapterReadCount);
+        PlanDBUtil.updateValue(DB.COL_READINGPLAN_TODAY_READ_COUNT, mTodayReadCount);
         PlanDBUtil.updateValue(DB.COL_READINGPLAN_TOTAL_READ_COUNT, mTotalReadCount);
     }
 }
