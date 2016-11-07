@@ -1,13 +1,17 @@
 <resources>
     <string name="app_name">테스트</string>
+
+    <!-- Main Menu!-->
     <string name="settings">설정</string>
     <string name="reading_plan">계획</string>
+    <string name="logs">기록</string>
 
 
     <string name="oldtestament">구약</string>
     <string name="newtestament">신약</string>
     <string name="choice">직접 선택</string>
 
+    <!-- Bible !-->
     <string name="bible_gen">창세기</string>
     <string name="bible_ex">출애굽기</string>
     <string name="bible_lev">레위기</string>

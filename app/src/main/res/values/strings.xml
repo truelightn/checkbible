@@ -1,7 +1,11 @@
 <resources>
+
     <string name="app_name">TEST</string>
+
+    <!-- Main Menu!-->
     <string name="settings">Setting</string>
     <string name="reading_plan">Reading Plan</string>
+    <string name="logs">Logs</string>
 
     <string name="oldtestament">Old Testament</string>
     <string name="newtestament">New Testament</string>

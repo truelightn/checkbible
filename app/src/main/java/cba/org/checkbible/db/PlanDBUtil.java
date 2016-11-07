@@ -19,15 +19,7 @@ public class PlanDBUtil {
         if (planItem == null) {
             return result;
         }
-        final ContentValues values = new ContentValues();
-        values.put(DB.COL_READINGPLAN_TITLE, planItem.title);
-        values.put(DB.COL_READINGPLAN_PLANED_CHAPTER, planItem.planedChapter);
-        values.put(DB.COL_READINGPLAN_COMPLETED_CHAPTER, planItem.compeltedChapter);
-        values.put(DB.COL_READINGPLAN_TOTAL_COUNT, planItem.totalCount);
-        values.put(DB.COL_READINGPLAN_START_DATE, planItem.startTime);
-        values.put(DB.COL_READINGPLAN_END_DATE, planItem.endTime);
-        values.put(DB.COL_READINGPLAN_COMPLETE, planItem.complete ? 1 : 0);
-        values.put(DB.COL_READINGPLAN_IS_ACTIVE, 1);
+        final ContentValues values = planItem.getContentValues();
         DBUtil.getInstance().insert(DB.TABLE_READINGPLAN, values);
         result = true;
 
@@ -35,7 +27,18 @@ public class PlanDBUtil {
     }
 
     public static ArrayList<PlanItem> getAllPlanItem() {
-        return null;
+        ArrayList<PlanItem> retList = new ArrayList<>();
+        Cursor c = null;
+        c = DBUtil.getInstance().query(DB.TABLE_READINGPLAN, null, null);
+        if (c != null) {
+            c.moveToFirst();
+            while (c.moveToNext()) {
+                PlanItem i = new PlanItem();
+                i.setValues(c);
+                retList.add(i);
+            }
+        }
+        return retList;
     }
 
     public static String getPlanString(String col) {

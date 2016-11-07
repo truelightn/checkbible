@@ -18,11 +18,11 @@ import cba.org.checkbible.db.PlanDBUtil;
 
 public class PlanManager {
 
-    public static ArrayList<Integer> getCompeletChapterPosition() {
+    public static ArrayList<Integer> getCompleteChapterPosition() {
         ArrayList<Integer> chapterList = new ArrayList<>();
         String chapter = PlanDBUtil.getPlanString(DB.COL_READINGPLAN_COMPLETED_CHAPTER);
         if (TextUtils.isEmpty(chapter)) {
-            return null;
+            return chapterList;
         }
         String[] chapterString = chapter.split("/");
         for (String s : chapterString) {
@@ -81,15 +81,35 @@ public class PlanManager {
     }
 
     public static GregorianCalendar getStartDate() {
-        String endDateString = PlanDBUtil.getPlanString(DB.COL_READINGPLAN_END_DATE);
+        String startDateString = PlanDBUtil.getPlanString(DB.COL_READINGPLAN_END_DATE);
         GregorianCalendar calendar = new GregorianCalendar();
         try {
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
-            Date endDate = formatter.parse(endDateString);
-            calendar.setTime(endDate);
+            Date startDate = formatter.parse(startDateString);
+            calendar.setTime(startDate);
         } catch (ParseException e) {
             e.printStackTrace();
         }
         return calendar;
     }
+
+    public static String getDuringString() {
+        String endDateString = PlanDBUtil.getPlanString(DB.COL_READINGPLAN_END_DATE);
+        String startDateString = PlanDBUtil.getPlanString(DB.COL_READINGPLAN_START_DATE);
+
+        return startDateString + " ~ " + endDateString;
+    }
+
+    public static void setChapter(String col, ArrayList<Integer> chapter) {
+        if (chapter.isEmpty()) {
+            return;
+        }
+        String chapterStr = "";
+        Collections.reverse(chapter);
+        for (int i : chapter) {
+            chapterStr = chapterStr + String.valueOf(i) + "/";
+        }
+        PlanDBUtil.updateValue(col, chapterStr);
+    }
+
 }

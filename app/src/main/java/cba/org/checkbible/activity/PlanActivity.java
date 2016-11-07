@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.SparseBooleanArray;
@@ -21,6 +22,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -63,7 +66,7 @@ public class PlanActivity extends AppCompatActivity {
 
         mBibleCount = getResources().getIntArray(R.array.bible_count);
         mPlanItem = new PlanItem();
-//        mPlanItem = new PlanItem(0, "", "", "", 0, 0, 0, "", "", true);
+        // mPlanItem = new PlanItem(0, "", "", "", 0, 0, 0, "", "", true);
 
         mTitle = V.get(this, R.id.editTitle);
 
@@ -120,16 +123,15 @@ public class PlanActivity extends AppCompatActivity {
                     int i = mBibleCount[position];
                     mPlanedCount = mPlanedCount + mBibleCount[position];
                     mConfrimBtn.setText("총 " + mPlanedCount + "장 만들기");
-//
+                    //
                 } else {
                     mPlanedCount = mPlanedCount - mBibleCount[position];
                     mConfrimBtn.setText("총 " + mPlanedCount + "장 만들기");
-//                    Toast.makeText(PlanActivity.this, "" + mPlanedCount, Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(PlanActivity.this, "" + mPlanedCount,
+                    // Toast.LENGTH_SHORT).show();
                 }
             }
         });
-
-
 
         mMyChk.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -142,7 +144,7 @@ public class PlanActivity extends AppCompatActivity {
             }
         });
 
-        mOldTestamentChk.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
+        mOldTestamentChk.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -161,7 +163,7 @@ public class PlanActivity extends AppCompatActivity {
                 }
             }
         });
-        mNewTestamentChk.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
+        mNewTestamentChk.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -189,6 +191,7 @@ public class PlanActivity extends AppCompatActivity {
     }
 
     private View.OnClickListener onClickListener = new View.OnClickListener() {
+
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
@@ -201,6 +204,16 @@ public class PlanActivity extends AppCompatActivity {
                         String startTime = String.format("%d/%d/%d", year, monthOfYear + 1,
                                 dayOfMonth);
                         mStartBtn.setText(startTime);
+
+                        //endBtn text를 설정한 startDate+3달로 변경
+                        GregorianCalendar gCalendar = getCalendar(startTime);
+                        gCalendar.add(Calendar.MONTH, 3);
+                        mEndY = gCalendar.get(Calendar.YEAR);
+                        mEndM = gCalendar.get(Calendar.MONTH);
+                        mEndD = gCalendar.get(Calendar.DAY_OF_MONTH);
+                        String endTime = String.format("%d/%d/%d", mEndY, mEndM + 1, mEndD);
+                        mEndBtn.setText(endTime);
+
                         mPlanItem.startTime = startTime;
                     }
                 }, mStartY, mStartM, mStartD).show();
@@ -226,7 +239,6 @@ public class PlanActivity extends AppCompatActivity {
                 int planedCount = 0;
                 String planedChapter = "";
 
-
                 for (int i = count - 1; i >= 0; i--) {
                     if (checkedItems.get(i)) {
                         planedCount = planedCount + mBibleCount[i];
@@ -235,8 +247,9 @@ public class PlanActivity extends AppCompatActivity {
                 }
                 mPlanItem.totalCount = planedCount;
                 mPlanItem.planedChapter = planedChapter;
+                mPlanItem.chapterReadCount = 1;
                 mPlanItem.title = String.valueOf(mTitle.getText());
-                Log.d(TAG,"total : " + planedCount + " - chapter: " + planedChapter);
+                Log.d(TAG, "total : " + planedCount + " - chapter: " + planedChapter);
                 PlanDBUtil.setCurrentActiveRowToInActive();
                 PlanDBUtil.addPlan(mPlanItem);
                 Toast.makeText(PlanActivity.this, "계획이 만들어 졌습니다.", Toast.LENGTH_SHORT).show();
@@ -247,6 +260,19 @@ public class PlanActivity extends AppCompatActivity {
             }
         }
     };
+
+    public GregorianCalendar getCalendar(String startTime) {
+        GregorianCalendar calendar = new GregorianCalendar();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
+        Date endDate = null;
+        try {
+            endDate = formatter.parse(startTime);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        calendar.setTime(endDate);
+        return calendar;
+    }
 
     public static void start(Context context) {
         Intent intent = new Intent(context, PlanActivity.class);

@@ -11,6 +11,8 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 import cba.org.checkbible.PlanManager;
 import cba.org.checkbible.R;
 import cba.org.checkbible.afw.V;
@@ -43,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
 
         mAbbreviationBible = getResources().getStringArray(R.array.abbreviation_bible);
         mBibleCount = getResources().getIntArray(R.array.bible_count);
-
 
         initialView();
 
@@ -79,9 +80,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
+        mChapterReadCount = PlanDBUtil.getPlanInt(DB.COL_READINGPLAN_CHAPTER_READ_COUNT);
         mTodayReadCount = PlanDBUtil.getPlanInt(DB.COL_READINGPLAN_TODAY_READ_COUNT);
         mTotalReadCount = PlanDBUtil.getPlanInt(DB.COL_READINGPLAN_TOTAL_READ_COUNT);
-        mChapterReadCount = PlanDBUtil.getPlanInt(DB.COL_READINGPLAN_CHAPTER_READ_COUNT);
         refreshView();
 
     }
@@ -108,9 +109,8 @@ public class MainActivity extends AppCompatActivity {
         // set progress
 
         // set during ex: 16.10.16~16.12.31
-        // String duringMsg = PlanManager.getStartDate() + "~" +
-        // PlanManager.getEndDate();
-        mDuringTextView.setText("16.10.16~16.12.31");
+        String duringMsg = PlanManager.getDuringString();
+        mDuringTextView.setText(duringMsg);
 
         // set chaptergrid
     }
@@ -136,6 +136,9 @@ public class MainActivity extends AppCompatActivity {
             break;
         case R.id.menu_settings:
 
+            break;
+        case R.id.menu_logs:
+            LogActivity.start(this);
             break;
         default:
             break;
@@ -183,12 +186,22 @@ public class MainActivity extends AppCompatActivity {
 
     @NonNull
     public String getChapterString() {
-        return mAbbreviationBible[PlanManager.getCurrentChapterPosition()] + " " + mTodayReadCount
+        return mAbbreviationBible[PlanManager.getCurrentChapterPosition()] + " " + mChapterReadCount
                 + "/" + mBibleCount[PlanManager.getCurrentChapterPosition()] + "장";
     }
 
     public void increaseCount(int i) {
         mChapterReadCount = mChapterReadCount + i;
+        if (mChapterReadCount > mBibleCount[PlanManager.getCurrentChapterPosition()]) {
+            mChapterReadCount = 1;
+            ArrayList<Integer> plan = PlanManager.getPlanedChapterPosition();
+            ArrayList<Integer> complete = PlanManager.getCompleteChapterPosition();
+            complete.add(plan.get(0));
+            plan.remove(0);
+            PlanManager.setChapter(DB.COL_READINGPLAN_COMPLETED_CHAPTER, complete);
+            PlanManager.setChapter(DB.COL_READINGPLAN_PLANED_CHAPTER, plan);
+        }
+
         mTodayReadCount = mTodayReadCount + i;
         mTotalReadCount = mTotalReadCount + i;
         PlanDBUtil.updateValue(DB.COL_READINGPLAN_CHAPTER_READ_COUNT, mChapterReadCount);
