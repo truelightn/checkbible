@@ -242,7 +242,7 @@ public class PlanActivity extends AppCompatActivity {
                 for (int i = count - 1; i >= 0; i--) {
                     if (checkedItems.get(i)) {
                         planedCount = planedCount + mBibleCount[i];
-                        planedChapter = planedChapter + String.valueOf(i) + "/";
+                        planedChapter = String.valueOf(i) + "/" + planedChapter;
                     }
                 }
                 mPlanItem.totalCount = planedCount;

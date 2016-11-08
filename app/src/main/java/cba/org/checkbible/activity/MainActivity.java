@@ -161,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
                 increaseCount(1);
                 mProgress.setProgress(mTodayReadCount);
                 mProgress.setSecondaryProgress(mTodayReadCount + 10);
-                // mChaterTextView.setText(getChapterString());
+                // mChaterTextView.setText(getChapterString());z
                 refreshView();
                 break;
             case R.id.custom_btn:
@@ -211,6 +211,16 @@ public class MainActivity extends AppCompatActivity {
 
     public void decreaseCount(int i) {
         mChapterReadCount = mChapterReadCount - i;
+        if (mChapterReadCount <= 0) {
+            ArrayList<Integer> plan = PlanManager.getPlanedChapterPosition();
+            ArrayList<Integer> complete = PlanManager.getCompleteChapterPosition();
+            plan.add(0, complete.get(complete.size() - 1));
+            complete.remove(complete.size() - 1);
+            PlanManager.setChapter(DB.COL_READINGPLAN_COMPLETED_CHAPTER, complete);
+            PlanManager.setChapter(DB.COL_READINGPLAN_PLANED_CHAPTER, plan);
+            mChapterReadCount = mBibleCount[PlanManager.getCurrentChapterPosition()];
+        }
+
         mTodayReadCount = mTodayReadCount - i;
         mTotalReadCount = mTotalReadCount - i;
         PlanDBUtil.updateValue(DB.COL_READINGPLAN_CHAPTER_READ_COUNT, mChapterReadCount);

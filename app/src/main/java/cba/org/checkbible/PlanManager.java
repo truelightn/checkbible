@@ -41,7 +41,6 @@ public class PlanManager {
         for (String s : chapterString) {
             chapterList.add(Integer.parseInt(s));
         }
-        Collections.reverse(chapterList);
         return chapterList;
     }
 
@@ -105,7 +104,6 @@ public class PlanManager {
             return;
         }
         String chapterStr = "";
-        Collections.reverse(chapter);
         for (int i : chapter) {
             chapterStr = chapterStr + String.valueOf(i) + "/";
         }
