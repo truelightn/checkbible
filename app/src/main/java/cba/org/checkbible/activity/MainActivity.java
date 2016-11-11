@@ -10,14 +10,19 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 import cba.org.checkbible.PlanManager;
 import cba.org.checkbible.R;
 import cba.org.checkbible.afw.V;
 import cba.org.checkbible.db.DB;
 import cba.org.checkbible.db.PlanDBUtil;
+import cba.org.checkbible.db.SettingDBUtil;
 
 public class MainActivity extends AppCompatActivity {
     private Button mPlusBtn;
@@ -80,12 +85,28 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
+        resetTodayCount();
         mChapterReadCount = PlanDBUtil.getPlanInt(DB.COL_READINGPLAN_CHAPTER_READ_COUNT);
         mTodayReadCount = PlanDBUtil.getPlanInt(DB.COL_READINGPLAN_TODAY_READ_COUNT);
         mTotalReadCount = PlanDBUtil.getPlanInt(DB.COL_READINGPLAN_TOTAL_READ_COUNT);
         refreshView();
 
     }
+
+    private void resetTodayCount() {
+        GregorianCalendar gc = new GregorianCalendar();
+        Date today = gc.getTime();
+        Toast.makeText(this, String.valueOf(today), Toast.LENGTH_SHORT).show();
+//        SettingDBUtil.setSettingValue("Today", today);
+//        if (isNextDay()) {
+//            mTodayReadCount = 0;
+//            PlanDBUtil.updateValue(DB.COL_READINGPLAN_TODAY_READ_COUNT, mTodayReadCount);
+//        }
+    }
+
+//    private boolean isNextDay() {
+//
+//    }
 
     public void refreshView() {
         // setTitle
@@ -191,6 +212,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void increaseCount(int i) {
+        if (mTotalReadCount >= PlanDBUtil.getPlanInt(DB.COL_READINGPLAN_TOTAL_COUNT)) {
+            Toast.makeText(this, "모두 읽었습니다.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (mTotalReadCount == PlanDBUtil.getPlanInt(DB.COL_READINGPLAN_TOTAL_COUNT)-1) {
+            //이순간 다읽음 처리해야함
+            mTotalReadCount = mTotalReadCount + 1;
+            mTodayReadCount = mTodayReadCount + 1;
+            PlanDBUtil.updateValue(DB.COL_READINGPLAN_TODAY_READ_COUNT, mTodayReadCount);
+            PlanDBUtil.updateValue(DB.COL_READINGPLAN_TOTAL_READ_COUNT, mTotalReadCount);
+            return;
+        }
+        mTodayReadCount = mTodayReadCount + i;
+        mTotalReadCount = mTotalReadCount + i;
         mChapterReadCount = mChapterReadCount + i;
         if (mChapterReadCount > mBibleCount[PlanManager.getCurrentChapterPosition()]) {
             mChapterReadCount = 1;
@@ -201,16 +236,23 @@ public class MainActivity extends AppCompatActivity {
             PlanManager.setChapter(DB.COL_READINGPLAN_COMPLETED_CHAPTER, complete);
             PlanManager.setChapter(DB.COL_READINGPLAN_PLANED_CHAPTER, plan);
         }
-
-        mTodayReadCount = mTodayReadCount + i;
-        mTotalReadCount = mTotalReadCount + i;
         PlanDBUtil.updateValue(DB.COL_READINGPLAN_CHAPTER_READ_COUNT, mChapterReadCount);
         PlanDBUtil.updateValue(DB.COL_READINGPLAN_TODAY_READ_COUNT, mTodayReadCount);
         PlanDBUtil.updateValue(DB.COL_READINGPLAN_TOTAL_READ_COUNT, mTotalReadCount);
+
+
+
     }
 
     public void decreaseCount(int i) {
+        if (mTotalReadCount <= 0) {
+            Toast.makeText(this, "잘못된 입력 입니다.", Toast.LENGTH_SHORT).show();
+            return;
+        }
         mChapterReadCount = mChapterReadCount - i;
+        mTodayReadCount = mTodayReadCount - i;
+        mTotalReadCount = mTotalReadCount - i;
+
         if (mChapterReadCount <= 0) {
             ArrayList<Integer> plan = PlanManager.getPlanedChapterPosition();
             ArrayList<Integer> complete = PlanManager.getCompleteChapterPosition();
@@ -221,8 +263,7 @@ public class MainActivity extends AppCompatActivity {
             mChapterReadCount = mBibleCount[PlanManager.getCurrentChapterPosition()];
         }
 
-        mTodayReadCount = mTodayReadCount - i;
-        mTotalReadCount = mTotalReadCount - i;
+    
         PlanDBUtil.updateValue(DB.COL_READINGPLAN_CHAPTER_READ_COUNT, mChapterReadCount);
         PlanDBUtil.updateValue(DB.COL_READINGPLAN_TODAY_READ_COUNT, mTodayReadCount);
         PlanDBUtil.updateValue(DB.COL_READINGPLAN_TOTAL_READ_COUNT, mTotalReadCount);

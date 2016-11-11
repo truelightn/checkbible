@@ -79,19 +79,6 @@ public class PlanManager {
         return calendar;
     }
 
-    public static GregorianCalendar getStartDate() {
-        String startDateString = PlanDBUtil.getPlanString(DB.COL_READINGPLAN_END_DATE);
-        GregorianCalendar calendar = new GregorianCalendar();
-        try {
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
-            Date startDate = formatter.parse(startDateString);
-            calendar.setTime(startDate);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return calendar;
-    }
-
     public static String getDuringString() {
         String endDateString = PlanDBUtil.getPlanString(DB.COL_READINGPLAN_END_DATE);
         String startDateString = PlanDBUtil.getPlanString(DB.COL_READINGPLAN_START_DATE);
