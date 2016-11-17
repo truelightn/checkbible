@@ -17,7 +17,7 @@ public class DB {
     // Reading_Plan Database columns
     public static final String COL_READINGPLAN_ID = "_id";
     public static final String COL_READINGPLAN_TITLE = "title";
-    public static final String COL_READINGPLAN_PLANED_CHAPTER = "palned_chapter";
+    public static final String COL_READINGPLAN_PLANED_CHAPTER = "planed_chapter";
     public static final String COL_READINGPLAN_COMPLETED_CHAPTER = "checked_chapter";
     public static final String COL_READINGPLAN_TOTAL_COUNT = "total_count";
     public static final String COL_READINGPLAN_TODAY_READ_COUNT = "today_read_count";

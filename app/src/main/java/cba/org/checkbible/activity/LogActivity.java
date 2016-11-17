@@ -36,6 +36,7 @@ public class LogActivity extends AppCompatActivity {
 
         mListview = (ListView)findViewById(R.id.log_list_view);
         mListview.setAdapter(mAdapter);
+        mListview.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 
         ArrayList<PlanItem> planItemList = PlanDBUtil.getAllPlanItem();
         for (PlanItem planItem : planItemList) {

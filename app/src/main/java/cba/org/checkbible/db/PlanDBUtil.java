@@ -114,4 +114,15 @@ public class PlanDBUtil {
     public static void setCurrentActiveRowToInActive() {
         updateValue(DB.COL_READINGPLAN_IS_ACTIVE, 0);
     }
+
+    public static boolean hasNoPlanedData() {
+        boolean result = false;
+        Cursor cursor = DBUtil.getInstance().query(DB.TABLE_READINGPLAN, null, null);
+        if (cursor != null) {
+            result = cursor.getCount() <= 0;
+            cursor.close();
+        }
+        return result;
+    }
+
 }

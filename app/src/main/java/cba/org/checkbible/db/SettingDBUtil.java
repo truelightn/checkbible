@@ -56,4 +56,6 @@ public class SettingDBUtil {
         return retValue;
     }
 
+    public static void initialize() {
+    }
 }

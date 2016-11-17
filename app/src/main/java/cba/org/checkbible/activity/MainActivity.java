@@ -1,5 +1,7 @@
 package cba.org.checkbible.activity;
 
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -14,7 +16,6 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 
 import cba.org.checkbible.PlanManager;
@@ -22,6 +23,7 @@ import cba.org.checkbible.R;
 import cba.org.checkbible.afw.V;
 import cba.org.checkbible.db.DB;
 import cba.org.checkbible.db.PlanDBUtil;
+import cba.org.checkbible.db.Setting;
 import cba.org.checkbible.db.SettingDBUtil;
 
 public class MainActivity extends AppCompatActivity {
@@ -37,9 +39,12 @@ public class MainActivity extends AppCompatActivity {
 
     private ProgressBar mProgress;
     private LinearLayout mLayout;
+
     private int mTodayReadCount;
     private int mChapterReadCount;
     private int mTotalReadCount;
+    private int mTotalCount;
+
     String[] mAbbreviationBible;
     int[] mBibleCount;
 
@@ -89,24 +94,26 @@ public class MainActivity extends AppCompatActivity {
         mChapterReadCount = PlanDBUtil.getPlanInt(DB.COL_READINGPLAN_CHAPTER_READ_COUNT);
         mTodayReadCount = PlanDBUtil.getPlanInt(DB.COL_READINGPLAN_TODAY_READ_COUNT);
         mTotalReadCount = PlanDBUtil.getPlanInt(DB.COL_READINGPLAN_TOTAL_READ_COUNT);
+        mTotalCount = PlanDBUtil.getPlanInt(DB.COL_READINGPLAN_TOTAL_COUNT);
         refreshView();
 
     }
 
     private void resetTodayCount() {
-        GregorianCalendar gc = new GregorianCalendar();
-        Date today = gc.getTime();
-        Toast.makeText(this, String.valueOf(today), Toast.LENGTH_SHORT).show();
-//        SettingDBUtil.setSettingValue("Today", today);
-//        if (isNextDay()) {
-//            mTodayReadCount = 0;
-//            PlanDBUtil.updateValue(DB.COL_READINGPLAN_TODAY_READ_COUNT, mTodayReadCount);
-//        }
-    }
+        String previousDay = SettingDBUtil.getSettingValue(Setting.TODAY);
+        if (previousDay.isEmpty()) {
+            SettingDBUtil.setSettingValue(Setting.TODAY, String.valueOf(0));
+            return;
+        }
 
-//    private boolean isNextDay() {
-//
-//    }
+        GregorianCalendar gc = new GregorianCalendar();
+        int today = gc.get(Calendar.DAY_OF_MONTH);
+        if (today != Integer.valueOf(previousDay)) {
+            SettingDBUtil.setSettingValue(Setting.TODAY, String.valueOf(today));
+            mTodayReadCount = 0;
+            PlanDBUtil.updateValue(DB.COL_READINGPLAN_TODAY_READ_COUNT, mTodayReadCount);
+        }
+    }
 
     public void refreshView() {
         // setTitle
@@ -124,10 +131,11 @@ public class MainActivity extends AppCompatActivity {
 
         // setTotal ex: 34장/145장
         String totalMsg = "Total " + mTotalReadCount + "장/"
-                + PlanDBUtil.getPlanInt(DB.COL_READINGPLAN_TOTAL_COUNT) + "장";
+                +mTotalCount + "장";
         mTotalTextView.setText(totalMsg);
 
         // set progress
+        setProgress();
 
         // set during ex: 16.10.16~16.12.31
         String duringMsg = PlanManager.getDuringString();
@@ -174,18 +182,18 @@ public class MainActivity extends AppCompatActivity {
             switch (v.getId()) {
             case R.id.minus_btn:
                 decreaseCount(1);
-                mProgress.setProgress(mTodayReadCount);
+
                 refreshView();
                 break;
 
             case R.id.plus_btn:
                 increaseCount(1);
-                mProgress.setProgress(mTodayReadCount);
-                mProgress.setSecondaryProgress(mTodayReadCount + 10);
+//                mProgress.setSecondaryProgress(mTodayReadCount + 10);
                 // mChaterTextView.setText(getChapterString());z
                 refreshView();
                 break;
             case R.id.custom_btn:
+                increaseCount(6);
                 // ArrayList<Integer> a =
                 // PlanManager.getPlanedChapterPosition(2);
                 // mChaterTextView.setText(a.toString());
@@ -205,6 +213,22 @@ public class MainActivity extends AppCompatActivity {
 
     };
 
+    public void setProgress() {
+        int percent = (int)(((double)mTotalReadCount / (double)mTotalCount) * 100.0);
+        int totalPercent = 100 - (int)((double)PlanManager.getDuringDay()
+                / (double)PlanManager.getTotalDuringDay() * 100.0);
+        mProgress.setProgress(percent);
+        mProgress.setSecondaryProgress(totalPercent);
+
+        if (percent < (totalPercent - 5)) {
+            mProgress.getProgressDrawable().setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
+        } else if (percent > (totalPercent + 5)) {
+            mProgress.getProgressDrawable().setColorFilter(Color.BLUE, PorterDuff.Mode.SRC_IN);
+        } else {
+            mProgress.getProgressDrawable().setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_IN);
+        }
+    }
+
     @NonNull
     public String getChapterString() {
         return mAbbreviationBible[PlanManager.getCurrentChapterPosition()] + " " + mChapterReadCount
@@ -212,11 +236,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void increaseCount(int i) {
-        if (mTotalReadCount >= PlanDBUtil.getPlanInt(DB.COL_READINGPLAN_TOTAL_COUNT)) {
+        if (mTotalReadCount >=mTotalCount) {
             Toast.makeText(this, "모두 읽었습니다.", Toast.LENGTH_SHORT).show();
             return;
         }
-        if (mTotalReadCount == PlanDBUtil.getPlanInt(DB.COL_READINGPLAN_TOTAL_COUNT)-1) {
+        if (mTotalReadCount ==mTotalCount-1) {
             //이순간 다읽음 처리해야함
             mTotalReadCount = mTotalReadCount + 1;
             mTodayReadCount = mTodayReadCount + 1;

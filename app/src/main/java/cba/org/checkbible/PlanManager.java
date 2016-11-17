@@ -66,13 +66,33 @@ public class PlanManager {
         return (endCalendar.getTimeInMillis() - todayCalendar.getTimeInMillis()) / oneDay + 2;
     }
 
+    public static long getTotalDuringDay(){
+        long oneDay = 24 * 60 * 60 * 1000;
+        GregorianCalendar endCalendar = getEndDate();
+        GregorianCalendar startCalendar = getStartDate();
+
+        return (endCalendar.getTimeInMillis() - startCalendar.getTimeInMillis()) / oneDay + 2;
+    }
+
     public static GregorianCalendar getEndDate() {
         String endDateString = PlanDBUtil.getPlanString(DB.COL_READINGPLAN_END_DATE);
         GregorianCalendar calendar = new GregorianCalendar();
         try {
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
-            Date endDate = formatter.parse(endDateString);
-            calendar.setTime(endDate);
+            Date date = formatter.parse(endDateString);
+            calendar.setTime(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return calendar;
+    }
+    public static GregorianCalendar getStartDate() {
+        String endDateString = PlanDBUtil.getPlanString(DB.COL_READINGPLAN_START_DATE);
+        GregorianCalendar calendar = new GregorianCalendar();
+        try {
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
+            Date date = formatter.parse(endDateString);
+            calendar.setTime(date);
         } catch (ParseException e) {
             e.printStackTrace();
         }

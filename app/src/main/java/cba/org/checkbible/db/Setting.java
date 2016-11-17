@@ -5,4 +5,5 @@ package cba.org.checkbible.db;
  */
 
 public class Setting {
+    public static final String TODAY = "today";
 }
