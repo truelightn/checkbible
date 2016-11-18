@@ -6,6 +6,10 @@
     <string name="reading_plan">계획</string>
     <string name="logs">기록</string>
 
+    <!--context menu!-->
+    <string name="delete">삭제</string>
+    <string name="add">추가</string>
+    <string name="select">선택</string>
 
     <string name="oldtestament">구약</string>
     <string name="newtestament">신약</string>

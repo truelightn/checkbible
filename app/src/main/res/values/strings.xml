@@ -7,6 +7,11 @@
     <string name="reading_plan">Reading Plan</string>
     <string name="logs">Logs</string>
 
+    <!--context menu!-->
+    <string name="delete">Delete</string>
+    <string name="add">Add</string>
+    <string name="select">Select</string>
+
     <string name="oldtestament">Old Testament</string>
     <string name="newtestament">New Testament</string>
     <string name="choice">Your Choice</string>

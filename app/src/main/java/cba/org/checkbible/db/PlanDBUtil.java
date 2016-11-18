@@ -22,8 +22,12 @@ public class PlanDBUtil {
         final ContentValues values = planItem.getContentValues();
         DBUtil.getInstance().insert(DB.TABLE_READINGPLAN, values);
         result = true;
-
         return result;
+    }
+
+    public static boolean removePlan(int id) {
+        String selection = DB.COL_READINGPLAN_ID + " = \'" + id + "\'";
+        return DBUtil.getInstance().delete(DB.TABLE_READINGPLAN, selection) > 1 ? true : false;
     }
 
     public static ArrayList<PlanItem> getAllPlanItem() {
@@ -32,12 +36,14 @@ public class PlanDBUtil {
         c = DBUtil.getInstance().query(DB.TABLE_READINGPLAN, null, null);
         if (c != null) {
             c.moveToFirst();
-            while (c.moveToNext()) {
+            while (!c.isAfterLast()) {
                 PlanItem i = new PlanItem();
                 i.setValues(c);
                 retList.add(i);
+                c.moveToNext();
             }
         }
+        c.close();
         return retList;
     }
 

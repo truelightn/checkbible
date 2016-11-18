@@ -6,4 +6,5 @@ package cba.org.checkbible.db;
 
 public class Setting {
     public static final String TODAY = "today";
+    public static final String CUSTOM_COUNT ="costom_count";
 }

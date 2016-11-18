@@ -10,7 +10,7 @@ import cba.org.checkbible.db.DB;
  */
 
 public class PlanItem {
-    public long id;
+    public int id;
     public String title = "";
     public String planedChapter = "";
     public String compeltedChapter = "";
@@ -72,5 +72,9 @@ public class PlanItem {
             return tempInt;
         }
         return -1;
+    }
+
+    public int getId() {
+        return id;
     }
 }

@@ -4,8 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.ContextMenu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ListView;
@@ -23,9 +27,10 @@ import cba.org.checkbible.dto.PlanItem;
  */
 
 public class LogActivity extends AppCompatActivity {
-
+    public static final String TAG = LogActivity.class.getSimpleName();
     ListView mListview;
     LogListViewAdapter mAdapter;
+    ArrayList<PlanItem> mPlanItemList;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -34,14 +39,18 @@ public class LogActivity extends AppCompatActivity {
 
         mAdapter = new LogListViewAdapter();
 
-        mListview = (ListView)findViewById(R.id.log_list_view);
+        mListview = (ListView) findViewById(R.id.log_list_view);
         mListview.setAdapter(mAdapter);
         mListview.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+        registerForContextMenu(mListview);
 
-        ArrayList<PlanItem> planItemList = PlanDBUtil.getAllPlanItem();
-        for (PlanItem planItem : planItemList) {
-            mAdapter.addItem(planItem.title, planItem.endTime, planItem.totalCount + "장", null);
+        mPlanItemList = PlanDBUtil.getAllPlanItem();
+        for (PlanItem planItem : mPlanItemList) {
+            Log.e(TAG, "add item title " + planItem.title);
+            mAdapter.addItem(planItem.title, planItem.endTime, planItem.totalCount
+                    + "장", null);
         }
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -52,6 +61,7 @@ public class LogActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
+
 
     }
 
@@ -66,11 +76,55 @@ public class LogActivity extends AppCompatActivity {
         super.onStop();
     }
 
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        getMenuInflater().inflate(R.menu.log_context_menu, menu);
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+        menu.setHeaderTitle(mPlanItemList.get(info.position).title);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item
+                .getMenuInfo();
+        int index = info.position; // AdapterView안에서 ContextMenu를 보여즈는 항목의 위치
+        switch (item.getItemId()) {
+        case R.id.context_delete:
+            PlanDBUtil.removePlan(mPlanItemList.get(index).getId());
+            mAdapter.remove(index);
+            mAdapter.notifyDataSetChanged();
+            break;
+        case R.id.context_select:
+            break;
+        default:
+            return super.onContextItemSelected(item);
+        }
+        return true;
+    }
+
+//    AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener() {
+//
+//        // ListView의 아이템 중 하나가 클릭될 때 호출되는 메소드
+//        // 첫번째 파라미터 : 클릭된 아이템을 보여주고 있는 AdapterView 객체(여기서는 ListView객체)
+//        // 두번째 파라미터 : 클릭된 아이템 뷰
+//        // 세번째 파라미터 : 클릭된 아이템의 위치(ListView이 첫번째 아이템(가장위쪽)부터 차례대로 0,1,2,3.....)
+//        // 네번재 파리미터 : 클릭된 아이템의 아이디(특별한 설정이 없다면 세번째 파라이터인 position과 같은 값)
+//        @Override
+//        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//            // TODO Auto-generated method stub
+//
+//            // 클릭된 아이템의 위치를 이용하여 데이터인 문자열을 Toast로 출력
+//        }
+//    };
+
     public class LogListViewItem {
+
         private String titleStr;
         private String duringStr;
         private String totalStr;
         private GridView bibleView;
+
 
         public void setTitle(String title) {
             titleStr = title;
@@ -168,6 +222,10 @@ public class LogActivity extends AppCompatActivity {
             item.setTotal(total);
 
             listViewItemList.add(item);
+        }
+
+        public void remove(int position) {
+            listViewItemList.remove(position);
         }
     }
 }

@@ -80,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
         mMinusBtn.setOnClickListener(onClickListener);
         mPlusBtn.setOnClickListener(onClickListener);
         mCustomBtn.setOnClickListener(onClickListener);
+        mCustomBtn.setOnLongClickListener(onLongClickListener);
     }
 
     @Override
@@ -130,8 +131,7 @@ public class MainActivity extends AppCompatActivity {
         mTodayTextView.setText(todayMsg);
 
         // setTotal ex: 34장/145장
-        String totalMsg = "Total " + mTotalReadCount + "장/"
-                +mTotalCount + "장";
+        String totalMsg = "Total " + mTotalReadCount + "장/" + mTotalCount + "장";
         mTotalTextView.setText(totalMsg);
 
         // set progress
@@ -182,35 +182,40 @@ public class MainActivity extends AppCompatActivity {
             switch (v.getId()) {
             case R.id.minus_btn:
                 decreaseCount(1);
-
                 refreshView();
                 break;
 
             case R.id.plus_btn:
                 increaseCount(1);
-//                mProgress.setSecondaryProgress(mTodayReadCount + 10);
-                // mChaterTextView.setText(getChapterString());z
                 refreshView();
                 break;
             case R.id.custom_btn:
-                increaseCount(6);
-                // ArrayList<Integer> a =
-                // PlanManager.getPlanedChapterPosition(2);
-                // mChaterTextView.setText(a.toString());
-                // int todayCount = 0;
-                // String settext =
-                // mAbbreviationBible[PlanManager.getCurrentChapte rPosition(2)]
-                // + " "
-                // + todayCount + "/" +
-                // Bible.getCount(PlanManager.getCurrentChapterPosition(2));
-                // mChaterTextView.setText(settext);
-
+                increaseCount(Integer.valueOf(SettingDBUtil.getSettingValue(Setting.CUSTOM_COUNT)));
+                refreshView();
                 break;
             default:
                 break;
             }
         }
+    };
+    private View.OnLongClickListener onLongClickListener = new View.OnLongClickListener() {
+        @Override
+        public boolean onLongClick(View v) {
+            switch (v.getId()) {
+            case R.id.minus_btn:
+                break;
 
+            case R.id.plus_btn:
+                break;
+            case R.id.custom_btn:
+                // TODO: 여기다가 custom_count setting하는거 넣어야함
+                SettingDBUtil.setSettingValue(Setting.CUSTOM_COUNT,"5");
+                break;
+            default:
+                break;
+            }
+            return false;
+        }
     };
 
     public void setProgress() {
@@ -231,17 +236,18 @@ public class MainActivity extends AppCompatActivity {
 
     @NonNull
     public String getChapterString() {
-        return mAbbreviationBible[PlanManager.getCurrentChapterPosition()] + " " + mChapterReadCount
-                + "/" + mBibleCount[PlanManager.getCurrentChapterPosition()] + "장";
+        return mAbbreviationBible[PlanManager.getCurrentChapterPosition()] + " "
+                + mChapterReadCount + "/" + mBibleCount[PlanManager.getCurrentChapterPosition()]
+                + "장";
     }
 
     public void increaseCount(int i) {
-        if (mTotalReadCount >=mTotalCount) {
+        if (mTotalReadCount >= mTotalCount) {
             Toast.makeText(this, "모두 읽었습니다.", Toast.LENGTH_SHORT).show();
             return;
         }
-        if (mTotalReadCount ==mTotalCount-1) {
-            //이순간 다읽음 처리해야함
+        if (mTotalReadCount == mTotalCount - 1) {
+            // 이순간 다읽음 처리해야함
             mTotalReadCount = mTotalReadCount + 1;
             mTodayReadCount = mTodayReadCount + 1;
             PlanDBUtil.updateValue(DB.COL_READINGPLAN_TODAY_READ_COUNT, mTodayReadCount);
@@ -264,8 +270,6 @@ public class MainActivity extends AppCompatActivity {
         PlanDBUtil.updateValue(DB.COL_READINGPLAN_TODAY_READ_COUNT, mTodayReadCount);
         PlanDBUtil.updateValue(DB.COL_READINGPLAN_TOTAL_READ_COUNT, mTotalReadCount);
 
-
-
     }
 
     public void decreaseCount(int i) {
@@ -287,7 +291,6 @@ public class MainActivity extends AppCompatActivity {
             mChapterReadCount = mBibleCount[PlanManager.getCurrentChapterPosition()];
         }
 
-    
         PlanDBUtil.updateValue(DB.COL_READINGPLAN_CHAPTER_READ_COUNT, mChapterReadCount);
         PlanDBUtil.updateValue(DB.COL_READINGPLAN_TODAY_READ_COUNT, mTodayReadCount);
         PlanDBUtil.updateValue(DB.COL_READINGPLAN_TOTAL_READ_COUNT, mTotalReadCount);
