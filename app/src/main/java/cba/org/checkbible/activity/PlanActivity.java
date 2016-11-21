@@ -251,6 +251,7 @@ public class PlanActivity extends AppCompatActivity {
                 mPlanItem.title = String.valueOf(mTitle.getText());
                 Log.d(TAG, "total : " + planedCount + " - chapter: " + planedChapter);
                 PlanDBUtil.setCurrentActiveRowToInActive();
+                mPlanItem.active = 1;
                 PlanDBUtil.addPlan(mPlanItem);
                 Toast.makeText(PlanActivity.this, "계획이 만들어 졌습니다.", Toast.LENGTH_SHORT).show();
                 finish();

@@ -2,6 +2,7 @@ package cba.org.checkbible.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -17,8 +18,10 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import cba.org.checkbible.PlanManager;
 import cba.org.checkbible.R;
 import cba.org.checkbible.afw.V;
+import cba.org.checkbible.db.DB;
 import cba.org.checkbible.db.PlanDBUtil;
 import cba.org.checkbible.dto.PlanItem;
 
@@ -47,8 +50,7 @@ public class LogActivity extends AppCompatActivity {
         mPlanItemList = PlanDBUtil.getAllPlanItem();
         for (PlanItem planItem : mPlanItemList) {
             Log.e(TAG, "add item title " + planItem.title);
-            mAdapter.addItem(planItem.title, planItem.endTime, planItem.totalCount
-                    + "장", null);
+            mAdapter.addItem(planItem);
         }
         mAdapter.notifyDataSetChanged();
     }
@@ -96,72 +98,20 @@ public class LogActivity extends AppCompatActivity {
             mAdapter.notifyDataSetChanged();
             break;
         case R.id.context_select:
+            PlanDBUtil.setCurrentActiveRowToInActive();
+            PlanDBUtil.updateValueByID(DB.COL_READINGPLAN_IS_ACTIVE, 1, mPlanItemList.get(index).getId());
+            mAdapter.changeActive(index);
+            mAdapter.notifyDataSetChanged();
             break;
-        default:
+            default:
             return super.onContextItemSelected(item);
         }
         return true;
     }
 
-//    AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener() {
-//
-//        // ListView의 아이템 중 하나가 클릭될 때 호출되는 메소드
-//        // 첫번째 파라미터 : 클릭된 아이템을 보여주고 있는 AdapterView 객체(여기서는 ListView객체)
-//        // 두번째 파라미터 : 클릭된 아이템 뷰
-//        // 세번째 파라미터 : 클릭된 아이템의 위치(ListView이 첫번째 아이템(가장위쪽)부터 차례대로 0,1,2,3.....)
-//        // 네번재 파리미터 : 클릭된 아이템의 아이디(특별한 설정이 없다면 세번째 파라이터인 position과 같은 값)
-//        @Override
-//        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//            // TODO Auto-generated method stub
-//
-//            // 클릭된 아이템의 위치를 이용하여 데이터인 문자열을 Toast로 출력
-//        }
-//    };
-
-    public class LogListViewItem {
-
-        private String titleStr;
-        private String duringStr;
-        private String totalStr;
-        private GridView bibleView;
-
-
-        public void setTitle(String title) {
-            titleStr = title;
-        }
-
-        public String getTitle() {
-            return this.titleStr;
-        }
-
-        public void setDuring(String during) {
-            duringStr = during;
-        }
-
-        public String getDuring() {
-            return this.duringStr;
-        }
-
-        public void setTotal(String total) {
-            totalStr = total;
-        }
-
-        public String getTotal() {
-            return totalStr;
-        }
-
-        public void setBibleView(GridView bibleView) {
-            this.bibleView = bibleView;
-        }
-
-        public GridView getBibleView() {
-            return bibleView;
-        }
-    }
-
     public class LogListViewAdapter extends BaseAdapter {
         // Adapter에 추가된 데이터를 저장하기 위한 ArrayList
-        private ArrayList<LogListViewItem> listViewItemList = new ArrayList<>();
+        private ArrayList<PlanItem> listViewItemList = new ArrayList<>();
 
         // ListViewAdapter의 생성자
         public LogListViewAdapter() {
@@ -191,12 +141,16 @@ public class LogActivity extends AppCompatActivity {
             TextView totalTextView = V.get(convertView, R.id.log_total);
 
             // Data Set(listViewItemList)에서 position에 위치한 데이터 참조 획득
-            LogListViewItem listViewItem = listViewItemList.get(position);
-
+            PlanItem listViewItem = listViewItemList.get(position);
+            if (listViewItem.getActive() == 1) {
+                titleTextView.setTextColor(Color.RED);
+            } else {
+                titleTextView.setTextColor(Color.GRAY);
+            }
             // 아이템 내 각 위젯에 데이터 반영
             titleTextView.setText(listViewItem.getTitle());
-            duringTextView.setText(listViewItem.getDuring());
-            totalTextView.setText(listViewItem.getTotal());
+            duringTextView.setText(listViewItem.getStartTime() + "~" + listViewItem.getEndTime());
+            totalTextView.setText(String.valueOf(listViewItem.getTotalCount()));
 
             return convertView;
         }
@@ -213,19 +167,21 @@ public class LogActivity extends AppCompatActivity {
             return listViewItemList.get(position);
         }
 
-        // 아이템 데이터 추가를 위한 함수. 개발자가 원하는대로 작성 가능.
-        public void addItem(String title, String during, String total, String[] bible) {
-            LogListViewItem item = new LogListViewItem();
-
-            item.setTitle(title);
-            item.setDuring(during);
-            item.setTotal(total);
-
-            listViewItemList.add(item);
-        }
-
         public void remove(int position) {
             listViewItemList.remove(position);
+        }
+
+        public void addItem(PlanItem planItem) {
+            listViewItemList.add(planItem);
+        }
+
+        public void changeActive(int position) {
+            for (PlanItem planItem : listViewItemList) {
+                if (planItem.active == 1) {
+                    planItem.active = 0;
+                }
+            }
+            listViewItemList.get(position).setActive(1);
         }
     }
 }

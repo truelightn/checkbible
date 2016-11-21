@@ -93,6 +93,29 @@ public class PlanDBUtil {
         return retValue;
     }
 
+    public static void updateValueByID(String col, Object item, int id) {
+        Cursor c = null;
+        String selection =  DB.COL_READINGPLAN_ID + " = \'" + id + "\'";
+        final ContentValues values = new ContentValues();
+        if (item instanceof String) {
+            values.put(col, (String)item);
+        }
+        if (item instanceof Integer) {
+            values.put(col, (int)item);
+        }
+        try {
+            c = DBUtil.getInstance().query(DB.TABLE_READINGPLAN, new String[] { col }, selection);
+            if (c != null) {
+                DBUtil.getInstance().update(DB.TABLE_READINGPLAN, values, selection);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (c != null) {
+                c.close();
+            }
+        }
+    }
     public static void updateValue(String col, Object item) {
         Cursor c = null;
         String selection = DB.COL_READINGPLAN_IS_ACTIVE + " = \'" + 1 + "\'";

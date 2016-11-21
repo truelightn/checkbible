@@ -21,23 +21,75 @@ public class PlanItem {
     public String startTime = "";
     public String endTime = "";
     public boolean complete;
-
+    public int active;
+    
     public PlanItem() {
+    }
+    public int getId() {
+        return id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getPlanedChapter() {
+        return planedChapter;
+    }
+
+    public String getCompeltedChapter() {
+        return compeltedChapter;
+    }
+
+    public int getTotalCount() {
+        return totalCount;
+    }
+
+    public int getTodayReadCount() {
+        return todayReadCount;
+    }
+
+    public int getChapterReadCount() {
+        return chapterReadCount;
+    }
+
+    public int getTotalReadCount() {
+        return totalReadCount;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public boolean isComplete() {
+        return complete;
+    }
+
+    public int getActive() {
+        return active;
+    }
+
+    public void setActive(int i) {
+        active = i;
     }
 
     public ContentValues getContentValues() {
         ContentValues values = new ContentValues();
-        values.put(DB.COL_READINGPLAN_TITLE, this.title);
-        values.put(DB.COL_READINGPLAN_PLANED_CHAPTER, this.planedChapter);
-        values.put(DB.COL_READINGPLAN_COMPLETED_CHAPTER, this.compeltedChapter);
-        values.put(DB.COL_READINGPLAN_TOTAL_COUNT, this.totalCount);
-        values.put(DB.COL_READINGPLAN_TODAY_READ_COUNT, this.todayReadCount);
-        values.put(DB.COL_READINGPLAN_CHAPTER_READ_COUNT, this.chapterReadCount);
-        values.put(DB.COL_READINGPLAN_TOTAL_READ_COUNT, this.totalReadCount);
-        values.put(DB.COL_READINGPLAN_START_DATE, this.startTime);
-        values.put(DB.COL_READINGPLAN_END_DATE, this.endTime);
-        values.put(DB.COL_READINGPLAN_COMPLETE, this.complete ? 1 : 0);
-        values.put(DB.COL_READINGPLAN_IS_ACTIVE, 1);
+        values.put(DB.COL_READINGPLAN_TITLE, title);
+        values.put(DB.COL_READINGPLAN_PLANED_CHAPTER, planedChapter);
+        values.put(DB.COL_READINGPLAN_COMPLETED_CHAPTER, compeltedChapter);
+        values.put(DB.COL_READINGPLAN_TOTAL_COUNT, totalCount);
+        values.put(DB.COL_READINGPLAN_TODAY_READ_COUNT, todayReadCount);
+        values.put(DB.COL_READINGPLAN_CHAPTER_READ_COUNT, chapterReadCount);
+        values.put(DB.COL_READINGPLAN_TOTAL_READ_COUNT, totalReadCount);
+        values.put(DB.COL_READINGPLAN_START_DATE, startTime);
+        values.put(DB.COL_READINGPLAN_END_DATE, endTime);
+        values.put(DB.COL_READINGPLAN_COMPLETE, complete ? 1 : 0);
+        values.put(DB.COL_READINGPLAN_IS_ACTIVE, active);
         return values;
     }
 
@@ -53,7 +105,7 @@ public class PlanItem {
         this.startTime = getString(cursor, DB.COL_READINGPLAN_START_DATE);
         this.endTime = getString(cursor, DB.COL_READINGPLAN_END_DATE);
         this.complete = getInt(cursor, DB.COL_READINGPLAN_COMPLETE) == 1;
-
+        this.active = getInt(cursor, DB.COL_READINGPLAN_IS_ACTIVE);
     }
 
     public String getString(Cursor cursor, String col) {
@@ -74,7 +126,4 @@ public class PlanItem {
         return -1;
     }
 
-    public int getId() {
-        return id;
-    }
 }
