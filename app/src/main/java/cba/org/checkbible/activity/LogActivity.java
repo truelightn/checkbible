@@ -2,6 +2,7 @@ package cba.org.checkbible.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +16,7 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -40,18 +42,13 @@ public class LogActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log);
 
-        mAdapter = new LogListViewAdapter();
+        mAdapter = new LogListViewAdapter(PlanDBUtil.getAllPlanItem());
 
         mListview = (ListView) findViewById(R.id.log_list_view);
         mListview.setAdapter(mAdapter);
         mListview.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         registerForContextMenu(mListview);
 
-        mPlanItemList = PlanDBUtil.getAllPlanItem();
-        for (PlanItem planItem : mPlanItemList) {
-            Log.e(TAG, "add item title " + planItem.title);
-            mAdapter.addItem(planItem);
-        }
         mAdapter.notifyDataSetChanged();
     }
 
@@ -83,7 +80,8 @@ public class LogActivity extends AppCompatActivity {
         super.onCreateContextMenu(menu, v, menuInfo);
         getMenuInflater().inflate(R.menu.log_context_menu, menu);
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-        menu.setHeaderTitle(mPlanItemList.get(info.position).title);
+        PlanItem pi = (PlanItem) mAdapter.getItem(info.position);
+        menu.setHeaderTitle(pi.getTitle());
     }
 
     @Override
@@ -91,20 +89,25 @@ public class LogActivity extends AppCompatActivity {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item
                 .getMenuInfo();
         int index = info.position; // AdapterView안에서 ContextMenu를 보여즈는 항목의 위치
+        PlanItem pi = (PlanItem) mAdapter.getItem(info.position);
         switch (item.getItemId()) {
-        case R.id.context_delete:
-            PlanDBUtil.removePlan(mPlanItemList.get(index).getId());
-            mAdapter.remove(index);
-            mAdapter.notifyDataSetChanged();
-            break;
-        case R.id.context_select:
-            PlanDBUtil.setCurrentActiveRowToInActive();
-            PlanDBUtil.updateValueByID(DB.COL_READINGPLAN_IS_ACTIVE, 1, mPlanItemList.get(index).getId());
-            mAdapter.changeActive(index);
-            mAdapter.notifyDataSetChanged();
-            break;
+            case R.id.context_delete:
+                if (pi.getActive() == 1) {
+                    Toast.makeText(LogActivity.this, "활성화된 계획은 삭제 할수 없습니다.", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+                PlanDBUtil.removePlan(pi.getId());
+                mAdapter.remove(index);
+                mAdapter.notifyDataSetChanged();
+                break;
+            case R.id.context_select:
+                PlanDBUtil.setCurrentActiveRowToInActive();
+                PlanDBUtil.updateValueByID(DB.COL_READINGPLAN_IS_ACTIVE, 1, pi.getId());
+                mAdapter.changeActive(index);
+                mAdapter.notifyDataSetChanged();
+                break;
             default:
-            return super.onContextItemSelected(item);
+                return super.onContextItemSelected(item);
         }
         return true;
     }
@@ -114,8 +117,8 @@ public class LogActivity extends AppCompatActivity {
         private ArrayList<PlanItem> listViewItemList = new ArrayList<>();
 
         // ListViewAdapter의 생성자
-        public LogListViewAdapter() {
-
+        public LogListViewAdapter(ArrayList<PlanItem> listViewItemList) {
+            this.listViewItemList = listViewItemList;
         }
 
         // Adapter에 사용되는 데이터의 개수를 리턴. : 필수 구현
@@ -142,14 +145,15 @@ public class LogActivity extends AppCompatActivity {
 
             // Data Set(listViewItemList)에서 position에 위치한 데이터 참조 획득
             PlanItem listViewItem = listViewItemList.get(position);
+            ColorStateList oldColors =  duringTextView.getTextColors();
             if (listViewItem.getActive() == 1) {
                 titleTextView.setTextColor(Color.RED);
             } else {
-                titleTextView.setTextColor(Color.GRAY);
+                titleTextView.setTextColor(oldColors);
             }
             // 아이템 내 각 위젯에 데이터 반영
             titleTextView.setText(listViewItem.getTitle());
-            duringTextView.setText(listViewItem.getStartTime() + "~" + listViewItem.getEndTime());
+            duringTextView.setText(listViewItem.getStartTime() + " ~ " + listViewItem.getEndTime());
             totalTextView.setText(String.valueOf(listViewItem.getTotalCount()));
 
             return convertView;
@@ -171,9 +175,6 @@ public class LogActivity extends AppCompatActivity {
             listViewItemList.remove(position);
         }
 
-        public void addItem(PlanItem planItem) {
-            listViewItemList.add(planItem);
-        }
 
         public void changeActive(int position) {
             for (PlanItem planItem : listViewItemList) {

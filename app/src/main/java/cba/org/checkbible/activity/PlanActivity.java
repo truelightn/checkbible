@@ -234,11 +234,16 @@ public class PlanActivity extends AppCompatActivity {
                 break;
 
             case R.id.confrimBtn:
+                mPlanItem.title = String.valueOf(mTitle.getText());
+                if (mPlanItem.title.isEmpty()) {
+                    Toast.makeText(PlanActivity.this, "제목을 입력해 주세요",
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 SparseBooleanArray checkedItems = mBibleGridView.getCheckedItemPositions();
                 int count = mBibleGridBibleAdapter.getCount();
                 int planedCount = 0;
                 String planedChapter = "";
-
                 for (int i = count - 1; i >= 0; i--) {
                     if (checkedItems.get(i)) {
                         planedCount = planedCount + mBibleCount[i];
@@ -247,11 +252,17 @@ public class PlanActivity extends AppCompatActivity {
                 }
                 mPlanItem.totalCount = planedCount;
                 mPlanItem.planedChapter = planedChapter;
+                if (mPlanItem.planedChapter.isEmpty()) {
+                    Toast.makeText(PlanActivity.this, "성경을 선택해주세요",
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                
                 mPlanItem.chapterReadCount = 1;
-                mPlanItem.title = String.valueOf(mTitle.getText());
                 Log.d(TAG, "total : " + planedCount + " - chapter: " + planedChapter);
                 PlanDBUtil.setCurrentActiveRowToInActive();
                 mPlanItem.active = 1;
+                
                 PlanDBUtil.addPlan(mPlanItem);
                 Toast.makeText(PlanActivity.this, "계획이 만들어 졌습니다.", Toast.LENGTH_SHORT).show();
                 finish();

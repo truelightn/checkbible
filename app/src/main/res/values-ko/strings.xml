@@ -15,6 +15,8 @@
     <string name="newtestament">신약</string>
     <string name="choice">직접 선택</string>
 
+    <string name="title_hint">제목을 입력해주세요</string>
+
     <!-- Bible !-->
     <string name="bible_gen">창세기</string>
     <string name="bible_ex">출애굽기</string>

@@ -1,7 +1,9 @@
 package cba.org.checkbible.activity;
 
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -224,13 +226,27 @@ public class MainActivity extends AppCompatActivity {
                 / (double)PlanManager.getTotalDuringDay() * 100.0);
         mProgress.setProgress(percent);
         mProgress.setSecondaryProgress(totalPercent);
-
         if (percent < (totalPercent - 5)) {
-            mProgress.getProgressDrawable().setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                mProgress.setProgressTintList(ColorStateList.valueOf(Color.RED));
+                mProgress.setSecondaryProgressTintList(ColorStateList.valueOf(Color.RED));
+            } else {
+                mProgress.getProgressDrawable().setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
+            }
         } else if (percent > (totalPercent + 5)) {
-            mProgress.getProgressDrawable().setColorFilter(Color.BLUE, PorterDuff.Mode.SRC_IN);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                mProgress.setProgressTintList(ColorStateList.valueOf(Color.BLUE));
+            } else {
+                mProgress.getProgressDrawable().setColorFilter(Color.BLUE, PorterDuff.Mode.SRC_IN);
+            }
         } else {
-            mProgress.getProgressDrawable().setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_IN);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                mProgress.setProgressTintList(ColorStateList.valueOf(Color.BLACK));
+                mProgress.setSecondaryProgressTintList(ColorStateList.valueOf(Color.BLACK));
+            } else {
+                mProgress.getProgressDrawable().setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_IN);
+            }
+
         }
     }
 

@@ -16,6 +16,8 @@
     <string name="newtestament">New Testament</string>
     <string name="choice">Your Choice</string>
 
+    <string name="title_hint">Please set Title</string>
+
     <!-- Bible !-->
     <string name="bible_gen">Genesis</string>
     <string name="bible_ex">Exodus</string>
