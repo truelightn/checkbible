@@ -47,20 +47,22 @@
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+
         <TextView
             android:text="During"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
             android:id="@+id/during" />
 
         <GridView
-            android:id="@+id/gridview2"
+            android:id="@+id/abb_gridview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:columnWidth="90dp"
-            android:numColumns="auto_fit"
-            android:verticalSpacing="10dp"
-            android:horizontalSpacing="10dp"
+            android:paddingLeft="3dp"
+            android:numColumns="6"
+            android:verticalSpacing="1dp"
+            android:horizontalSpacing="1dp"
             android:stretchMode="columnWidth"
             android:gravity="center"
             android:layout_weight="1">

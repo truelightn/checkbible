@@ -116,5 +116,25 @@ public class PlanManager {
         }
         PlanDBUtil.updateValue(col, chapterStr);
     }
+    
+    public static ArrayList<String> getCompleteChapterAbbreviation() {
+        String[] bible = CheckBibleApp.getContext().getResources()
+                .getStringArray(R.array.abbreviation_bible);
+        ArrayList<String> completeList = new ArrayList<>();
+        for (Integer i : getCompleteChapterPosition()) {
+            completeList.add(bible[i]);
+        }
+        return completeList;
+    }
+
+    public static ArrayList<String> getPlanedChapterAbbreviation() {
+        String[] bible = CheckBibleApp.getContext().getResources()
+                .getStringArray(R.array.abbreviation_bible);
+        ArrayList<String> completeList = new ArrayList<>();
+        for (Integer i : getPlanedChapterPosition()) {
+            completeList.add(bible[i]);
+        }
+        return completeList;
+    }
 
 }

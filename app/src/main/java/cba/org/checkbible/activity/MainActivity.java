@@ -10,7 +10,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -41,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
 
     private ProgressBar mProgress;
     private LinearLayout mLayout;
+
+    private GridView mAbbGridView;
 
     private int mTodayReadCount;
     private int mChapterReadCount;
@@ -76,8 +81,9 @@ public class MainActivity extends AppCompatActivity {
         mTotalTextView = V.get(this, R.id.total);
 
         mProgress = V.get(this, R.id.progressBar);
-
         mDuringTextView = V.get(this, R.id.during);
+
+        mAbbGridView = V.get(this, R.id.abb_gridview);
 
         mMinusBtn.setOnClickListener(onClickListener);
         mPlusBtn.setOnClickListener(onClickListener);
@@ -144,6 +150,9 @@ public class MainActivity extends AppCompatActivity {
         mDuringTextView.setText(duringMsg);
 
         // set chaptergrid
+        AbbChapterAdapter addAdapter = new AbbChapterAdapter();
+        mAbbGridView.setAdapter(addAdapter);
+        mAbbGridView.setNumColumns(7);
     }
 
     @Override
@@ -310,5 +319,50 @@ public class MainActivity extends AppCompatActivity {
         PlanDBUtil.updateValue(DB.COL_READINGPLAN_CHAPTER_READ_COUNT, mChapterReadCount);
         PlanDBUtil.updateValue(DB.COL_READINGPLAN_TODAY_READ_COUNT, mTodayReadCount);
         PlanDBUtil.updateValue(DB.COL_READINGPLAN_TOTAL_READ_COUNT, mTotalReadCount);
+    }
+
+    public class AbbChapterAdapter extends BaseAdapter {
+        private ArrayList<String> mTotalList = new ArrayList<>();
+        private ArrayList<String> mPlanedList = new ArrayList<>();
+        private ArrayList<String> mCompleteList = new ArrayList<>();
+
+        public AbbChapterAdapter() {
+            mCompleteList = PlanManager.getCompleteChapterAbbreviation();
+            mPlanedList = PlanManager.getPlanedChapterAbbreviation();
+            mTotalList.addAll(mCompleteList);
+            mTotalList.addAll(mPlanedList);
+        }
+
+        @Override
+        public int getCount() {
+            return mTotalList.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return mTotalList.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (convertView == null) {
+                convertView = getLayoutInflater().inflate(R.layout.grid_abb_chapter_item, parent, false);
+            }
+            mCompleteList = PlanManager.getCompleteChapterAbbreviation();
+            String addChapterString = (String)getItem(position);
+            TextView textTextView = V.get(convertView, R.id.textView2);
+
+            if (mCompleteList.contains(addChapterString)) {
+                textTextView.setTextColor(Color.RED);
+            }
+            textTextView.setText(addChapterString);
+
+            return convertView;
+        }
     }
 }
