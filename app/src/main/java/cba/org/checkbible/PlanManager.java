@@ -53,9 +53,14 @@ public class PlanManager {
     }
 
     public static int calculateTodayCount() {
+        int retValue = 0;
         int totalCount = PlanDBUtil.getPlanInt(DB.COL_READINGPLAN_TOTAL_COUNT);
         long during = getDuringDay();
-        return (int)(totalCount / during);
+        retValue = (int)(totalCount / during);
+        if (retValue <= 0) {
+            return 1;
+        }
+        return retValue;
     }
 
     public static long getDuringDay() {
@@ -66,7 +71,7 @@ public class PlanManager {
         return (endCalendar.getTimeInMillis() - todayCalendar.getTimeInMillis()) / oneDay + 2;
     }
 
-    public static long getTotalDuringDay(){
+    public static long getTotalDuringDay() {
         long oneDay = 24 * 60 * 60 * 1000;
         GregorianCalendar endCalendar = getEndDate();
         GregorianCalendar startCalendar = getStartDate();
@@ -86,6 +91,7 @@ public class PlanManager {
         }
         return calendar;
     }
+
     public static GregorianCalendar getStartDate() {
         String endDateString = PlanDBUtil.getPlanString(DB.COL_READINGPLAN_START_DATE);
         GregorianCalendar calendar = new GregorianCalendar();
@@ -107,16 +113,13 @@ public class PlanManager {
     }
 
     public static void setChapter(String col, ArrayList<Integer> chapter) {
-        if (chapter.isEmpty()) {
-            return;
-        }
         String chapterStr = "";
         for (int i : chapter) {
             chapterStr = chapterStr + String.valueOf(i) + "/";
         }
         PlanDBUtil.updateValue(col, chapterStr);
     }
-    
+
     public static ArrayList<String> getCompleteChapterAbbreviation() {
         String[] bible = CheckBibleApp.getContext().getResources()
                 .getStringArray(R.array.abbreviation_bible);

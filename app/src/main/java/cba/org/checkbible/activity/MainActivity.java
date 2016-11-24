@@ -2,6 +2,7 @@ package cba.org.checkbible.activity;
 
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
@@ -72,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
 
         mMinusBtn = V.get(this, R.id.minus_btn);
         mPlusBtn = V.get(this, R.id.plus_btn);
-        mCustomBtn = V.get(this, R.id.custom_btn);
+        mCustomBtn = V.get(this, R.id.today_btn);
 
         mTitleTextView = V.get(this, R.id.title);
         mChaterTextView = V.get(this, R.id.chapter);
@@ -200,8 +201,9 @@ public class MainActivity extends AppCompatActivity {
                 increaseCount(1);
                 refreshView();
                 break;
-            case R.id.custom_btn:
-//                increaseCount(Integer.valueOf(SettingDBUtil.getSettingValue(Setting.CUSTOM_COUNT)));
+            case R.id.today_btn:
+                // increaseCount(Integer.valueOf(SettingDBUtil.getSettingValue(Setting.CUSTOM_COUNT)));
+                increaseCount(PlanManager.calculateTodayCount());
                 refreshView();
                 break;
             default:
@@ -218,9 +220,7 @@ public class MainActivity extends AppCompatActivity {
 
             case R.id.plus_btn:
                 break;
-            case R.id.custom_btn:
-                // TODO: 여기다가 custom_count setting하는거 넣어야함
-                SettingDBUtil.setSettingValue(Setting.CUSTOM_COUNT,"5");
+            case R.id.today_btn:
                 break;
             default:
                 break;
@@ -242,6 +242,7 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 mProgress.getProgressDrawable().setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
             }
+//            mProgress.setProgressDrawable(getResources().getDrawable(R.drawable.progressbar));
         } else if (percent > (totalPercent + 5)) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 mProgress.setProgressTintList(ColorStateList.valueOf(Color.BLUE));
@@ -266,24 +267,40 @@ public class MainActivity extends AppCompatActivity {
                 + "장";
     }
 
-    public void increaseCount(int i) {
+    public void increaseCount(int increaseCount) {
         if (mTotalReadCount >= mTotalCount) {
             Toast.makeText(this, "모두 읽었습니다.", Toast.LENGTH_SHORT).show();
             return;
         }
-        if (mTotalReadCount == mTotalCount - 1) {
+
+        if (mTotalReadCount >= mTotalCount - increaseCount) {
             // 이순간 다읽음 처리해야함
-            mTotalReadCount = mTotalReadCount + 1;
-            mTodayReadCount = mTodayReadCount + 1;
+            // today
+            mTodayReadCount = PlanManager.calculateTodayCount();
+            mTotalReadCount = mTotalCount;
+            mChapterReadCount = mBibleCount[PlanManager.getCurrentChapterPosition()];
+            ArrayList<Integer> plan = PlanManager.getPlanedChapterPosition();
+            ArrayList<Integer> complete = PlanManager.getCompleteChapterPosition();
+            complete.add(plan.get(0));
+            plan.remove(0);
+            PlanManager.setChapter(DB.COL_READINGPLAN_COMPLETED_CHAPTER, complete);
+            PlanManager.setChapter(DB.COL_READINGPLAN_PLANED_CHAPTER, plan);
+
+            PlanDBUtil.updateValue(DB.COL_READINGPLAN_CHAPTER_READ_COUNT, mChapterReadCount);
             PlanDBUtil.updateValue(DB.COL_READINGPLAN_TODAY_READ_COUNT, mTodayReadCount);
             PlanDBUtil.updateValue(DB.COL_READINGPLAN_TOTAL_READ_COUNT, mTotalReadCount);
+            PlanDBUtil.updateValue(DB.COL_READINGPLAN_COMPLETE, 1);
             return;
         }
-        mTodayReadCount = mTodayReadCount + i;
-        mTotalReadCount = mTotalReadCount + i;
-        mChapterReadCount = mChapterReadCount + i;
-        if (mChapterReadCount > mBibleCount[PlanManager.getCurrentChapterPosition()]) {
-            mChapterReadCount = 1;
+
+        mTodayReadCount = mTodayReadCount + increaseCount;
+        mTotalReadCount = mTotalReadCount + increaseCount;
+        mChapterReadCount = mChapterReadCount + increaseCount;
+
+        //1장씩 있는 chapter들때문에 while을 사용
+        while (mChapterReadCount > mBibleCount[PlanManager.getCurrentChapterPosition()]) {
+            mChapterReadCount = mChapterReadCount
+                    - mBibleCount[PlanManager.getCurrentChapterPosition()];
             ArrayList<Integer> plan = PlanManager.getPlanedChapterPosition();
             ArrayList<Integer> complete = PlanManager.getCompleteChapterPosition();
             complete.add(plan.get(0));
@@ -291,6 +308,7 @@ public class MainActivity extends AppCompatActivity {
             PlanManager.setChapter(DB.COL_READINGPLAN_COMPLETED_CHAPTER, complete);
             PlanManager.setChapter(DB.COL_READINGPLAN_PLANED_CHAPTER, plan);
         }
+
         PlanDBUtil.updateValue(DB.COL_READINGPLAN_CHAPTER_READ_COUNT, mChapterReadCount);
         PlanDBUtil.updateValue(DB.COL_READINGPLAN_TODAY_READ_COUNT, mTodayReadCount);
         PlanDBUtil.updateValue(DB.COL_READINGPLAN_TOTAL_READ_COUNT, mTotalReadCount);
@@ -351,14 +369,17 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             if (convertView == null) {
-                convertView = getLayoutInflater().inflate(R.layout.grid_abb_chapter_item, parent, false);
+                convertView = getLayoutInflater().inflate(R.layout.grid_abb_chapter_item, parent,
+                        false);
             }
             mCompleteList = PlanManager.getCompleteChapterAbbreviation();
             String addChapterString = (String)getItem(position);
             TextView textTextView = V.get(convertView, R.id.textView2);
 
             if (mCompleteList.contains(addChapterString)) {
-                textTextView.setTextColor(Color.RED);
+                textTextView.setBackgroundColor(Color.GRAY);
+                textTextView.setPaintFlags(textTextView.getPaintFlags()
+                        | Paint.STRIKE_THRU_TEXT_FLAG);
             }
             textTextView.setText(addChapterString);
 

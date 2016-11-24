@@ -49,26 +49,32 @@
             android:layout_height="wrap_content" />
 
         <TextView
-            android:text="During"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:id="@+id/during" />
-
-        <GridView
-            android:id="@+id/abb_gridview"
+            android:id="@+id/during"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="#ffeeeeee"
-            android:gravity="center"
-            android:horizontalSpacing="1dp"
-            android:numColumns="6"
+            android:gravity="center_horizontal"
+            android:paddingTop="30dp"
+            android:text="During" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:paddingLeft="30dp"
-            android:paddingRight="30dp"
-            android:paddingTop="3dp"
-            android:stretchMode="columnWidth"
-            android:verticalSpacing="1dp"></GridView>
+            android:paddingRight="30dp">
+
+            <GridView
+                android:id="@+id/abb_gridview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="#ffeeeeee"
+                android:gravity="center"
+                android:horizontalSpacing="1dp"
+                android:numColumns="6"
+                android:padding="3dp"
+                android:stretchMode="columnWidth"
+                android:verticalSpacing="1dp"></GridView>
+        </LinearLayout>
 
 
     </LinearLayout>
@@ -94,11 +100,11 @@
             android:text="+"
             android:layout_weight="1"/>
         <Button
-            android:id="@+id/custom_btn"
+            android:id="@+id/today_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:text="custom"
+            android:text="today"
             android:layout_weight="1"/>
     </LinearLayout>
 
