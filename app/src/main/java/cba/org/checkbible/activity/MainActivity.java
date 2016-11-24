@@ -201,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
                 refreshView();
                 break;
             case R.id.custom_btn:
-                increaseCount(Integer.valueOf(SettingDBUtil.getSettingValue(Setting.CUSTOM_COUNT)));
+//                increaseCount(Integer.valueOf(SettingDBUtil.getSettingValue(Setting.CUSTOM_COUNT)));
                 refreshView();
                 break;
             default:

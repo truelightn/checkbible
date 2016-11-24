@@ -57,16 +57,18 @@
 
         <GridView
             android:id="@+id/abb_gridview"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="3dp"
-            android:numColumns="6"
-            android:verticalSpacing="1dp"
-            android:horizontalSpacing="1dp"
-            android:stretchMode="columnWidth"
+            android:layout_weight="1"
+            android:background="#ffeeeeee"
             android:gravity="center"
-            android:layout_weight="1">
-        </GridView>
+            android:horizontalSpacing="1dp"
+            android:numColumns="6"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:paddingTop="3dp"
+            android:stretchMode="columnWidth"
+            android:verticalSpacing="1dp"></GridView>
 
 
     </LinearLayout>
