@@ -145,9 +145,11 @@ public class LogActivity extends AppCompatActivity {
 
             // Data Set(listViewItemList)에서 position에 위치한 데이터 참조 획득
             PlanItem listViewItem = listViewItemList.get(position);
-            ColorStateList oldColors =  duringTextView.getTextColors();
+            ColorStateList oldColors = duringTextView.getTextColors();
             if (listViewItem.getActive() == 1) {
                 titleTextView.setTextColor(Color.RED);
+            } else if (listViewItem.isComplete()) {
+                titleTextView.setTextColor(Color.BLUE);
             } else {
                 titleTextView.setTextColor(oldColors);
             }

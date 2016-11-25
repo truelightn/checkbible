@@ -60,12 +60,12 @@ public class MainActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         mAbbreviationBible = getResources().getStringArray(R.array.abbreviation_bible);
         mBibleCount = getResources().getIntArray(R.array.bible_count);
-
         initialView();
-
+        if(PlanDBUtil.hasNoPlanedData()){
+            PlanActivity.start(this);
+        }
     }
 
     public void initialView() {
@@ -132,7 +132,11 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // setChapter ex:신5장/34장
-        mChaterTextView.setText(getChapterString());
+        if(PlanManager.isComplete()){
+            mChaterTextView.setText("계획된 성경을 모두 읽었습니다");
+        }else{
+            mChaterTextView.setText(getChapterString());
+        }
 
         // setToday ex: 3장/10장
         String todayMsg = "Today " + mTodayReadCount + "장/" + PlanManager.calculateTodayCount()
@@ -172,17 +176,17 @@ public class MainActivity extends AppCompatActivity {
 
         // noinspection SimplifiableIfStatement
         switch (id) {
-        case R.id.menu_reading_plan:
-            PlanActivity.start(this);
-            break;
-        case R.id.menu_settings:
+            case R.id.menu_reading_plan:
+                PlanActivity.start(this);
+                break;
+            case R.id.menu_settings:
 
-            break;
-        case R.id.menu_logs:
-            LogActivity.start(this);
-            break;
-        default:
-            break;
+                break;
+            case R.id.menu_logs:
+                LogActivity.start(this);
+                break;
+            default:
+                break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -191,23 +195,27 @@ public class MainActivity extends AppCompatActivity {
     private View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            if (PlanManager.isComplete()) {
+                Toast.makeText(MainActivity.this, "모두 읽었습니다.", Toast.LENGTH_SHORT).show();
+                return;
+            }
             switch (v.getId()) {
-            case R.id.minus_btn:
-                decreaseCount(1);
-                refreshView();
-                break;
+                case R.id.minus_btn:
+                    decreaseCount(1);
+                    refreshView();
+                    break;
 
-            case R.id.plus_btn:
-                increaseCount(1);
-                refreshView();
-                break;
-            case R.id.today_btn:
-                // increaseCount(Integer.valueOf(SettingDBUtil.getSettingValue(Setting.CUSTOM_COUNT)));
-                increaseCount(PlanManager.calculateTodayCount());
-                refreshView();
-                break;
-            default:
-                break;
+                case R.id.plus_btn:
+                    increaseCount(1);
+                    refreshView();
+                    break;
+                case R.id.today_btn:
+                    // increaseCount(Integer.valueOf(SettingDBUtil.getSettingValue(Setting.CUSTOM_COUNT)));
+                    increaseCount(PlanManager.calculateTodayCount());
+                    refreshView();
+                    break;
+                default:
+                    break;
             }
         }
     };
@@ -215,24 +223,23 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public boolean onLongClick(View v) {
             switch (v.getId()) {
-            case R.id.minus_btn:
-                break;
-
-            case R.id.plus_btn:
-                break;
-            case R.id.today_btn:
-                break;
-            default:
-                break;
+                case R.id.minus_btn:
+                    break;
+                case R.id.plus_btn:
+                    break;
+                case R.id.today_btn:
+                    break;
+                default:
+                    break;
             }
             return false;
         }
     };
 
     public void setProgress() {
-        int percent = (int)(((double)mTotalReadCount / (double)mTotalCount) * 100.0);
-        int totalPercent = 100 - (int)((double)PlanManager.getDuringDay()
-                / (double)PlanManager.getTotalDuringDay() * 100.0);
+        int percent = (int) (((double) mTotalReadCount / (double) mTotalCount) * 100.0);
+        int totalPercent = 100 - (int) ((double) PlanManager.getDuringDay()
+                / (double) PlanManager.getTotalDuringDay() * 100.0);
         mProgress.setProgress(percent);
         mProgress.setSecondaryProgress(totalPercent);
         if (percent < (totalPercent - 5)) {
@@ -268,14 +275,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void increaseCount(int increaseCount) {
-        if (mTotalReadCount >= mTotalCount) {
-            Toast.makeText(this, "모두 읽었습니다.", Toast.LENGTH_SHORT).show();
-            return;
-        }
 
         if (mTotalReadCount >= mTotalCount - increaseCount) {
             // 이순간 다읽음 처리해야함
-            // today
             mTodayReadCount = PlanManager.calculateTodayCount();
             mTotalReadCount = mTotalCount;
             mChapterReadCount = mBibleCount[PlanManager.getCurrentChapterPosition()];

@@ -11,7 +11,7 @@ import cba.org.checkbible.db.SettingDBUtil;
  */
 
 public class CheckBibleApp extends Application {
-    public static Context mContext;
+    private static Context mContext;
 
     @Override
     public void onCreate() {

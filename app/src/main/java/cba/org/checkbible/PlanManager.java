@@ -140,4 +140,8 @@ public class PlanManager {
         return completeList;
     }
 
+    public static boolean isComplete() {
+        return (PlanDBUtil.getPlanInt(DB.COL_READINGPLAN_COMPLETE) == 1 ? true : false);
+    }
+
 }
