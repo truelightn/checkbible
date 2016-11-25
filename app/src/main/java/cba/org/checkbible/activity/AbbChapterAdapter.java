@@ -59,7 +59,7 @@ public class AbbChapterAdapter extends BaseAdapter {
                     Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.grid_abb_chapter_item, parent, false);
         }
-        mCompleteList = PlanManager.getCompleteChapterAbbreviation(mId);
+
         String addChapterString = (String) getItem(position);
         TextView textTextView = V.get(convertView, R.id.textView2);
 
@@ -67,6 +67,9 @@ public class AbbChapterAdapter extends BaseAdapter {
             textTextView.setBackgroundColor(Color.GRAY);
             textTextView.setTextColor(Color.WHITE);
             textTextView.setPaintFlags(textTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        }
+        if(mPlanedList.get(0).equals(addChapterString)){
+            textTextView.setTextColor(Color.BLUE);
         }
         textTextView.setText(addChapterString);
 
