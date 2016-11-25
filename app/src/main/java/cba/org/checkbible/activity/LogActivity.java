@@ -6,7 +6,6 @@ import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
@@ -114,17 +113,18 @@ public class LogActivity extends AppCompatActivity {
 
     public class LogListViewAdapter extends BaseAdapter {
         // Adapter에 추가된 데이터를 저장하기 위한 ArrayList
-        private ArrayList<PlanItem> listViewItemList = new ArrayList<>();
+        private ArrayList<PlanItem> mViewItemList = new ArrayList<>();
+        private GridView mAbbGridView;
 
         // ListViewAdapter의 생성자
         public LogListViewAdapter(ArrayList<PlanItem> listViewItemList) {
-            this.listViewItemList = listViewItemList;
+            this.mViewItemList = listViewItemList;
         }
 
         // Adapter에 사용되는 데이터의 개수를 리턴. : 필수 구현
         @Override
         public int getCount() {
-            return listViewItemList.size();
+            return mViewItemList.size();
         }
 
         // position에 위치한 데이터를 화면에 출력하는데 사용될 View를 리턴. : 필수 구현
@@ -137,14 +137,21 @@ public class LogActivity extends AppCompatActivity {
             if (convertView == null) {
                 convertView = getLayoutInflater().inflate(R.layout.list_log_item, parent, false);
             }
+            PlanItem listViewItem = mViewItemList.get(position);
 
             // 화면에 표시될 View(Layout이 inflate된)으로부터 위젯에 대한 참조 획득
             TextView titleTextView = V.get(convertView, R.id.log_title);
             TextView duringTextView = V.get(convertView, R.id.log_during);
             TextView totalTextView = V.get(convertView, R.id.log_total);
+            TextView chapterTextView = V.get(convertView, R.id.log_chapter);
+
+            // mAbbGridView = V.get(convertView, R.id.abb_log_gridview);
+            // AbbChapterAdapter addAdapter = new
+            // AdbbChapterAdapter(LogActivity.this,listViewItem.getId());
+            // mAbbGridView.setAdapter(addAdapter);
+//            mAbbGridView.setNumColumns(15);
 
             // Data Set(listViewItemList)에서 position에 위치한 데이터 참조 획득
-            PlanItem listViewItem = listViewItemList.get(position);
             ColorStateList oldColors = duringTextView.getTextColors();
             if (listViewItem.getActive() == 1) {
                 titleTextView.setTextColor(Color.RED);
@@ -156,7 +163,13 @@ public class LogActivity extends AppCompatActivity {
             // 아이템 내 각 위젯에 데이터 반영
             titleTextView.setText(listViewItem.getTitle());
             duringTextView.setText(listViewItem.getStartTime() + " ~ " + listViewItem.getEndTime());
-            totalTextView.setText(String.valueOf(listViewItem.getTotalCount()));
+            String totalMsg = "Total " + listViewItem.getTotalReadCount() + "장/"
+                    + listViewItem.getTotalCount() + "장";
+            totalTextView.setText(totalMsg);
+            ArrayList<String> totalList = new ArrayList<>();
+            totalList.addAll(PlanManager.getCompleteChapterAbbreviation(listViewItem.getId()));
+            totalList.addAll(PlanManager.getPlanedChapterAbbreviation(listViewItem.getId()));
+            chapterTextView.setText(totalList.toString());
 
             return convertView;
         }
@@ -170,21 +183,21 @@ public class LogActivity extends AppCompatActivity {
         // 지정한 위치(position)에 있는 데이터 리턴 : 필수 구현
         @Override
         public Object getItem(int position) {
-            return listViewItemList.get(position);
+            return mViewItemList.get(position);
         }
 
         public void remove(int position) {
-            listViewItemList.remove(position);
+            mViewItemList.remove(position);
         }
 
 
         public void changeActive(int position) {
-            for (PlanItem planItem : listViewItemList) {
+            for (PlanItem planItem : mViewItemList) {
                 if (planItem.active == 1) {
                     planItem.active = 0;
                 }
             }
-            listViewItemList.get(position).setActive(1);
+            mViewItemList.get(position).setActive(1);
         }
     }
 }

@@ -155,9 +155,16 @@ public class MainActivity extends AppCompatActivity {
         mDuringTextView.setText(duringMsg);
 
         // set chaptergrid
-        AbbChapterAdapter addAdapter = new AbbChapterAdapter();
+        ArrayList<Integer> totalList = new ArrayList<>();
+        totalList.addAll( PlanManager.getCompleteChapterPosition(0));
+        totalList.addAll( PlanManager.getPlanedChapterPosition(0));
+        AbbChapterAdapter addAdapter = new AbbChapterAdapter(this,0);
         mAbbGridView.setAdapter(addAdapter);
-        mAbbGridView.setNumColumns(7);
+        if (totalList.size() > 7) {
+            mAbbGridView.setNumColumns(7);
+        }else{
+            mAbbGridView.setNumColumns(totalList.size());
+        }
     }
 
     @Override
@@ -281,8 +288,8 @@ public class MainActivity extends AppCompatActivity {
             mTodayReadCount = PlanManager.calculateTodayCount();
             mTotalReadCount = mTotalCount;
             mChapterReadCount = mBibleCount[PlanManager.getCurrentChapterPosition()];
-            ArrayList<Integer> plan = PlanManager.getPlanedChapterPosition();
-            ArrayList<Integer> complete = PlanManager.getCompleteChapterPosition();
+            ArrayList<Integer> plan = PlanManager.getPlanedChapterPosition(0);
+            ArrayList<Integer> complete = PlanManager.getCompleteChapterPosition(0);
             complete.add(plan.get(0));
             plan.remove(0);
             PlanManager.setChapter(DB.COL_READINGPLAN_COMPLETED_CHAPTER, complete);
@@ -303,8 +310,8 @@ public class MainActivity extends AppCompatActivity {
         while (mChapterReadCount > mBibleCount[PlanManager.getCurrentChapterPosition()]) {
             mChapterReadCount = mChapterReadCount
                     - mBibleCount[PlanManager.getCurrentChapterPosition()];
-            ArrayList<Integer> plan = PlanManager.getPlanedChapterPosition();
-            ArrayList<Integer> complete = PlanManager.getCompleteChapterPosition();
+            ArrayList<Integer> plan = PlanManager.getPlanedChapterPosition(0);
+            ArrayList<Integer> complete = PlanManager.getCompleteChapterPosition(0);
             complete.add(plan.get(0));
             plan.remove(0);
             PlanManager.setChapter(DB.COL_READINGPLAN_COMPLETED_CHAPTER, complete);
@@ -327,8 +334,8 @@ public class MainActivity extends AppCompatActivity {
         mTotalReadCount = mTotalReadCount - i;
 
         if (mChapterReadCount <= 0) {
-            ArrayList<Integer> plan = PlanManager.getPlanedChapterPosition();
-            ArrayList<Integer> complete = PlanManager.getCompleteChapterPosition();
+            ArrayList<Integer> plan = PlanManager.getPlanedChapterPosition(0);
+            ArrayList<Integer> complete = PlanManager.getCompleteChapterPosition(0);
             plan.add(0, complete.get(complete.size() - 1));
             complete.remove(complete.size() - 1);
             PlanManager.setChapter(DB.COL_READINGPLAN_COMPLETED_CHAPTER, complete);
@@ -341,51 +348,4 @@ public class MainActivity extends AppCompatActivity {
         PlanDBUtil.updateValue(DB.COL_READINGPLAN_TOTAL_READ_COUNT, mTotalReadCount);
     }
 
-    public class AbbChapterAdapter extends BaseAdapter {
-        private ArrayList<String> mTotalList = new ArrayList<>();
-        private ArrayList<String> mPlanedList = new ArrayList<>();
-        private ArrayList<String> mCompleteList = new ArrayList<>();
-
-        public AbbChapterAdapter() {
-            mCompleteList = PlanManager.getCompleteChapterAbbreviation();
-            mPlanedList = PlanManager.getPlanedChapterAbbreviation();
-            mTotalList.addAll(mCompleteList);
-            mTotalList.addAll(mPlanedList);
-        }
-
-        @Override
-        public int getCount() {
-            return mTotalList.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return mTotalList.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            if (convertView == null) {
-                convertView = getLayoutInflater().inflate(R.layout.grid_abb_chapter_item, parent,
-                        false);
-            }
-            mCompleteList = PlanManager.getCompleteChapterAbbreviation();
-            String addChapterString = (String)getItem(position);
-            TextView textTextView = V.get(convertView, R.id.textView2);
-
-            if (mCompleteList.contains(addChapterString)) {
-                textTextView.setBackgroundColor(Color.GRAY);
-                textTextView.setPaintFlags(textTextView.getPaintFlags()
-                        | Paint.STRIKE_THRU_TEXT_FLAG);
-            }
-            textTextView.setText(addChapterString);
-
-            return convertView;
-        }
-    }
 }

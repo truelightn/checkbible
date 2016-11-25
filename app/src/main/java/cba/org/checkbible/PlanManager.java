@@ -18,9 +18,14 @@ import cba.org.checkbible.db.PlanDBUtil;
 
 public class PlanManager {
 
-    public static ArrayList<Integer> getCompleteChapterPosition() {
+    public static ArrayList<Integer> getCompleteChapterPosition(int id) {
         ArrayList<Integer> chapterList = new ArrayList<>();
-        String chapter = PlanDBUtil.getPlanString(DB.COL_READINGPLAN_COMPLETED_CHAPTER);
+        String chapter;
+        if (id == 0) {
+            chapter = PlanDBUtil.getPlanString(DB.COL_READINGPLAN_COMPLETED_CHAPTER);
+        } else {
+            chapter = PlanDBUtil.getPlanStringByID(DB.COL_READINGPLAN_COMPLETED_CHAPTER, id);
+        }
         if (TextUtils.isEmpty(chapter)) {
             return chapterList;
         }
@@ -31,9 +36,14 @@ public class PlanManager {
         return chapterList;
     }
 
-    public static ArrayList<Integer> getPlanedChapterPosition() {
+    public static ArrayList<Integer> getPlanedChapterPosition(int id) {
         ArrayList<Integer> chapterList = new ArrayList<>();
-        String chapter = PlanDBUtil.getPlanString(DB.COL_READINGPLAN_PLANED_CHAPTER);
+        String chapter;
+        if (id == 0) {
+            chapter = PlanDBUtil.getPlanString(DB.COL_READINGPLAN_PLANED_CHAPTER);
+        } else {
+            chapter = PlanDBUtil.getPlanStringByID(DB.COL_READINGPLAN_PLANED_CHAPTER, id);
+        }
         if (TextUtils.isEmpty(chapter)) {
             return chapterList;
         }
@@ -45,7 +55,7 @@ public class PlanManager {
     }
 
     public static int getCurrentChapterPosition() {
-        ArrayList<Integer> list = getPlanedChapterPosition();
+        ArrayList<Integer> list = getPlanedChapterPosition(0);
         if (list.isEmpty()) {
             return 0;
         }
@@ -120,21 +130,21 @@ public class PlanManager {
         PlanDBUtil.updateValue(col, chapterStr);
     }
 
-    public static ArrayList<String> getCompleteChapterAbbreviation() {
+    public static ArrayList<String> getCompleteChapterAbbreviation(int id) {
         String[] bible = CheckBibleApp.getContext().getResources()
                 .getStringArray(R.array.abbreviation_bible);
         ArrayList<String> completeList = new ArrayList<>();
-        for (Integer i : getCompleteChapterPosition()) {
+        for (Integer i : getCompleteChapterPosition(id)) {
             completeList.add(bible[i]);
         }
         return completeList;
     }
 
-    public static ArrayList<String> getPlanedChapterAbbreviation() {
+    public static ArrayList<String> getPlanedChapterAbbreviation(int id) {
         String[] bible = CheckBibleApp.getContext().getResources()
                 .getStringArray(R.array.abbreviation_bible);
         ArrayList<String> completeList = new ArrayList<>();
-        for (Integer i : getPlanedChapterPosition()) {
+        for (Integer i : getPlanedChapterPosition(id)) {
             completeList.add(bible[i]);
         }
         return completeList;

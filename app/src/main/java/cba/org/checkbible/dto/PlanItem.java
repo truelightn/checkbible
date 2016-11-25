@@ -123,7 +123,7 @@ public class PlanItem {
         if (tempInt > 0) {
             return tempInt;
         }
-        return -1;
+        return 0;
     }
 
 }

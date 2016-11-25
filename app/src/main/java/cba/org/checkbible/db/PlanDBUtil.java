@@ -70,6 +70,29 @@ public class PlanDBUtil {
         }
         return retValue;
     }
+    public static String getPlanStringByID(String col,int id) {
+        String retValue = "";
+        Cursor c = null;
+        String selection =  DB.COL_READINGPLAN_ID + " = \'" + id + "\'";
+        try {
+            c = DBUtil.getInstance().query(DB.TABLE_READINGPLAN, new String[] { col }, selection);
+            if (c != null) {
+                if (c.moveToFirst()) {
+                    String value = c.getString(c.getColumnIndexOrThrow(col));
+                    if (!TextUtils.isEmpty(value)) {
+                        retValue = value;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (c != null) {
+                c.close();
+            }
+        }
+        return retValue;
+    }
 
     public static int getPlanInt(String col) {
         int retValue = -1;

@@ -11,8 +11,9 @@
         android:id="@+id/layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:paddingTop="10dp"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/title"
@@ -26,6 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
+            android:paddingBottom="10dp"
             android:text="chapter" />
 
         <TextView
@@ -46,14 +48,21 @@
             android:id="@+id/progressBar"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp" />
+
+        <!--<View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray" />!-->
 
         <TextView
             android:id="@+id/during"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:paddingTop="30dp"
+            android:paddingTop="20dp"
             android:text="During" />
 
         <LinearLayout
@@ -64,13 +73,12 @@
 
             <GridView
                 android:id="@+id/abb_gridview"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:background="#ffeeeeee"
                 android:gravity="center"
                 android:horizontalSpacing="1dp"
-                android:numColumns="6"
+                android:numColumns="auto_fit"
                 android:padding="3dp"
                 android:stretchMode="columnWidth"
                 android:verticalSpacing="1dp"></GridView>
@@ -82,33 +90,37 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-       >
+        android:orientation="horizontal">
 
         <Button
-            style="@style/Widget.AppCompat.Button.Borderless"
             android:id="@+id/minus_btn"
+            style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="-"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:paddingBottom="10dp"
+            android:text="-" />
 
         <Button
-            style="@style/Widget.AppCompat.Button.Borderless"
             android:id="@+id/plus_btn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:text="+"
-            android:layout_weight="1"/>
-        <Button
             style="@style/Widget.AppCompat.Button.Borderless"
-            android:id="@+id/today_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:text="today"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:paddingBottom="10dp"
+            android:text="+" />
+
+        <Button
+            android:id="@+id/today_btn"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_weight="1"
+            android:paddingBottom="10dp"
+            android:text="today" />
+
     </LinearLayout>
 
 
