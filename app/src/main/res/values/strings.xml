@@ -14,7 +14,7 @@
 
     <string name="oldtestament">Old Testament</string>
     <string name="newtestament">New Testament</string>
-    <string name="choice">Your Choice</string>
+    <string name="choice">section</string>
 
     <string name="title_hint">Please set Title</string>
 

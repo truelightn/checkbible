@@ -68,7 +68,8 @@ public class AbbChapterAdapter extends BaseAdapter {
             textTextView.setTextColor(Color.WHITE);
             textTextView.setPaintFlags(textTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         }
-        if(mPlanedList.get(0).equals(addChapterString)){
+
+        if (!mPlanedList.isEmpty() && mPlanedList.get(0).equals(addChapterString)) {
             textTextView.setTextColor(Color.BLUE);
         }
         textTextView.setText(addChapterString);

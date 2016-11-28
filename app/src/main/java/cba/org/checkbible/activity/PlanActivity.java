@@ -4,7 +4,6 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.SparseBooleanArray;
@@ -54,10 +53,11 @@ public class PlanActivity extends AppCompatActivity {
     PlanItem mPlanItem;
 
     int[] mBibleCount;
+    int mStartChapter = 0;
+    int mEndChapter = 0;
 
     int mStartY, mStartM, mStartD;
     int mEndY, mEndM, mEndD;
-    int mPlanedCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,8 +77,8 @@ public class PlanActivity extends AppCompatActivity {
         mEndBtn.setOnClickListener(onClickListener);
         mConfrimBtn.setOnClickListener(onClickListener);
 
-        mBibleGridLayout = V.get(this, R.id.bible_grid);
-        mBibleGridLayout.setVisibility(View.GONE);
+//        mBibleGridLayout = V.get(this, R.id.bible_grid);
+//        mBibleGridLayout.setVisibility(View.GONE);
 
         mOldTestamentChk = V.get(this, R.id.OldTestamentChk);
         mNewTestamentChk = V.get(this, R.id.NewTestamentChk);
@@ -95,7 +95,7 @@ public class PlanActivity extends AppCompatActivity {
         mStartM = calendar.get(Calendar.MONTH);
         mStartD = calendar.get(Calendar.DAY_OF_MONTH);
 
-        calendar.add(Calendar.MONTH, 3);
+        calendar.add(Calendar.MONTH, 2);
         mEndY = calendar.get(Calendar.YEAR);
         mEndM = calendar.get(Calendar.MONTH);
         mEndD = calendar.get(Calendar.DAY_OF_MONTH);
@@ -117,19 +117,22 @@ public class PlanActivity extends AppCompatActivity {
             mEndBtn.setText(endT);
         }
 
+
         mBibleGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                if (mBibleGridView.isItemChecked(position)) {
-                    int i = mBibleCount[position];
-                    mPlanedCount = mPlanedCount + mBibleCount[position];
-                    mConfrimBtn.setText("총 " + mPlanedCount + "장 만들기");
-                    //
-                } else {
-                    mPlanedCount = mPlanedCount - mBibleCount[position];
-                    mConfrimBtn.setText("총 " + mPlanedCount + "장 만들기");
-                    // Toast.makeText(PlanActivity.this, "" + mPlanedCount,
-                    // Toast.LENGTH_SHORT).show();
+                if (mMyChk.isChecked()) {
+                    if (mBibleGridView.isItemChecked(position)) {
+                        if (mStartChapter == 0) {
+                            mStartChapter = position;
+                        } else if (mEndChapter == 0) {
+                            mEndChapter = position;
+                            for (int i = mStartChapter; i < mEndChapter; i++) {
+                                mBibleGridView.setItemChecked(i, true);
+                            }
+                        }
+                    }
                 }
+                setConfrimText();
             }
         });
 
@@ -137,9 +140,9 @@ public class PlanActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    mBibleGridLayout.setVisibility(View.VISIBLE);
                 } else {
-                    mBibleGridLayout.setVisibility(View.GONE);
+                    mStartChapter = 0;
+                    mEndChapter = 0;
                 }
             }
         });
@@ -152,15 +155,13 @@ public class PlanActivity extends AppCompatActivity {
                     for (int i = 0; i < 39; i++) {
                         mBibleGridView.setItemChecked(i, true);
                     }
-                    mPlanedCount = mPlanedCount + 929;
-                    mConfrimBtn.setText("총 " + mPlanedCount + "장 만들기");
                 } else {
                     for (int i = 0; i < 39; i++) {
                         mBibleGridView.setItemChecked(i, false);
                     }
-                    mPlanedCount = mPlanedCount - 929;
-                    mConfrimBtn.setText("총 " + mPlanedCount + "장 만들기");
                 }
+                setConfrimText();
+
             }
         });
         mNewTestamentChk.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -171,17 +172,24 @@ public class PlanActivity extends AppCompatActivity {
                     for (int i = 39; i < 66; i++) {
                         mBibleGridView.setItemChecked(i, true);
                     }
-                    mPlanedCount = mPlanedCount + 260;
-                    mConfrimBtn.setText("총 " + mPlanedCount + "장 만들기");
                 } else {
                     for (int i = 39; i < 66; i++) {
                         mBibleGridView.setItemChecked(i, false);
                     }
-                    mPlanedCount = mPlanedCount - 260;
-                    mConfrimBtn.setText("총 " + mPlanedCount + "장 만들기");
                 }
+                setConfrimText();
             }
         });
+    }
+
+    public void setConfrimText() {
+        int count = 0;
+        for (int i = 0; i < 66; i++) {
+            if (mBibleGridView.isItemChecked(i)) {
+                count = count + mBibleCount[i];
+            }
+        }
+        mConfrimBtn.setText("총 " + count + "장 만들기");
     }
 
     @Override
