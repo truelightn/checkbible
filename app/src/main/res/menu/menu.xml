@@ -3,18 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="cba.org.myapplication.MainActivity">
     <item
-        android:id="@+id/menu_settings"
-        android:orderInCategory="100"
-        android:title="@string/settings"
-        app:showAsAction="never" />
-    <item
         android:id="@+id/menu_reading_plan"
-        android:orderInCategory="100"
         android:title="@string/reading_plan"
-        app:showAsAction="never" />
+        android:icon="@drawable/add_plan_24dp"
+        app:showAsAction="always" />
     <item
         android:id="@+id/menu_logs"
-        android:orderInCategory="100"
         android:title="@string/logs"
-        app:showAsAction="never" />
+        android:icon="@drawable/log_plan_24dp"
+        app:showAsAction="always" />
 </menu>

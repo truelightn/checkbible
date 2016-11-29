@@ -186,9 +186,6 @@ public class MainActivity extends AppCompatActivity {
             case R.id.menu_reading_plan:
                 PlanActivity.start(this);
                 break;
-            case R.id.menu_settings:
-
-                break;
             case R.id.menu_logs:
                 LogActivity.start(this);
                 break;
