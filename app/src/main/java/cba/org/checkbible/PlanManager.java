@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import cba.org.checkbible.activity.PlanActivity;
 import cba.org.checkbible.db.DB;
 import cba.org.checkbible.db.PlanDBUtil;
 
@@ -148,6 +149,15 @@ public class PlanManager {
             completeList.add(bible[i]);
         }
         return completeList;
+    }
+
+    public static String getAbbreviation(int i) {
+        String[] bible = CheckBibleApp.getContext().getResources()
+                .getStringArray(R.array.abbreviation_bible);
+        if (i < 0 || i > bible.length) {
+            return "NA" ;
+        }
+        return bible[i];
     }
 
     public static boolean isComplete() {

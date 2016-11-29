@@ -119,15 +119,19 @@ public class PlanActivity extends AppCompatActivity {
                         if (mStartChapter == 0) {
                             mStartChapter = position;
                         } else if (mEndChapter == 0 && mStartChapter != position) {
-                            mEndChapter = position;
-                            if (mEndChapter < mStartChapter) {
-                                for (int i = mStartChapter; i < 66; i++) {
-                                    mBibleGridView.setItemChecked(i, true);
-                                }
-                                for (int i = 0; i < mEndChapter; i++) {
-                                    mBibleGridView.setItemChecked(i, true);
-                                }
+                            if (position < mStartChapter) {
+                                Toast.makeText(PlanActivity.this, "선택하신 장보다 뒤에 장을 선택해주세요",
+                                        Toast.LENGTH_SHORT).show();
+                                mBibleGridView.setItemChecked(position, false);
+
+                                // for (int i = mStartChapter; i < 66; i++) {
+                                // mBibleGridView.setItemChecked(i, true);
+                                // }
+                                // for (int i = 0; i < mEndChapter; i++) {
+                                // mBibleGridView.setItemChecked(i, true);
+                                // }
                             } else {
+                                mEndChapter = position;
                                 for (int i = mStartChapter; i < mEndChapter; i++) {
                                     mBibleGridView.setItemChecked(i, true);
                                 }
@@ -143,14 +147,12 @@ public class PlanActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    Toast.makeText(PlanActivity.this, "처음과 끝을 선택하시면 구간이 선택됩니다.", Toast.LENGTH_SHORT)
-                            .show();
+                    Toast.makeText(PlanActivity.this, "처음과 끝을 선택하시면 구간이 선택됩니다.", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(PlanActivity.this, "다시 체크하시면 구간을 선택하실수 있습니다.어딩",
-                            Toast.LENGTH_SHORT).show();
-                    // for (int i = 0; i < 66; i++) {
-                    // mBibleGridView.setItemChecked(i, false);
-                    // }
+//                    Toast.makeText(PlanActivity.this, "다시 체크하시면 구간을 선택하실수 있습니다.", Toast.LENGTH_SHORT).show();
+                    for (int i = 0; i < 66; i++) {
+                        mBibleGridView.setItemChecked(i, false);
+                    }
                     mStartChapter = 0;
                     mEndChapter = 0;
                 }

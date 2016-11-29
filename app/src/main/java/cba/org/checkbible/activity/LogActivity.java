@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.ContextMenu;
 import android.view.MenuItem;
@@ -17,8 +19,15 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.appindexing.Thing;
+import com.google.android.gms.common.api.GoogleApiClient;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import cba.org.checkbible.CheckBibleApp;
 import cba.org.checkbible.PlanManager;
 import cba.org.checkbible.R;
 import cba.org.checkbible.afw.V;
@@ -34,7 +43,11 @@ public class LogActivity extends AppCompatActivity {
     public static final String TAG = LogActivity.class.getSimpleName();
     ListView mListview;
     LogListViewAdapter mAdapter;
-    ArrayList<PlanItem> mPlanItemList;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API. See
+     * https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,72 +56,93 @@ public class LogActivity extends AppCompatActivity {
 
         mAdapter = new LogListViewAdapter(PlanDBUtil.getAllPlanItem());
 
-        mListview = (ListView) findViewById(R.id.log_list_view);
+        mListview = (ListView)findViewById(R.id.log_list_view);
         mListview.setAdapter(mAdapter);
         mListview.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         registerForContextMenu(mListview);
 
         mAdapter.notifyDataSetChanged();
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     @Override
     protected void onStart() {
-        super.onStart();
+        super.onStart();// ATTENTION: This was auto-generated to implement the
+                        // App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        AppIndex.AppIndexApi.start(client, getIndexApiAction());
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
-
-    }
-
-    public static void start(Context context) {
-        Intent intent = new Intent(context, LogActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        context.startActivity(intent);
     }
 
     @Override
     public void onStop() {
-        super.onStop();
+        super.onStop();// ATTENTION: This was auto-generated to implement the
+                       // App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        AppIndex.AppIndexApi.end(client, getIndexApiAction());
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.disconnect();
     }
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         getMenuInflater().inflate(R.menu.log_context_menu, menu);
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-        PlanItem pi = (PlanItem) mAdapter.getItem(info.position);
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
+        PlanItem pi = (PlanItem)mAdapter.getItem(info.position);
         menu.setHeaderTitle(pi.getTitle());
     }
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item
                 .getMenuInfo();
         int index = info.position; // AdapterView안에서 ContextMenu를 보여즈는 항목의 위치
-        PlanItem pi = (PlanItem) mAdapter.getItem(info.position);
+        PlanItem pi = (PlanItem)mAdapter.getItem(info.position);
         switch (item.getItemId()) {
-            case R.id.context_delete:
-                if (pi.getActive() == 1) {
-                    Toast.makeText(LogActivity.this, "활성화된 계획은 삭제 할수 없습니다.", Toast.LENGTH_SHORT).show();
-                    return false;
-                }
-                PlanDBUtil.removePlan(pi.getId());
-                mAdapter.remove(index);
-                mAdapter.notifyDataSetChanged();
-                break;
-            case R.id.context_select:
-                PlanDBUtil.setCurrentActiveRowToInActive();
-                PlanDBUtil.updateValueByID(DB.COL_READINGPLAN_IS_ACTIVE, 1, pi.getId());
-                mAdapter.changeActive(index);
-                mAdapter.notifyDataSetChanged();
-                break;
-            default:
-                return super.onContextItemSelected(item);
+        case R.id.context_delete:
+            if (pi.getActive() == 1) {
+                Toast.makeText(LogActivity.this, "활성화된 계획은 삭제 할수 없습니다.", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+            PlanDBUtil.removePlan(pi.getId());
+            mAdapter.remove(index);
+            mAdapter.notifyDataSetChanged();
+            break;
+        case R.id.context_select:
+            PlanDBUtil.setCurrentActiveRowToInActive();
+            PlanDBUtil.updateValueByID(DB.COL_READINGPLAN_IS_ACTIVE, 1, pi.getId());
+            mAdapter.changeActive(index);
+            mAdapter.notifyDataSetChanged();
+            break;
+        default:
+            return super.onContextItemSelected(item);
         }
         return true;
+    }
+
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API. See
+     * https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    public Action getIndexApiAction() {
+        Thing object = new Thing.Builder().setName("Log Page") // TODO: Define a
+                                                               // title for the
+                                                               // content shown.
+                // TODO: Make sure this auto-generated URL is correct.
+                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]")).build();
+        return new Action.Builder(Action.TYPE_VIEW).setObject(object)
+                .setActionStatus(Action.STATUS_TYPE_COMPLETED).build();
     }
 
     public class LogListViewAdapter extends BaseAdapter {
@@ -145,12 +179,6 @@ public class LogActivity extends AppCompatActivity {
             TextView totalTextView = V.get(convertView, R.id.log_total);
             TextView chapterTextView = V.get(convertView, R.id.log_chapter);
 
-            // mAbbGridView = V.get(convertView, R.id.abb_log_gridview);
-            // AbbChapterAdapter addAdapter = new
-            // AdbbChapterAdapter(LogActivity.this,listViewItem.getId());
-            // mAbbGridView.setAdapter(addAdapter);
-//            mAbbGridView.setNumColumns(15);
-
             // Data Set(listViewItemList)에서 position에 위치한 데이터 참조 획득
             ColorStateList oldColors = duringTextView.getTextColors();
             if (listViewItem.getActive() == 1) {
@@ -166,12 +194,51 @@ public class LogActivity extends AppCompatActivity {
             String totalMsg = "Total " + listViewItem.getTotalReadCount() + "장/"
                     + listViewItem.getTotalCount() + "장";
             totalTextView.setText(totalMsg);
-            ArrayList<String> totalList = new ArrayList<>();
-            totalList.addAll(PlanManager.getCompleteChapterAbbreviation(listViewItem.getId()));
-            totalList.addAll(PlanManager.getPlanedChapterAbbreviation(listViewItem.getId()));
-            chapterTextView.setText(totalList.toString());
+            chapterTextView.setText(getStrings(listViewItem));
 
             return convertView;
+        }
+
+        public String getStrings(PlanItem listViewItem) {
+            String retValue = "말씀";
+            boolean isOldTestament = false;
+            boolean isNewTestament = false;
+            ArrayList<Integer> totalList = new ArrayList<>();
+            totalList.addAll(PlanManager.getCompleteChapterPosition(listViewItem.getId()));
+            totalList.addAll(PlanManager.getPlanedChapterPosition(listViewItem.getId()));
+            ArrayList<Integer> oldTestament = new ArrayList<>();
+            for (int i = 0; i < 39; i++) {
+                oldTestament.add(i);
+            }
+            ArrayList<Integer> newTestament = new ArrayList<>();
+            for (int i = 39; i < 66; i++) {
+                newTestament.add(i);
+            }
+            isOldTestament = totalList.containsAll(oldTestament);
+            isNewTestament = totalList.containsAll(newTestament);
+            if (isOldTestament) {
+                retValue = retValue + "/구약";
+                totalList.removeAll(oldTestament);
+            }
+            if (isNewTestament) {
+                retValue = retValue + "/신약";
+                totalList.removeAll(newTestament);
+            }
+            if (!totalList.isEmpty()) {
+                int firsti = totalList.get(0);
+                int lasti = totalList.get(totalList.size() - 1);
+                if ((lasti - firsti + 1) == totalList.size()) {
+                    retValue = retValue + "/" + PlanManager.getAbbreviation(firsti) + "~"
+                            + PlanManager.getAbbreviation(lasti);
+
+                } else {
+                    for (int i = 0; i < totalList.size() - 1; i++) {
+                        retValue = retValue + "/" + PlanManager.getAbbreviation(i);
+                    }
+                }
+            }
+
+            return retValue;
         }
 
         // 지정한 위치(position)에 있는 데이터와 관계된 아이템(row)의 ID를 리턴. : 필수 구현
@@ -190,7 +257,6 @@ public class LogActivity extends AppCompatActivity {
             mViewItemList.remove(position);
         }
 
-
         public void changeActive(int position) {
             for (PlanItem planItem : mViewItemList) {
                 if (planItem.active == 1) {
@@ -199,5 +265,11 @@ public class LogActivity extends AppCompatActivity {
             }
             mViewItemList.get(position).setActive(1);
         }
+    }
+
+    public static void start(Context context) {
+        Intent intent = new Intent(context, LogActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        context.startActivity(intent);
     }
 }
