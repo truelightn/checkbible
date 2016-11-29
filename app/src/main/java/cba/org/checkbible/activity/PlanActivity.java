@@ -17,7 +17,6 @@ import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.GridView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,12 +41,11 @@ public class PlanActivity extends AppCompatActivity {
 
     private Button mStartBtn;
     private Button mEndBtn;
-    private Button mConfrimBtn;
+    private Button mConfirmBtn;
     private CheckBox mOldTestamentChk;
     private CheckBox mNewTestamentChk;
     private CheckBox mMyChk;
     private EditText mTitle;
-    private LinearLayout mBibleGridLayout;
     private GridView mBibleGridView;
     private GridBibleAdapter mBibleGridBibleAdapter;
     PlanItem mPlanItem;
@@ -72,13 +70,10 @@ public class PlanActivity extends AppCompatActivity {
 
         mStartBtn = V.get(this, R.id.startBtn);
         mEndBtn = V.get(this, R.id.endBtn);
-        mConfrimBtn = V.get(this, R.id.confrimBtn);
+        mConfirmBtn = V.get(this, R.id.confrimBtn);
         mStartBtn.setOnClickListener(onClickListener);
         mEndBtn.setOnClickListener(onClickListener);
-        mConfrimBtn.setOnClickListener(onClickListener);
-
-//        mBibleGridLayout = V.get(this, R.id.bible_grid);
-//        mBibleGridLayout.setVisibility(View.GONE);
+        mConfirmBtn.setOnClickListener(onClickListener);
 
         mOldTestamentChk = V.get(this, R.id.OldTestamentChk);
         mNewTestamentChk = V.get(this, R.id.NewTestamentChk);
@@ -117,7 +112,6 @@ public class PlanActivity extends AppCompatActivity {
             mEndBtn.setText(endT);
         }
 
-
         mBibleGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                 if (mMyChk.isChecked()) {
@@ -126,13 +120,22 @@ public class PlanActivity extends AppCompatActivity {
                             mStartChapter = position;
                         } else if (mEndChapter == 0) {
                             mEndChapter = position;
-                            for (int i = mStartChapter; i < mEndChapter; i++) {
-                                mBibleGridView.setItemChecked(i, true);
+                            if (mEndChapter < mStartChapter) {
+                                for (int i = mStartChapter; i < 66; i++) {
+                                    mBibleGridView.setItemChecked(i, true);
+                                }
+                                for (int i = 0; i < mEndChapter; i++) {
+                                    mBibleGridView.setItemChecked(i, true);
+                                }
+                            } else {
+                                for (int i = mStartChapter; i < mEndChapter; i++) {
+                                    mBibleGridView.setItemChecked(i, true);
+                                }
                             }
                         }
                     }
                 }
-                setConfrimText();
+                setConfirmText();
             }
         });
 
@@ -140,7 +143,12 @@ public class PlanActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
+                    Toast.makeText(PlanActivity.this, "처음과 끝을 선택하시면 구간이 선택됩니다.", Toast.LENGTH_SHORT).show();
                 } else {
+                    Toast.makeText(PlanActivity.this, "다시 체크하시면 구간을 선택하실수 있습니다.어딩", Toast.LENGTH_SHORT).show();
+//                    for (int i = 0; i < 66; i++) {
+//                        mBibleGridView.setItemChecked(i, false);
+//                    }
                     mStartChapter = 0;
                     mEndChapter = 0;
                 }
@@ -160,7 +168,7 @@ public class PlanActivity extends AppCompatActivity {
                         mBibleGridView.setItemChecked(i, false);
                     }
                 }
-                setConfrimText();
+                setConfirmText();
 
             }
         });
@@ -177,19 +185,19 @@ public class PlanActivity extends AppCompatActivity {
                         mBibleGridView.setItemChecked(i, false);
                     }
                 }
-                setConfrimText();
+                setConfirmText();
             }
         });
     }
 
-    public void setConfrimText() {
+    public void setConfirmText() {
         int count = 0;
         for (int i = 0; i < 66; i++) {
             if (mBibleGridView.isItemChecked(i)) {
                 count = count + mBibleCount[i];
             }
         }
-        mConfrimBtn.setText("총 " + count + "장 만들기");
+        mConfirmBtn.setText("총 " + count + "장 만들기");
     }
 
     @Override
@@ -213,7 +221,7 @@ public class PlanActivity extends AppCompatActivity {
                                 dayOfMonth);
                         mStartBtn.setText(startTime);
 
-                        //endBtn text를 설정한 startDate+3달로 변경
+                        // endBtn text를 설정한 startDate+3달로 변경
                         GregorianCalendar gCalendar = getCalendar(startTime);
                         gCalendar.add(Calendar.MONTH, 3);
                         mEndY = gCalendar.get(Calendar.YEAR);
@@ -244,8 +252,7 @@ public class PlanActivity extends AppCompatActivity {
             case R.id.confrimBtn:
                 mPlanItem.title = String.valueOf(mTitle.getText());
                 if (mPlanItem.title.isEmpty()) {
-                    Toast.makeText(PlanActivity.this, "제목을 입력해 주세요",
-                            Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PlanActivity.this, "제목을 입력해 주세요", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 SparseBooleanArray checkedItems = mBibleGridView.getCheckedItemPositions();
@@ -261,16 +268,15 @@ public class PlanActivity extends AppCompatActivity {
                 mPlanItem.totalCount = planedCount;
                 mPlanItem.planedChapter = planedChapter;
                 if (mPlanItem.planedChapter.isEmpty()) {
-                    Toast.makeText(PlanActivity.this, "성경을 선택해주세요",
-                            Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PlanActivity.this, "성경을 선택해주세요", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                
+
                 mPlanItem.chapterReadCount = 1;
                 Log.d(TAG, "total : " + planedCount + " - chapter: " + planedChapter);
                 PlanDBUtil.setCurrentActiveRowToInActive();
                 mPlanItem.active = 1;
-                
+
                 PlanDBUtil.addPlan(mPlanItem);
                 Toast.makeText(PlanActivity.this, "계획이 만들어 졌습니다.", Toast.LENGTH_SHORT).show();
                 finish();

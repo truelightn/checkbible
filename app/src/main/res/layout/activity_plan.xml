@@ -10,6 +10,7 @@
 
     <EditText
         android:id="@+id/editTitle"
+        style="@style/Widget.AppCompat.EditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -23,6 +24,7 @@
 
         <Button
             android:id="@+id/startBtn"
+            style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -30,6 +32,7 @@
 
         <Button
             android:id="@+id/endBtn"
+            style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -71,7 +74,7 @@
         android:layout_height="315dp"
         android:columnWidth="90dp"
         android:gravity="center"
-        android:horizontalSpacing="10dp"
+        android:horizontalSpacing="5dp"
         android:numColumns="auto_fit"
         android:stretchMode="columnWidth"
         android:verticalSpacing="10dp" />
@@ -79,8 +82,9 @@
 
     <Button
         android:id="@+id/confrimBtn"
+        style="@style/Widget.AppCompat.Button"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="60dp"
         android:text="확인" />
 
 </LinearLayout>
