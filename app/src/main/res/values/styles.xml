@@ -1,19 +1,13 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="@style/Theme.AppCompat.Light">
-
-        <item name="android:actionBarStyle">@style/MyActionBar</item>
-
+    <style name="AppTheme" parent="Theme.AppCompat.Light">
         <!-- Support library compatibility -->
         <item name="actionBarStyle">@style/MyActionBar</item>
     </style>
 
     <!-- ACTION BAR STYLES -->
-    <style name="MyActionBar" parent="@style/Widget.AppCompat.ActionBar">
-        <item name="android:background">@android:color/transparent</item>
-        <item name="android:windowActionBarOverlay">true</item>
-        <item name="android:titleTextStyle">@style/TitleTextStyle</item>
+    <style name="MyActionBar" parent="Widget.AppCompat.ActionBar">
 
         <!-- Support library compatibility -->
         <item name="background">@android:color/transparent</item>
@@ -21,7 +15,7 @@
         <item name="titleTextStyle">@style/TitleTextStyle</item>
     </style>
 
-    <style name="TitleTextStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
+    <style name="TitleTextStyle" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
         <item name="android:textSize">16sp</item>
     </style>
 </resources>
