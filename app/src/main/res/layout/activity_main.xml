@@ -75,7 +75,6 @@
                 android:id="@+id/abb_gridview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="#ffeeeeee"
                 android:gravity="center"
                 android:horizontalSpacing="1dp"
                 android:numColumns="auto_fit"
