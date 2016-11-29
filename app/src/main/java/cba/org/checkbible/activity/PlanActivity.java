@@ -118,7 +118,7 @@ public class PlanActivity extends AppCompatActivity {
                     if (mBibleGridView.isItemChecked(position)) {
                         if (mStartChapter == 0) {
                             mStartChapter = position;
-                        } else if (mEndChapter == 0) {
+                        } else if (mEndChapter == 0 && mStartChapter != position) {
                             mEndChapter = position;
                             if (mEndChapter < mStartChapter) {
                                 for (int i = mStartChapter; i < 66; i++) {
@@ -143,12 +143,14 @@ public class PlanActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    Toast.makeText(PlanActivity.this, "처음과 끝을 선택하시면 구간이 선택됩니다.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PlanActivity.this, "처음과 끝을 선택하시면 구간이 선택됩니다.", Toast.LENGTH_SHORT)
+                            .show();
                 } else {
-                    Toast.makeText(PlanActivity.this, "다시 체크하시면 구간을 선택하실수 있습니다.어딩", Toast.LENGTH_SHORT).show();
-//                    for (int i = 0; i < 66; i++) {
-//                        mBibleGridView.setItemChecked(i, false);
-//                    }
+                    Toast.makeText(PlanActivity.this, "다시 체크하시면 구간을 선택하실수 있습니다.어딩",
+                            Toast.LENGTH_SHORT).show();
+                    // for (int i = 0; i < 66; i++) {
+                    // mBibleGridView.setItemChecked(i, false);
+                    // }
                     mStartChapter = 0;
                     mEndChapter = 0;
                 }
