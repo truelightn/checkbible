@@ -43,17 +43,13 @@ public class LogActivity extends AppCompatActivity {
     public static final String TAG = LogActivity.class.getSimpleName();
     ListView mListview;
     LogListViewAdapter mAdapter;
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API. See
-     * https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    private GoogleApiClient client;
+    private PlanManager mPlanManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log);
-
+        mPlanManager = PlanManager.getInstance(this);
         mAdapter = new LogListViewAdapter(PlanDBUtil.getAllPlanItem());
 
         mListview = (ListView)findViewById(R.id.log_list_view);
@@ -62,20 +58,11 @@ public class LogActivity extends AppCompatActivity {
         registerForContextMenu(mListview);
 
         mAdapter.notifyDataSetChanged();
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     @Override
     protected void onStart() {
-        super.onStart();// ATTENTION: This was auto-generated to implement the
-                        // App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client.connect();
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        AppIndex.AppIndexApi.start(client, getIndexApiAction());
+        super.onStart();
     }
 
     @Override
@@ -85,13 +72,7 @@ public class LogActivity extends AppCompatActivity {
 
     @Override
     public void onStop() {
-        super.onStop();// ATTENTION: This was auto-generated to implement the
-                       // App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        AppIndex.AppIndexApi.end(client, getIndexApiAction());
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client.disconnect();
+        super.onStop();
     }
 
     @Override
@@ -208,8 +189,8 @@ public class LogActivity extends AppCompatActivity {
             boolean isOldTestament = false;
             boolean isNewTestament = false;
             ArrayList<Integer> totalList = new ArrayList<>();
-            totalList.addAll(PlanManager.getCompleteChapterPosition(listViewItem.getId()));
-            totalList.addAll(PlanManager.getPlanedChapterPosition(listViewItem.getId()));
+            totalList.addAll(PlanDBUtil.getCompleteChapterPosition(listViewItem.getId()));
+            totalList.addAll(PlanDBUtil.getPlanedChapterPosition(listViewItem.getId()));
             ArrayList<Integer> oldTestament = new ArrayList<>();
             for (int i = 0; i < 39; i++) {
                 oldTestament.add(i);
@@ -232,12 +213,12 @@ public class LogActivity extends AppCompatActivity {
                 int firsti = totalList.get(0);
                 int lasti = totalList.get(totalList.size() - 1);
                 if ((lasti - firsti + 1) == totalList.size()) {
-                    retValue = retValue + "/" + PlanManager.getAbbreviation(firsti) + "~"
-                            + PlanManager.getAbbreviation(lasti);
+                    retValue = retValue + "/" + mPlanManager.getAbbreviation(firsti) + "~"
+                            + mPlanManager.getAbbreviation(lasti);
 
                 } else {
                     for (int i = 0; i < totalList.size() - 1; i++) {
-                        retValue = retValue + "/" + PlanManager.getAbbreviation(i);
+                        retValue = retValue + "/" + mPlanManager.getAbbreviation(i);
                     }
                 }
             }

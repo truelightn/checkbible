@@ -12,10 +12,9 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import cba.org.checkbible.CheckBibleApp;
-import cba.org.checkbible.PlanManager;
 import cba.org.checkbible.R;
 import cba.org.checkbible.afw.V;
+import cba.org.checkbible.db.PlanDBUtil;
 
 /**
  * Created by jinhwan.na on 2016-11-25.
@@ -31,8 +30,8 @@ public class AbbChapterAdapter extends BaseAdapter {
     public AbbChapterAdapter(Activity activity, int id) {
         mId = id;
         mActivity = activity;
-        mCompleteList = PlanManager.getCompleteChapterAbbreviation(mId);
-        mPlanedList = PlanManager.getPlanedChapterAbbreviation(mId);
+        mCompleteList = PlanDBUtil.getCompleteChapterAbbreviation(mId);
+        mPlanedList = PlanDBUtil.getPlanedChapterAbbreviation(mId);
         mTotalList.addAll(mCompleteList);
         mTotalList.addAll(mPlanedList);
     }

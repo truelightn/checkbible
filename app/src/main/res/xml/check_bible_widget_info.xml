@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:initialKeyguardLayout="@layout/check_bible_widget"
+    android:initialLayout="@layout/check_bible_widget"
+    android:minHeight="72dp"
+    android:minWidth="146dp"
+    android:previewImage="@drawable/checkbiblewidget"
+    android:resizeMode="horizontal|vertical"
+    android:updatePeriodMillis="0"
+    android:widgetCategory="home_screen|keyguard"></appwidget-provider><!--
+        android:configure="cba.org.checkbible.widget.CheckBibleWidgetConfigureActivity"
+        -->
