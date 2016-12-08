@@ -117,10 +117,12 @@ public class PlanManager {
     }
 
     public static String getDuringString() {
+        String retVaule;
         String endDateString = PlanDBUtil.getPlanString(DB.COL_READINGPLAN_END_DATE);
         String startDateString = PlanDBUtil.getPlanString(DB.COL_READINGPLAN_START_DATE);
-
-        return startDateString + " ~ " + endDateString;
+        retVaule = startDateString + " ~ " + endDateString;
+        retVaule = retVaule.replace("/", ".");
+        return retVaule;
     }
 
     public static void setChapter(String col, ArrayList<Integer> chapter) {

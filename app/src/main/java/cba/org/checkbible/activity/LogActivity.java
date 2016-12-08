@@ -190,7 +190,11 @@ public class LogActivity extends AppCompatActivity {
             }
             // 아이템 내 각 위젯에 데이터 반영
             titleTextView.setText(listViewItem.getTitle());
-            duringTextView.setText(listViewItem.getStartTime() + " ~ " + listViewItem.getEndTime());
+
+            String duringStr = listViewItem.getStartTime() + " ~ " + listViewItem.getEndTime();
+            duringStr = duringStr.replace("/", ".");
+            duringTextView.setText(duringStr);
+
             String totalMsg = "Total " + listViewItem.getTotalReadCount() + "장/"
                     + listViewItem.getTotalCount() + "장";
             totalTextView.setText(totalMsg);
