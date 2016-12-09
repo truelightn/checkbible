@@ -1,33 +1,22 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="@dimen/widget_margin">
+    android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/layout"
+    <TextView
+        android:id="@+id/appwidget_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingTop="10dp">
-
-        <TextView
-            android:id="@+id/appwidget_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="8dp"
-            android:text="@string/appwidget_text" />
-
-        <Button
-            android:id="@+id/appwidget_button"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="+" />
-
-    </LinearLayout>
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text="title"/>
+    <Button
+        android:id="@+id/appwidget_button"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="left"
+        android:text="+" />
 
 
     <TextView
@@ -36,8 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="8dp"
-        android:text="@string/appwidget_text" />
+        android:text="chapter"/>
 
     <TextView
         android:id="@+id/appwidget_today"
@@ -45,17 +33,15 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="8dp"
-        android:text="@string/appwidget_text" />
+        android:text="today"/>
 
-    <TextView
-        android:id="@+id/appwidget_during"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="8dp"
-        android:text="@string/appwidget_text" />
+    <!--<TextView-->
+        <!--android:id="@+id/appwidget_during"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:layout_centerVertical="true"-->
+        <!--android:text="during"/>-->
 
 
 </LinearLayout>

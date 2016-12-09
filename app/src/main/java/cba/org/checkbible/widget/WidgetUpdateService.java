@@ -23,12 +23,13 @@ public class WidgetUpdateService extends Service {
         RemoteViews views = new RemoteViews(this.getPackageName(), R.layout.check_bible_widget);
         PlanManager planManager = PlanManager.getInstance(this);
         planManager.initCount();
-        views.setTextViewText(R.id.appwidget_title,
-                PlanDBUtil.getPlanString(DB.COL_READINGPLAN_TITLE));
+//        views.setTextViewText(R.id.appwidget_title,
+//                PlanDBUtil.getPlanString(DB.COL_READINGPLAN_TITLE));
+        views.setTextViewText(R.id.appwidget_button, PlanDBUtil.getPlanString(DB.COL_READINGPLAN_TITLE));
         views.setTextViewText(R.id.appwidget_chapter, planManager.getChapterString());
         views.setTextViewText(R.id.appwidget_today, planManager.getTodayString());
-        views.setTextViewText(R.id.appwidget_during, planManager.getDuringString());
-        views.setTextColor(R.id.appwidget_title, getTextStatusColor(planManager));
+//        views.setTextViewText(R.id.appwidget_during, planManager.getDuringString());
+        views.setTextColor(R.id.appwidget_button, getTextStatusColor(planManager));
         ComponentName componentname = new ComponentName(this, CheckBibleWidget.class);
         AppWidgetManager appwidgetmanager = AppWidgetManager.getInstance(this);
 
