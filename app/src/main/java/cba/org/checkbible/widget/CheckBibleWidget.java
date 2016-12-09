@@ -35,7 +35,7 @@ public class CheckBibleWidget extends AppWidgetProvider {
 
         Intent countIntent = new Intent(ACTION_COUNT);
         PendingIntent countPIntent = PendingIntent.getBroadcast(context, 0, countIntent, 0);
-        views.setOnClickPendingIntent(R.id.appwidget_title, countPIntent);
+        views.setOnClickPendingIntent(R.id.appwidget_button, countPIntent);
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
