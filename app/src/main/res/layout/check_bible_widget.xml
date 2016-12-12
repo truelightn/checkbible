@@ -3,25 +3,27 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <!--<TextView-->
-        <!--android:id="@+id/appwidget_title"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_centerHorizontal="true"-->
-        <!--android:layout_centerVertical="true"-->
-        <!--android:text="title"/>-->
-    <Button
-        android:id="@+id/appwidget_button"
-        style="@style/Widget.AppCompat.Button.Borderless"
+    <TextView
+        android:id="@+id/appwidget_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="left"
-        android:text="+" />
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:padding="2dp"
+        android:background="#4DDCDCDC"
+        android:text="title"/>
+    <!--<Button-->
+        <!--android:id="@+id/appwidget_button"-->
+        <!--style="@style/Widget.AppCompat.Button.Borderless"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:gravity="left"-->
+        <!--android:text="+" />-->
 
 
     <TextView
         android:id="@+id/appwidget_chapter"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
@@ -29,19 +31,19 @@
 
     <TextView
         android:id="@+id/appwidget_today"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:text="today"/>
 
-    <!--<TextView-->
-        <!--android:id="@+id/appwidget_during"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_centerHorizontal="true"-->
-        <!--android:layout_centerVertical="true"-->
-        <!--android:text="during"/>-->
+    <TextView
+        android:id="@+id/appwidget_during"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text="during"/>
 
 
 </LinearLayout>

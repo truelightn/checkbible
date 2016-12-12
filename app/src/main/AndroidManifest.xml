@@ -15,7 +15,6 @@
         <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -32,7 +31,8 @@
         <receiver android:name=".widget.CheckBibleWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="org.cba.checkbible.COUNT"/>
+                <action android:name="org.cba.checkbible.COUNT" />
+                <action android:name="org.cba.checkbible.MAIN_ACTIVITY" />
             </intent-filter>
 
             <meta-data
@@ -45,8 +45,7 @@
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>-->
-        <service android:name=".widget.WidgetUpdateService">
-        </service>
+        <service android:name=".widget.WidgetUpdateService"></service>
     </application>
 
 </manifest>

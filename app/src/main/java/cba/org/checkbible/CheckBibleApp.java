@@ -2,7 +2,9 @@ package cba.org.checkbible;
 
 import android.app.Application;
 import android.content.Context;
+import android.widget.TextView;
 
+import cba.org.checkbible.afw.V;
 import cba.org.checkbible.db.DBUtil;
 import cba.org.checkbible.db.SettingDBUtil;
 

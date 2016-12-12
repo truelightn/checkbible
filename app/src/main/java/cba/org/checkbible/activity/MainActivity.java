@@ -1,5 +1,6 @@
 package cba.org.checkbible.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
@@ -24,6 +25,7 @@ import cba.org.checkbible.R;
 import cba.org.checkbible.afw.V;
 import cba.org.checkbible.db.DB;
 import cba.org.checkbible.db.PlanDBUtil;
+import cba.org.checkbible.db.SettingDBUtil;
 import cba.org.checkbible.widget.WidgetUpdateService;
 
 public class MainActivity extends AppCompatActivity {
@@ -43,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
     private GridView mAbbGridView;
 
     private PlanManager mPlanManager;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -236,5 +239,10 @@ public class MainActivity extends AppCompatActivity {
             }
 
         }
+    }
+    public static void start(Context context) {
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
     }
 }

@@ -5,11 +5,15 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.widget.RemoteViews;
+import android.widget.TextView;
 
+import cba.org.checkbible.CheckBibleApp;
 import cba.org.checkbible.PlanManager;
 import cba.org.checkbible.R;
 import cba.org.checkbible.activity.MainActivity;
+import cba.org.checkbible.afw.V;
 import cba.org.checkbible.db.DB;
 import cba.org.checkbible.db.PlanDBUtil;
 
@@ -21,6 +25,7 @@ import cba.org.checkbible.db.PlanDBUtil;
 public class CheckBibleWidget extends AppWidgetProvider {
 
     private static final String ACTION_COUNT = "org.cba.checkbible.COUNT";
+    private static final String ACTION_START_MAIN_ACTIVITY = "org.cba.checkbible.MAIN_ACTIVITY";
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
 
@@ -29,13 +34,18 @@ public class CheckBibleWidget extends AppWidgetProvider {
         // appWidgetId);
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.check_bible_widget);
-
         Intent intent = new Intent(context, WidgetUpdateService.class);
         context.startService(intent);
 
         Intent countIntent = new Intent(ACTION_COUNT);
         PendingIntent countPIntent = PendingIntent.getBroadcast(context, 0, countIntent, 0);
-        views.setOnClickPendingIntent(R.id.appwidget_button, countPIntent);
+        views.setOnClickPendingIntent(R.id.appwidget_chapter, countPIntent);
+        views.setOnClickPendingIntent(R.id.appwidget_today, countPIntent);
+        views.setOnClickPendingIntent(R.id.appwidget_during, countPIntent);
+
+        Intent sIntent = new Intent(ACTION_START_MAIN_ACTIVITY);
+        PendingIntent sPIntent = PendingIntent.getBroadcast(context, 0, sIntent, 0);
+        views.setOnClickPendingIntent(R.id.appwidget_title, sPIntent);
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
@@ -75,6 +85,9 @@ public class CheckBibleWidget extends AppWidgetProvider {
         String action = intent.getAction();
         switch (action) {
         case AppWidgetManager.ACTION_APPWIDGET_UPDATE:
+            break;
+        case ACTION_START_MAIN_ACTIVITY:
+            MainActivity.start(context);
             break;
         case ACTION_COUNT:
             int id = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
