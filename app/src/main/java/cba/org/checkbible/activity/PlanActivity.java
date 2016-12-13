@@ -1,5 +1,6 @@
 package cba.org.checkbible.activity;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -7,8 +8,11 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.SparseBooleanArray;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
@@ -41,7 +45,6 @@ public class PlanActivity extends AppCompatActivity {
 
     private Button mStartBtn;
     private Button mEndBtn;
-    private Button mConfirmBtn;
     private CheckBox mOldTestamentChk;
     private CheckBox mNewTestamentChk;
     private CheckBox mMyChk;
@@ -49,6 +52,8 @@ public class PlanActivity extends AppCompatActivity {
     private GridView mBibleGridView;
     private GridBibleAdapter mBibleGridBibleAdapter;
     PlanItem mPlanItem;
+
+    private MenuItem mStringItem;
 
     int[] mBibleCount;
     int mStartChapter = 0;
@@ -70,10 +75,8 @@ public class PlanActivity extends AppCompatActivity {
 
         mStartBtn = V.get(this, R.id.startBtn);
         mEndBtn = V.get(this, R.id.endBtn);
-        mConfirmBtn = V.get(this, R.id.confrimBtn);
         mStartBtn.setOnClickListener(onClickListener);
         mEndBtn.setOnClickListener(onClickListener);
-        mConfirmBtn.setOnClickListener(onClickListener);
 
         mOldTestamentChk = V.get(this, R.id.OldTestamentChk);
         mNewTestamentChk = V.get(this, R.id.NewTestamentChk);
@@ -99,21 +102,22 @@ public class PlanActivity extends AppCompatActivity {
         String endT = SettingDBUtil.getSettingValue("enddate");
         if (startT.isEmpty()) {
             String startTime = String.format("%d/%d/%d", mStartY, mStartM + 1, mStartD);
-            mStartBtn.setText(startTime);
             mPlanItem.startTime = startTime;
+            mStartBtn.setText(startTime.replace("/", "."));
         } else {
-            mStartBtn.setText(startT);
+            mStartBtn.setText(startT.replace("/", "."));
         }
         if (endT.isEmpty()) {
             String endTime = String.format("%d/%d/%d", mEndY, mEndM + 1, mEndD);
-            mEndBtn.setText(endTime);
             mPlanItem.endTime = endTime;
+            mEndBtn.setText(endTime.replace("/", "."));
         } else {
-            mEndBtn.setText(endT);
+            mEndBtn.setText(endT.replace("/", "."));
         }
 
         mBibleGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                mTitle.clearFocus();
                 if (mMyChk.isChecked()) {
                     if (mBibleGridView.isItemChecked(position)) {
                         if (mStartChapter == 0) {
@@ -146,16 +150,20 @@ public class PlanActivity extends AppCompatActivity {
         mMyChk.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mTitle.clearFocus();
                 if (isChecked) {
-                    Toast.makeText(PlanActivity.this, "처음과 끝을 선택하시면 구간이 선택됩니다.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PlanActivity.this, "처음과 끝을 선택하시면 구간이 선택됩니다.", Toast.LENGTH_SHORT)
+                            .show();
                 } else {
-//                    Toast.makeText(PlanActivity.this, "다시 체크하시면 구간을 선택하실수 있습니다.", Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(PlanActivity.this,
+                    // "다시 체크하시면 구간을 선택하실수 있습니다.", Toast.LENGTH_SHORT).show();
                     for (int i = 0; i < 66; i++) {
                         mBibleGridView.setItemChecked(i, false);
                     }
                     mStartChapter = 0;
                     mEndChapter = 0;
                 }
+                setConfirmText();
             }
         });
 
@@ -163,6 +171,7 @@ public class PlanActivity extends AppCompatActivity {
 
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mTitle.clearFocus();
                 if (isChecked) {
                     for (int i = 0; i < 39; i++) {
                         mBibleGridView.setItemChecked(i, true);
@@ -173,13 +182,13 @@ public class PlanActivity extends AppCompatActivity {
                     }
                 }
                 setConfirmText();
-
             }
         });
         mNewTestamentChk.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mTitle.clearFocus();
                 if (isChecked) {
                     for (int i = 39; i < 66; i++) {
                         mBibleGridView.setItemChecked(i, true);
@@ -190,6 +199,15 @@ public class PlanActivity extends AppCompatActivity {
                     }
                 }
                 setConfirmText();
+            }
+        });
+
+        mTitle.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    hideKeyboard(v);
+                }
             }
         });
     }
@@ -201,7 +219,7 @@ public class PlanActivity extends AppCompatActivity {
                 count = count + mBibleCount[i];
             }
         }
-        mConfirmBtn.setText("총 " + count + "장 만들기");
+        mStringItem.setTitle("총 " + count + "장 선택 ");
     }
 
     @Override
@@ -211,9 +229,9 @@ public class PlanActivity extends AppCompatActivity {
     }
 
     private View.OnClickListener onClickListener = new View.OnClickListener() {
-
         @Override
         public void onClick(View v) {
+            mTitle.clearFocus();
             switch (v.getId()) {
             case R.id.startBtn:
                 // DatePickerDialog로 가져온 날짜를 planItem에 String 형태로 저장한다.
@@ -223,7 +241,9 @@ public class PlanActivity extends AppCompatActivity {
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                         String startTime = String.format("%d/%d/%d", year, monthOfYear + 1,
                                 dayOfMonth);
-                        mStartBtn.setText(startTime);
+                        mPlanItem.startTime = startTime;
+
+                        mStartBtn.setText(startTime.replace("/", "."));
 
                         // endBtn text를 설정한 startDate+2달로 변경
                         GregorianCalendar gCalendar = getCalendar(startTime);
@@ -232,9 +252,10 @@ public class PlanActivity extends AppCompatActivity {
                         mEndM = gCalendar.get(Calendar.MONTH);
                         mEndD = gCalendar.get(Calendar.DAY_OF_MONTH);
                         String endTime = String.format("%d/%d/%d", mEndY, mEndM + 1, mEndD);
-                        mEndBtn.setText(endTime);
+                        mPlanItem.endTime = endTime;
 
-                        mPlanItem.startTime = startTime;
+                        mEndBtn.setText(endTime.replace("/", "."));
+
                     }
                 }, mStartY, mStartM, mStartD).show();
                 break;
@@ -247,44 +268,12 @@ public class PlanActivity extends AppCompatActivity {
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                         String endTime = String.format("%d/%d/%d", year, monthOfYear + 1,
                                 dayOfMonth);
-                        mEndBtn.setText(endTime);
                         mPlanItem.endTime = endTime;
+                        mEndBtn.setText(endTime.replace("/", "."));
                     }
                 }, mEndY, mEndM, mEndD).show();
                 break;
 
-            case R.id.confrimBtn:
-                mPlanItem.title = String.valueOf(mTitle.getText());
-                if (mPlanItem.title.isEmpty()) {
-                    Toast.makeText(PlanActivity.this, "제목을 입력해 주세요", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                SparseBooleanArray checkedItems = mBibleGridView.getCheckedItemPositions();
-                int count = mBibleGridBibleAdapter.getCount();
-                int planedCount = 0;
-                String planedChapter = "";
-                for (int i = count - 1; i >= 0; i--) {
-                    if (checkedItems.get(i)) {
-                        planedCount = planedCount + mBibleCount[i];
-                        planedChapter = String.valueOf(i) + "/" + planedChapter;
-                    }
-                }
-                mPlanItem.totalCount = planedCount;
-                mPlanItem.planedChapter = planedChapter;
-                if (mPlanItem.planedChapter.isEmpty()) {
-                    Toast.makeText(PlanActivity.this, "성경을 선택해주세요", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                mPlanItem.chapterReadCount = 1;
-                Log.d(TAG, "total : " + planedCount + " - chapter: " + planedChapter);
-                PlanDBUtil.setCurrentActiveRowToInActive();
-                mPlanItem.active = 1;
-
-                PlanDBUtil.addPlan(mPlanItem);
-                Toast.makeText(PlanActivity.this, "계획이 만들어 졌습니다.", Toast.LENGTH_SHORT).show();
-                finish();
-                break;
             default:
                 break;
             }
@@ -302,6 +291,71 @@ public class PlanActivity extends AppCompatActivity {
         }
         calendar.setTime(endDate);
         return calendar;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.plan_menu, menu);
+        mStringItem = menu.findItem(R.id.plan_menu_string);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        // noinspection SimplifiableIfStatement
+        switch (id) {
+        case R.id.plan_menu_confirm:
+            mPlanItem.title = String.valueOf(mTitle.getText());
+            if (mPlanItem.title.isEmpty()) {
+                Toast.makeText(PlanActivity.this, "제목을 입력해 주세요", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+            SparseBooleanArray checkedItems = mBibleGridView.getCheckedItemPositions();
+            int count = mBibleGridBibleAdapter.getCount();
+            int planedCount = 0;
+            String planedChapter = "";
+            for (int i = count - 1; i >= 0; i--) {
+                if (checkedItems.get(i)) {
+                    planedCount = planedCount + mBibleCount[i];
+                    planedChapter = String.valueOf(i) + "/" + planedChapter;
+                }
+            }
+            mPlanItem.totalCount = planedCount;
+            mPlanItem.planedChapter = planedChapter;
+            if (mPlanItem.planedChapter.isEmpty()) {
+                Toast.makeText(PlanActivity.this, "성경을 선택해주세요", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+
+            mPlanItem.chapterReadCount = 1;
+            Log.d(TAG, "total : " + planedCount + " - chapter: " + planedChapter);
+            PlanDBUtil.setCurrentActiveRowToInActive();
+            mPlanItem.active = 1;
+
+            PlanDBUtil.addPlan(mPlanItem);
+            Toast.makeText(PlanActivity.this, "계획이 만들어 졌습니다.", Toast.LENGTH_SHORT).show();
+            finish();
+            break;
+        default:
+            break;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void hideKeyboard(View view) {
+        InputMethodManager inputMethodManager =(InputMethodManager)getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+    public void hideSoftKeyboard() {
+        InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(PlanActivity.this.getCurrentFocus().getWindowToken(), 0);
     }
 
     public static void start(Context context) {
