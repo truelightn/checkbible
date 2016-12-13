@@ -1,7 +1,11 @@
 package cba.org.checkbible;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.Toast;
 
 import java.text.ParseException;
@@ -13,6 +17,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import cba.org.checkbible.activity.PlanActivity;
+import cba.org.checkbible.constant.CheckBibleIntent;
 import cba.org.checkbible.db.DB;
 import cba.org.checkbible.db.PlanDBUtil;
 import cba.org.checkbible.db.Setting;
@@ -158,16 +163,16 @@ public class PlanManager {
                     + mBibleCount[getCurrentChapterPosition()] + "장";
         }
     }
+
     public String getTodayString() {
         return "오늘 " + PlanDBUtil.getPlanInt(DB.COL_READINGPLAN_TODAY_READ_COUNT) + "장/"
                 + calculateTodayCount() + "장";
     }
+
     public String getTotalString() {
         return "전체 " + PlanDBUtil.getPlanInt(DB.COL_READINGPLAN_TOTAL_READ_COUNT) + "장/"
                 + PlanDBUtil.getPlanInt(DB.COL_READINGPLAN_TOTAL_COUNT) + "장";
     }
-
-
 
     public void increaseCount(int count) {
         initCount();
@@ -178,7 +183,7 @@ public class PlanManager {
             mChapterReadCount = mBibleCount[getCurrentChapterPosition()];
             ArrayList<Integer> plan = PlanDBUtil.getPlanedChapterPosition(0);
             ArrayList<Integer> complete = PlanDBUtil.getCompleteChapterPosition(0);
-            if(plan.isEmpty()){
+            if (plan.isEmpty()) {
                 return;
             }
             complete.add(plan.get(0));
@@ -251,6 +256,22 @@ public class PlanManager {
             mTodayReadCount = 0;
             PlanDBUtil.updateValue(DB.COL_READINGPLAN_TODAY_READ_COUNT, mTodayReadCount);
         }
+    }
+
+    public void setAlarm(Context context) {
+        AlarmManager alarmMgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(CheckBibleIntent.ACITON_RESET_TODAY);
+        PendingIntent beforeAlarmIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
+        alarmMgr.cancel(beforeAlarmIntent);
+
+        PendingIntent alarmIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
+        Log.e("checkbible", "setAlarm");
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.HOUR_OF_DAY, 24);
+
+        alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+                AlarmManager.INTERVAL_DAY, alarmIntent);
     }
 
 }

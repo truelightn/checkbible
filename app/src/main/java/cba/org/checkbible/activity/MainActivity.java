@@ -25,7 +25,6 @@ import cba.org.checkbible.R;
 import cba.org.checkbible.afw.V;
 import cba.org.checkbible.db.DB;
 import cba.org.checkbible.db.PlanDBUtil;
-import cba.org.checkbible.db.SettingDBUtil;
 import cba.org.checkbible.widget.WidgetUpdateService;
 
 public class MainActivity extends AppCompatActivity {
@@ -52,7 +51,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         mPlanManager = PlanManager.getInstance(this);
         initialView();
+        mPlanManager.resetTodayCount();
         if (PlanDBUtil.hasNoPlanedData()) {
+            mPlanManager.setAlarm(this);
             PlanActivity.start(this);
         }
     }
@@ -65,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void initialView() {
-        mPlanManager.initCount();
+
         mLayout = V.get(this, R.id.layout);
 
         mMinusBtn = V.get(this, R.id.minus_btn);
@@ -97,8 +98,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        mPlanManager.resetTodayCount();
         refreshView();
+        mPlanManager.initCount();
     }
 
     public void refreshView() {
@@ -128,8 +129,8 @@ public class MainActivity extends AppCompatActivity {
         totalList.addAll(PlanDBUtil.getPlanedChapterPosition(0));
         AbbChapterAdapter addAdapter = new AbbChapterAdapter(this, 0);
         mAbbGridView.setAdapter(addAdapter);
-        if (totalList.size() > 7) {
-            mAbbGridView.setNumColumns(7);
+        if (totalList.size() > 6) {
+            mAbbGridView.setNumColumns(6);
         } else {
             mAbbGridView.setNumColumns(totalList.size());
         }
@@ -245,4 +246,5 @@ public class MainActivity extends AppCompatActivity {
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
+
 }

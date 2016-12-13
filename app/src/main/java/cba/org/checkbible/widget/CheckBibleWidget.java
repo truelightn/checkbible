@@ -14,6 +14,7 @@ import cba.org.checkbible.PlanManager;
 import cba.org.checkbible.R;
 import cba.org.checkbible.activity.MainActivity;
 import cba.org.checkbible.afw.V;
+import cba.org.checkbible.constant.CheckBibleIntent;
 import cba.org.checkbible.db.DB;
 import cba.org.checkbible.db.PlanDBUtil;
 
@@ -23,9 +24,6 @@ import cba.org.checkbible.db.PlanDBUtil;
  * CheckBibleWidgetConfigureActivity}
  */
 public class CheckBibleWidget extends AppWidgetProvider {
-
-    private static final String ACTION_COUNT = "org.cba.checkbible.COUNT";
-    private static final String ACTION_START_MAIN_ACTIVITY = "org.cba.checkbible.MAIN_ACTIVITY";
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
 
@@ -37,13 +35,13 @@ public class CheckBibleWidget extends AppWidgetProvider {
         Intent intent = new Intent(context, WidgetUpdateService.class);
         context.startService(intent);
 
-        Intent countIntent = new Intent(ACTION_COUNT);
+        Intent countIntent = new Intent(CheckBibleIntent.ACTION_COUNT);
         PendingIntent countPIntent = PendingIntent.getBroadcast(context, 0, countIntent, 0);
         views.setOnClickPendingIntent(R.id.appwidget_chapter, countPIntent);
         views.setOnClickPendingIntent(R.id.appwidget_today, countPIntent);
         views.setOnClickPendingIntent(R.id.appwidget_during, countPIntent);
 
-        Intent sIntent = new Intent(ACTION_START_MAIN_ACTIVITY);
+        Intent sIntent = new Intent(CheckBibleIntent.ACTION_START_MAIN_ACTIVITY);
         PendingIntent sPIntent = PendingIntent.getBroadcast(context, 0, sIntent, 0);
         views.setOnClickPendingIntent(R.id.appwidget_title, sPIntent);
 
@@ -86,14 +84,14 @@ public class CheckBibleWidget extends AppWidgetProvider {
         switch (action) {
         case AppWidgetManager.ACTION_APPWIDGET_UPDATE:
             break;
-        case ACTION_START_MAIN_ACTIVITY:
+        case CheckBibleIntent.ACTION_START_MAIN_ACTIVITY:
             MainActivity.start(context);
             break;
-        case ACTION_COUNT:
+        case CheckBibleIntent.ACTION_COUNT:
             int id = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
                     AppWidgetManager.INVALID_APPWIDGET_ID);
             PlanManager.getInstance(context).increaseCount(
-                    PlanManager.getInstance(context).calculateTodayCount());
+                PlanManager.getInstance(context).calculateTodayCount());
             Intent i = new Intent(context, WidgetUpdateService.class);
             context.startService(i);
             break;

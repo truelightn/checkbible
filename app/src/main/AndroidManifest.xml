@@ -39,6 +39,12 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/check_bible_widget_info" />
         </receiver>
+        <receiver android:name=".receiver.CheckBibleReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="org.cba.checkbible.RESET_COUNT" />
+            </intent-filter>
+        </receiver>
 
         <!--<activity android:name=".CheckBibleWidgetConfigureActivity">
             <intent-filter>

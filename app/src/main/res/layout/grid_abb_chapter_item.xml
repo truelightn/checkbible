@@ -11,6 +11,6 @@
         android:text="TEXT"
         android:background="@android:color/white"
         android:textColor="@android:color/tertiary_text_dark"
-        android:textSize="10sp" />
+        android:textSize="13sp" />
 
 </LinearLayout>

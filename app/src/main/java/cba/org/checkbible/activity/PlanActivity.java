@@ -151,6 +151,8 @@ public class PlanActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 mTitle.clearFocus();
+                mNewTestamentChk.setChecked(false);
+                mOldTestamentChk.setChecked(false);
                 if (isChecked) {
                     Toast.makeText(PlanActivity.this, "처음과 끝을 선택하시면 구간이 선택됩니다.", Toast.LENGTH_SHORT)
                             .show();
@@ -350,12 +352,14 @@ public class PlanActivity extends AppCompatActivity {
     }
 
     public void hideKeyboard(View view) {
-        InputMethodManager inputMethodManager =(InputMethodManager)getSystemService(Activity.INPUT_METHOD_SERVICE);
+        InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(Activity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
+
     public void hideSoftKeyboard() {
         InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(Activity.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(PlanActivity.this.getCurrentFocus().getWindowToken(), 0);
+        inputMethodManager.hideSoftInputFromWindow(PlanActivity.this.getCurrentFocus()
+                .getWindowToken(), 0);
     }
 
     public static void start(Context context) {

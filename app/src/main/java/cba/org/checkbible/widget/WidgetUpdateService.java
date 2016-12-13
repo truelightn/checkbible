@@ -5,6 +5,7 @@ import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.os.IBinder;
+import android.util.Log;
 import android.widget.RemoteViews;
 
 import cba.org.checkbible.PlanManager;
@@ -24,6 +25,7 @@ public class WidgetUpdateService extends Service {
         planManager.initCount();
         // views.setTextViewText(R.id.appwidget_button,
         // PlanDBUtil.getPlanString(DB.COL_READINGPLAN_TITLE));
+        Log.e("checkbible","widgetupdate");
         views.setTextViewText(R.id.appwidget_title,
                 PlanDBUtil.getPlanString(DB.COL_READINGPLAN_TITLE));
         views.setTextViewText(R.id.appwidget_chapter, planManager.getChapterString());
