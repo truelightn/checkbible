@@ -25,7 +25,7 @@ public class WidgetUpdateService extends Service {
         planManager.initCount();
         // views.setTextViewText(R.id.appwidget_button,
         // PlanDBUtil.getPlanString(DB.COL_READINGPLAN_TITLE));
-        Log.e("checkbible","widgetupdate");
+        Log.e("checkbible","widgetupdateservice");
         views.setTextViewText(R.id.appwidget_title,
                 PlanDBUtil.getPlanString(DB.COL_READINGPLAN_TITLE));
         views.setTextViewText(R.id.appwidget_chapter, planManager.getChapterString());

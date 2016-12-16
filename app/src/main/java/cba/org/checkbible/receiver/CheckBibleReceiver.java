@@ -31,8 +31,7 @@ public class CheckBibleReceiver extends BroadcastReceiver {
             PlanManager.getInstance(context).setAlarm(context);
             break;
         case CheckBibleIntent.ACITON_RESET_TODAY:
-            PlanDBUtil.updateValue(DB.COL_READINGPLAN_TODAY_READ_COUNT, 0);
-            Log.e("checkbible", "resetTodaycount");
+            PlanManager.getInstance(context).resetTodayCount();
             Intent i = new Intent(context, WidgetUpdateService.class);
             context.startService(i);
             break;

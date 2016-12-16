@@ -70,7 +70,8 @@ public class PlanManager {
 
     public int calculateTodayCount() {
         int retValue = 0;
-        int totalCount = PlanDBUtil.getPlanInt(DB.COL_READINGPLAN_TOTAL_COUNT);
+        int totalCount = PlanDBUtil.getPlanInt(DB.COL_READINGPLAN_TOTAL_COUNT)
+                - PlanDBUtil.getPlanInt(DB.COL_READINGPLAN_TOTAL_READ_COUNT);
         long during = getDuringDay();
         retValue = (int)(totalCount / during);
         if (retValue <= 0) {
@@ -244,13 +245,16 @@ public class PlanManager {
 
     public void resetTodayCount() {
         String previousDay = SettingDBUtil.getSettingValue(Setting.TODAY);
-        if (previousDay.isEmpty()) {
-            SettingDBUtil.setSettingValue(Setting.TODAY, String.valueOf(0));
-            return;
-        }
+        Log.e("checkbible", "resetTodaycount [" + previousDay + "]");
 
         GregorianCalendar gc = new GregorianCalendar();
         int today = gc.get(Calendar.DAY_OF_MONTH);
+
+        if (previousDay.isEmpty()) {
+            SettingDBUtil.setSettingValue(Setting.TODAY, String.valueOf(today));
+            return;
+        }
+
         if (today != Integer.valueOf(previousDay)) {
             SettingDBUtil.setSettingValue(Setting.TODAY, String.valueOf(today));
             mTodayReadCount = 0;
@@ -261,17 +265,18 @@ public class PlanManager {
     public void setAlarm(Context context) {
         AlarmManager alarmMgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(CheckBibleIntent.ACITON_RESET_TODAY);
-        PendingIntent beforeAlarmIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
-        alarmMgr.cancel(beforeAlarmIntent);
-
-        PendingIntent alarmIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
-        Log.e("checkbible", "setAlarm");
+        PendingIntent alarmIntent = PendingIntent.getBroadcast(context, 0, intent,
+                0);
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
         calendar.set(Calendar.HOUR_OF_DAY, 24);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
 
-        alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+        Log.e("checkbible", "setAlarm [" + calendar + "]");
+        Log.e("checkbible", "setAlarm millis[" + calendar.getTimeInMillis() + "]");
+
+        alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
                 AlarmManager.INTERVAL_DAY, alarmIntent);
     }
-
 }
