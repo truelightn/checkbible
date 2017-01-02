@@ -17,6 +17,9 @@
 
     <string name="title_hint">제목을 입력해주세요</string>
 
+    <!-- String !-->
+    <string name="log_info"><![CDATA[지금까지 읽은 성경을 확인 할 수 있습니다.<br/>Item을 길게 누루시면 선택/삭제를 하실 수 있습니다.<br/><font color="red">빨간색</font> : 현재 Main에 표시되는 항목<br/><font color="blue">파란색</font> : 성공적으로 계획이 완료된 항목]]></string>
+
     <!-- Bible !-->
     <string name="bible_gen">창세기</string>
     <string name="bible_ex">출애굽기</string>

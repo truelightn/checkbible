@@ -33,7 +33,7 @@ public class CheckBibleWidget extends AppWidgetProvider {
         PendingIntent countPIntent = PendingIntent.getBroadcast(context, 0, countIntent, 0);
         views.setOnClickPendingIntent(R.id.appwidget_chapter, countPIntent);
         views.setOnClickPendingIntent(R.id.appwidget_today, countPIntent);
-        views.setOnClickPendingIntent(R.id.appwidget_during, countPIntent);
+//        views.setOnClickPendingIntent(R.id.appwidget_during, countPIntent);
 
         Intent sIntent = new Intent(CheckBibleIntent.ACTION_START_MAIN_ACTIVITY);
         PendingIntent sPIntent = PendingIntent.getBroadcast(context, 0, sIntent, 0);

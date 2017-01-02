@@ -5,16 +5,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+
     tools:context="org.cba.checkbible.activity.LogActivity">
 
     <TextView
-        android:text="log보는 화면입니다."
+        android:id="@+id/log_info_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/textView" />
+        android:paddingBottom="2dp"
+        android:paddingLeft="5dp"
+        android:text="@string/log_info" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray" />
 
     <ListView
         android:id="@+id/log_list_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:paddingTop="2dp" />
 </LinearLayout>

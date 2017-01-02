@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
@@ -46,6 +47,9 @@ public class LogActivity extends AppCompatActivity {
         setContentView(R.layout.activity_log);
         mPlanManager = PlanManager.getInstance(this);
         mAdapter = new LogListViewAdapter(PlanDBUtil.getAllPlanItem());
+
+        TextView log_info = V.get(this,R.id.log_info_text_view);
+        log_info.setText(Html.fromHtml(getResources().getString(R.string.log_info)));
 
         mListview = (ListView)findViewById(R.id.log_list_view);
         mListview.setAdapter(mAdapter);

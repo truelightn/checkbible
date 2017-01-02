@@ -18,6 +18,9 @@
 
     <string name="title_hint">Please set Title</string>
 
+    <!-- String !-->
+    <string name="log_info">This is log view</string>
+
     <!-- Bible !-->
     <string name="bible_gen">Genesis</string>
     <string name="bible_ex">Exodus</string>
