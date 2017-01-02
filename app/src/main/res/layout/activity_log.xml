@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="cba.org.checkbible.activity.LogActivity">
+    tools:context="org.cba.checkbible.activity.LogActivity">
 
     <TextView
         android:text="log보는 화면입니다."

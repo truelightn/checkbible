@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="cba.org.checkbible">
+    package="org.cba.checkbible">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
-        android:name=".CheckBibleApp"
+        android:name="org.cba.checkbible.CheckBibleApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.MainActivity">
+        <activity android:name="org.cba.checkbible.activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.PlanActivity"></activity>
-        <activity android:name=".activity.LogActivity"></activity>
+        <activity android:name="org.cba.checkbible.activity.PlanActivity"></activity>
+        <activity android:name="org.cba.checkbible.activity.LogActivity"></activity>
         <!--
  ATTENTION: This was auto-generated to add Google Play services to your project for
      App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -28,7 +28,7 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <receiver android:name=".widget.CheckBibleWidget">
+        <receiver android:name="org.cba.checkbible.widget.CheckBibleWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="org.cba.checkbible.COUNT" />
@@ -39,7 +39,7 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/check_bible_widget_info" />
         </receiver>
-        <receiver android:name=".receiver.CheckBibleReceiver">
+        <receiver android:name="org.cba.checkbible.receiver.CheckBibleReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="org.cba.checkbible.RESET_COUNT" />
@@ -51,7 +51,7 @@
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>-->
-        <service android:name=".widget.WidgetUpdateService"></service>
+        <service android:name="org.cba.checkbible.widget.WidgetUpdateService"></service>
     </application>
 
 </manifest>

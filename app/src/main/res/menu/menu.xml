@@ -1,7 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="cba.org.myapplication.MainActivity">
+    tools:context="org.cba.myapplication.MainActivity">
     <item
         android:id="@+id/menu_reading_plan"
         android:title="@string/reading_plan"
