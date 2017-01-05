@@ -90,4 +90,8 @@
     <string name="bible_jude">유다서</string>
     <string name="bible_rev">요한계시록</string>
 
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="configure">Configure</string>
+    <string name="add_widget">Add widget</string>
+
 </resources>
