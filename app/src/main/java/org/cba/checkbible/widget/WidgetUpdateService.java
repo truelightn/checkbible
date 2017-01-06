@@ -24,6 +24,7 @@ public class WidgetUpdateService extends Service {
     public void onStart(Intent intent, int startId) {
         RemoteViews views = new RemoteViews(this.getPackageName(), R.layout.check_bible_widget);
         PlanManager planManager = PlanManager.getInstance(this);
+        planManager.resetTodayCount();
         planManager.initCount();
         // views.setTextViewText(R.id.appwidget_button,
         // PlanDBUtil.getPlanString(DB.COL_READINGPLAN_TITLE));

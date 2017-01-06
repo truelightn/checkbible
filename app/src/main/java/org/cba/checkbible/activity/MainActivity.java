@@ -50,7 +50,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mPlanManager = PlanManager.getInstance(this);
-        mPlanManager.setAlarm(this);
         initialView();
         mPlanManager.resetTodayCount();
         if (PlanDBUtil.hasNoPlanedData()) {

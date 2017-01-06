@@ -20,6 +20,7 @@ import org.cba.checkbible.db.DB;
 import org.cba.checkbible.db.PlanDBUtil;
 import org.cba.checkbible.db.Setting;
 import org.cba.checkbible.db.SettingDBUtil;
+import org.cba.checkbible.widget.WidgetUpdateService;
 
 /**
  * Created by jinhwan.na on 2016-11-01.
@@ -71,7 +72,7 @@ public class PlanManager {
         int totalCount = PlanDBUtil.getPlanInt(DB.COL_READINGPLAN_TOTAL_COUNT)
                 - PlanDBUtil.getPlanInt(DB.COL_READINGPLAN_TOTAL_READ_COUNT);
         long during = getDuringDay();
-        retValue = (int)(totalCount / during);
+        retValue = (int) (totalCount / during);
         if (retValue <= 0) {
             return 1;
         }
@@ -241,29 +242,32 @@ public class PlanManager {
         PlanDBUtil.updateValue(DB.COL_READINGPLAN_TOTAL_READ_COUNT, mTotalReadCount);
     }
 
-    public void resetTodayCount() {
+    public boolean resetTodayCount() {
         String previousDay = SettingDBUtil.getSettingValue(Setting.TODAY);
-        Log.e("checkbible", "resetTodaycount [" + previousDay + "]");
 
         GregorianCalendar gc = new GregorianCalendar();
         int today = gc.get(Calendar.DAY_OF_MONTH);
-
+        Log.e("checkbible", "previousDay [" + previousDay + "] Today [" + today + "]");
         if (previousDay.isEmpty()) {
             SettingDBUtil.setSettingValue(Setting.TODAY, String.valueOf(today));
-            return;
+            return true;
         }
 
         if (today != Integer.valueOf(previousDay)) {
+            Log.e("checkbible", "resetTodayCount");
+            setAlarm(mContext);
             SettingDBUtil.setSettingValue(Setting.TODAY, String.valueOf(today));
             mTodayReadCount = 0;
             PlanDBUtil.updateValue(DB.COL_READINGPLAN_TODAY_READ_COUNT, mTodayReadCount);
+            return true;
         }
+        return false;
     }
 
     public void setAlarm(Context context) {
-        AlarmManager alarmMgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(CheckBibleIntent.ACITON_RESET_TODAY);
-        PendingIntent alarmIntent = PendingIntent.getBroadcast(context, 0, intent,
+        AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(context, WidgetUpdateService.class);
+        PendingIntent alarmIntent = PendingIntent.getService(context, 0, intent,
                 0);
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
@@ -274,7 +278,7 @@ public class PlanManager {
         Log.e("checkbible", "setAlarm [" + calendar + "]");
         Log.e("checkbible", "setAlarm millis[" + calendar.getTimeInMillis() + "]");
 
-        alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+        alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
                 AlarmManager.INTERVAL_DAY, alarmIntent);
     }
 }
