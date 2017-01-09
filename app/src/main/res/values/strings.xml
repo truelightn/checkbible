@@ -96,5 +96,7 @@
     <string name="configure">Configure</string>
     <string name="add_widget">Add widget</string>
 
+    <string name="accessibility_service_description">description ghahah</string>
+
 
 </resources>
