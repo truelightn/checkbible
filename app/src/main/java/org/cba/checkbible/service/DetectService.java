@@ -3,6 +3,7 @@ package org.cba.checkbible.service;
 import android.accessibilityservice.AccessibilityService;
 import android.accessibilityservice.AccessibilityServiceInfo;
 import android.content.ComponentName;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -44,12 +45,12 @@ public class DetectService extends AccessibilityService {
                         isStartChurch = true;
                         isStopChurch = false;
                         Log.i("checkbible", "start Floating service");
-//                        startService(new Intent(getApplicationContext(), FloatingViewService.class));
+                        startService(new Intent(getApplicationContext(), FloatingViewService.class));
                     } else if(!isStopChurch){
                         isStartChurch = false;
                         isStopChurch = true;
                         Log.i("checkbible", "stop Floating service");
-//                        stopService(new Intent(getApplicationContext(), FloatingViewService.class));
+                        stopService(new Intent(getApplicationContext(), FloatingViewService.class));
                     }
 
                 }
@@ -65,16 +66,6 @@ public class DetectService extends AccessibilityService {
         }
     }
 
-    //    if (Build.VERSION.SDK_INT >= Bcuild.VERSION_CODES.M) {
-//                                boolean canDrawOverlays = Settings.canDrawOverlays(this);
-//                                if (!canDrawOverlays) {
-//                                    // Show alert dialog to the user saying a separate permission is needed
-//                                    // Launch the settings activity if the user prefers
-//                                    Intent myIntent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
-//                                    startActivity(myIntent);
-//                                    return;
-//                                }
-//                            }
     @Override
     public void onInterrupt() {
 

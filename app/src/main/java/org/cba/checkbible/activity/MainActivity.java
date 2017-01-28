@@ -5,9 +5,13 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,11 +24,13 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import org.cba.checkbible.CheckBibleApp;
 import org.cba.checkbible.PlanManager;
 import org.cba.checkbible.R;
 import org.cba.checkbible.afw.V;
 import org.cba.checkbible.db.DB;
 import org.cba.checkbible.db.PlanDBUtil;
+import org.cba.checkbible.service.DetectService;
 import org.cba.checkbible.widget.WidgetUpdateService;
 
 public class MainActivity extends AppCompatActivity {
@@ -45,9 +51,11 @@ public class MainActivity extends AppCompatActivity {
 
     private PlanManager mPlanManager;
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getOverlayDrawPermission();
         setContentView(R.layout.activity_main);
         mPlanManager = PlanManager.getInstance(this);
         initialView();
@@ -152,14 +160,14 @@ public class MainActivity extends AppCompatActivity {
 
         // noinspection SimplifiableIfStatement
         switch (id) {
-        case R.id.menu_reading_plan:
-            PlanActivity.start(this);
-            break;
-        case R.id.menu_logs:
-            LogActivity.start(this);
-            break;
-        default:
-            break;
+            case R.id.menu_reading_plan:
+                PlanActivity.start(this);
+                break;
+            case R.id.menu_logs:
+                LogActivity.start(this);
+                break;
+            default:
+                break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -173,22 +181,31 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
             switch (v.getId()) {
-            case R.id.minus_btn:
-                mPlanManager.decreaseCount(1);
-                refreshView();
-                break;
+                case R.id.minus_btn:
+//                    startService(new Intent(getApplicationContext(), FloatingViewService.class));    //서비스 종료
+                    mPlanManager.decreaseCount(1);
+                    refreshView();
+//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//                        // Show alert dialog to the user saying a separate permission is needed
+//                        // Launch the settings activity if the user prefers
+//                        Intent myIntent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
+//                        startActivity(myIntent);
+//                        return;
+//                    }
+                    break;
 
-            case R.id.plus_btn:
-                mPlanManager.increaseCount(1);
-                refreshView();
-                break;
-            case R.id.today_btn:
-                // increaseCount(Integer.valueOf(SettingDBUtil.getSettingValue(Setting.CUSTOM_COUNT)));
-                mPlanManager.increaseCount(mPlanManager.calculateTodayCount());
-                refreshView();
-                break;
-            default:
-                break;
+                case R.id.plus_btn:
+//                    stopService(new Intent(getApplicationContext(), FloatingViewService.class));    //서비스 종료
+                    mPlanManager.increaseCount(1);
+                    refreshView();
+                    break;
+                case R.id.today_btn:
+                    // increaseCount(Integer.valueOf(SettingDBUtil.getSettingValue(Setting.CUSTOM_COUNT)));
+                    mPlanManager.increaseCount(mPlanManager.calculateTodayCount());
+                    refreshView();
+                    break;
+                default:
+                    break;
             }
         }
     };
@@ -196,24 +213,25 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public boolean onLongClick(View v) {
             switch (v.getId()) {
-            case R.id.minus_btn:
-                break;
-            case R.id.plus_btn:
-                break;
-            case R.id.today_btn:
-                break;
-            default:
-                break;
+                case R.id.minus_btn:
+                    break;
+                case R.id.plus_btn:
+
+                    break;
+                case R.id.today_btn:
+                    break;
+                default:
+                    break;
             }
             return false;
         }
     };
 
     public void setProgress() {
-        int percent = (int)(((double)PlanDBUtil.getPlanInt(DB.COL_READINGPLAN_TOTAL_READ_COUNT) / (double)PlanDBUtil
+        int percent = (int) (((double) PlanDBUtil.getPlanInt(DB.COL_READINGPLAN_TOTAL_READ_COUNT) / (double) PlanDBUtil
                 .getPlanInt(DB.COL_READINGPLAN_TOTAL_COUNT)) * 100.0);
-        int totalPercent = 100 - (int)((double)mPlanManager.getDuringDay()
-                / (double)mPlanManager.getTotalDuringDay() * 100.0);
+        int totalPercent = 100 - (int) ((double) mPlanManager.getDuringDay()
+                / (double) mPlanManager.getTotalDuringDay() * 100.0);
         mProgress.setProgress(percent);
         mProgress.setSecondaryProgress(totalPercent);
         if (percent < (totalPercent - 5)) {
@@ -239,6 +257,77 @@ public class MainActivity extends AppCompatActivity {
             }
 
         }
+    }
+
+    public static final int OVERLAY_PERMISSION_REQ_CODE = 1234;
+    public static final int ACCESSIBILITY_PERMISSION_REQ_CODE = 12345;
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    public void getOverlayDrawPermission() {
+        if (!Settings.canDrawOverlays(this)) {
+            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                    Uri.parse("package:" + getPackageName()));
+            startActivityForResult(intent, OVERLAY_PERMISSION_REQ_CODE);
+        } else {
+            if (!isAccessibilitySettingsOn(CheckBibleApp.getContext())) {
+                getAccessibilityPermission();
+            }
+        }
+    }
+
+    public void getAccessibilityPermission() {
+        Intent intent = new Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS);
+        startActivityForResult(intent, ACCESSIBILITY_PERMISSION_REQ_CODE);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case OVERLAY_PERMISSION_REQ_CODE:
+                if (!Settings.canDrawOverlays(this)) {
+                    // SYSTEM_ALERT_WINDOW permission not granted...
+                } else {
+                    getAccessibilityPermission();
+                }
+                break;
+            case ACCESSIBILITY_PERMISSION_REQ_CODE:
+                if (isAccessibilitySettingsOn(CheckBibleApp.getContext())) {
+                    Toast.makeText(MainActivity.this, "권한을 모두 획득하셨습니다. ", Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(MainActivity.this, "권한을 획득하여 주세요 ", Toast.LENGTH_SHORT).show();
+                }
+                break;
+
+        }
+    }
+
+    public boolean isAccessibilitySettingsOn(Context mContext) {
+        int accessibilityEnabled = 0;
+        final String service = getPackageName() + "/" + DetectService.class.getCanonicalName();
+        try {
+            accessibilityEnabled = Settings.Secure.getInt(
+                    mContext.getApplicationContext().getContentResolver(),
+                    android.provider.Settings.Secure.ACCESSIBILITY_ENABLED);
+        } catch (Settings.SettingNotFoundException e) {
+        }
+        TextUtils.SimpleStringSplitter mStringColonSplitter = new TextUtils.SimpleStringSplitter(':');
+
+        if (accessibilityEnabled == 1) {
+            String settingValue = Settings.Secure.getString(
+                    mContext.getApplicationContext().getContentResolver(),
+                    Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES);
+            if (settingValue != null) {
+                mStringColonSplitter.setString(settingValue);
+                while (mStringColonSplitter.hasNext()) {
+                    String accessibilityService = mStringColonSplitter.next();
+                    if (accessibilityService.equalsIgnoreCase(service)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     public static void start(Context context) {
