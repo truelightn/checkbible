@@ -9,16 +9,24 @@ import android.os.Build;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 
+import org.cba.checkbible.R;
+
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Created by jinhwan.na on 2017-01-05.
  * http://stackoverflow.com/questions/3873659/android-how-can-i-get-the-current-foreground-activity-from-a-service?lq=1
  */
 
 public class DetectService extends AccessibilityService {
+    List<String> mResourceList;
+
+    private boolean isStartChurch;
+    private boolean isStopChurch;
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
-
         if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
             if (event.getPackageName() != null && event.getClassName() != null) {
                 String dectedPackage = event.getPackageName().toString();
@@ -26,11 +34,25 @@ public class DetectService extends AccessibilityService {
                         event.getPackageName().toString(),
                         event.getClassName().toString()
                 );
-
                 ActivityInfo activityInfo = tryGetActivity(componentName);
                 boolean isActivity = activityInfo != null;
-                if (isActivity)
-                    Log.i("checkbible", componentName.getPackageName());
+                if (isActivity) {
+                    String packageName = componentName.getPackageName().toString();
+                    Log.i("checkbible", packageName);
+                    boolean ischurch = mResourceList.contains(packageName);
+                    if (ischurch && !isStartChurch) {
+                        isStartChurch = true;
+                        isStopChurch = false;
+                        Log.i("checkbible", "start Floating service");
+//                        startService(new Intent(getApplicationContext(), FloatingViewService.class));
+                    } else if(!isStopChurch){
+                        isStartChurch = false;
+                        isStopChurch = true;
+                        Log.i("checkbible", "stop Floating service");
+//                        stopService(new Intent(getApplicationContext(), FloatingViewService.class));
+                    }
+
+                }
             }
         }
     }
@@ -43,7 +65,16 @@ public class DetectService extends AccessibilityService {
         }
     }
 
-
+    //    if (Build.VERSION.SDK_INT >= Bcuild.VERSION_CODES.M) {
+//                                boolean canDrawOverlays = Settings.canDrawOverlays(this);
+//                                if (!canDrawOverlays) {
+//                                    // Show alert dialog to the user saying a separate permission is needed
+//                                    // Launch the settings activity if the user prefers
+//                                    Intent myIntent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
+//                                    startActivity(myIntent);
+//                                    return;
+//                                }
+//                            }
     @Override
     public void onInterrupt() {
 
@@ -52,7 +83,9 @@ public class DetectService extends AccessibilityService {
     @Override
     protected void onServiceConnected() {
         super.onServiceConnected();
-
+        isStartChurch = false;
+        isStopChurch = true;
+        mResourceList = Arrays.asList(getResources().getStringArray(R.array.church_list));
         //Configure these here for compatibility with API 13 and below.
         AccessibilityServiceInfo config = new AccessibilityServiceInfo();
         config.eventTypes = AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED;

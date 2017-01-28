@@ -213,4 +213,11 @@
         <item>1</item>
         <item>22</item>
     </integer-array>
+
+    <string-array name="church_list">
+        <item>com.sungrak.app</item>
+        <item>cba.org.checkbible</item>
+        <item>org.cba.checkbible</item>
+    </string-array>
+
 </resources>
