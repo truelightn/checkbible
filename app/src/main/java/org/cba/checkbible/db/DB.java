@@ -20,6 +20,7 @@ public class DB {
     public static final String COL_READINGPLAN_PLANED_CHAPTER = "planed_chapter";
     public static final String COL_READINGPLAN_COMPLETED_CHAPTER = "checked_chapter";
     public static final String COL_READINGPLAN_TOTAL_COUNT = "total_count";
+    public static final String COL_READINGPLAN_TODAY_COUNT = "today_count";
     public static final String COL_READINGPLAN_TODAY_READ_COUNT = "today_read_count";
     public static final String COL_READINGPLAN_CHAPTER_READ_COUNT = "chapter_read_count";
     public static final String COL_READINGPLAN_TOTAL_READ_COUNT = "total_read_count";
@@ -30,23 +31,24 @@ public class DB {
 
     // SQL
     public final static String CREATE_TABLE_READINGPLAN =
-            "CREATE TABLE " + DB.TABLE_READINGPLAN +" ("
-                    + "_id INTEGER PRIMARY KEY, "+
+            "CREATE TABLE " + DB.TABLE_READINGPLAN + " ("
+                    + "_id INTEGER PRIMARY KEY, " +
                     DB.COL_READINGPLAN_TITLE + " text, " +
                     DB.COL_READINGPLAN_PLANED_CHAPTER + " text, " +
                     DB.COL_READINGPLAN_COMPLETED_CHAPTER + " text, " +
                     DB.COL_READINGPLAN_TOTAL_COUNT + " integer, " +
+                    DB.COL_READINGPLAN_TODAY_COUNT + " integer, " +
                     DB.COL_READINGPLAN_TODAY_READ_COUNT + " integer, " +
                     DB.COL_READINGPLAN_CHAPTER_READ_COUNT + " integer, " +
                     DB.COL_READINGPLAN_TOTAL_READ_COUNT + " integer, " +
                     DB.COL_READINGPLAN_START_DATE + " text, " +
                     DB.COL_READINGPLAN_END_DATE + " text, " +
                     DB.COL_READINGPLAN_COMPLETE + " integer, " +
-                    DB.COL_READINGPLAN_IS_ACTIVE + " integer) " ;
+                    DB.COL_READINGPLAN_IS_ACTIVE + " integer) ";
 
     public final static String CREATE_TABLE_SETTING =
             "CREATE TABLE " + DB.TABLE_SETTING + " ("
-            + "_id INTEGER PRIMARY KEY, " +
-            DB.COL_SETTING_KEY + " TEXT, " +
-            DB.COL_SETTING_VALUE   + " TEXT); ";
+                    + "_id INTEGER PRIMARY KEY, " +
+                    DB.COL_SETTING_KEY + " TEXT, " +
+                    DB.COL_SETTING_VALUE + " TEXT); ";
 }

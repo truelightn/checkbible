@@ -15,6 +15,7 @@ public class PlanItem {
     public String planedChapter = "";
     public String compeltedChapter = "";
     public int totalCount;
+    public int todayCount;
     public int todayReadCount;
     public int chapterReadCount;
     public int totalReadCount;
@@ -22,9 +23,10 @@ public class PlanItem {
     public String endTime = "";
     public boolean complete;
     public int active;
-    
+
     public PlanItem() {
     }
+
     public int getId() {
         return id;
     }
@@ -43,6 +45,10 @@ public class PlanItem {
 
     public int getTotalCount() {
         return totalCount;
+    }
+
+    public int getTodayCount() {
+        return todayCount;
     }
 
     public int getTodayReadCount() {
@@ -83,6 +89,7 @@ public class PlanItem {
         values.put(DB.COL_READINGPLAN_PLANED_CHAPTER, planedChapter);
         values.put(DB.COL_READINGPLAN_COMPLETED_CHAPTER, compeltedChapter);
         values.put(DB.COL_READINGPLAN_TOTAL_COUNT, totalCount);
+        values.put(DB.COL_READINGPLAN_TODAY_COUNT, todayCount);
         values.put(DB.COL_READINGPLAN_TODAY_READ_COUNT, todayReadCount);
         values.put(DB.COL_READINGPLAN_CHAPTER_READ_COUNT, chapterReadCount);
         values.put(DB.COL_READINGPLAN_TOTAL_READ_COUNT, totalReadCount);
@@ -99,6 +106,7 @@ public class PlanItem {
         this.planedChapter = getString(cursor, DB.COL_READINGPLAN_PLANED_CHAPTER);
         this.compeltedChapter = getString(cursor, DB.COL_READINGPLAN_COMPLETED_CHAPTER);
         this.totalCount = getInt(cursor, DB.COL_READINGPLAN_TOTAL_COUNT);
+        this.todayCount = getInt(cursor, DB.COL_READINGPLAN_TODAY_COUNT);
         this.todayReadCount = getInt(cursor, DB.COL_READINGPLAN_TODAY_READ_COUNT);
         this.chapterReadCount = getInt(cursor, DB.COL_READINGPLAN_CHAPTER_READ_COUNT);
         this.totalReadCount = getInt(cursor, DB.COL_READINGPLAN_TOTAL_READ_COUNT);
