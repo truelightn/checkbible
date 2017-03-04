@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getOverlayDrawPermission();
+//        getOverlayDrawPermission();
         setContentView(R.layout.activity_main);
         mPlanManager = PlanManager.getInstance(this);
         initialView();
@@ -182,25 +182,15 @@ public class MainActivity extends AppCompatActivity {
             }
             switch (v.getId()) {
                 case R.id.minus_btn:
-//                    startService(new Intent(getApplicationContext(), FloatingViewService.class));    //서비스 종료
                     mPlanManager.decreaseCount(1);
                     refreshView();
-//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//                        // Show alert dialog to the user saying a separate permission is needed
-//                        // Launch the settings activity if the user prefers
-//                        Intent myIntent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
-//                        startActivity(myIntent);
-//                        return;
-//                    }
                     break;
 
                 case R.id.plus_btn:
-//                    stopService(new Intent(getApplicationContext(), FloatingViewService.class));    //서비스 종료
                     mPlanManager.increaseCount(1);
                     refreshView();
                     break;
                 case R.id.today_btn:
-                    // increaseCount(Integer.valueOf(SettingDBUtil.getSettingValue(Setting.CUSTOM_COUNT)));
                     mPlanManager.increaseCount(mPlanManager.calculateTodayCount());
                     refreshView();
                     break;
@@ -258,7 +248,7 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
-
+// Detect Service를 수행하 코드
     public static final int OVERLAY_PERMISSION_REQ_CODE = 1234;
     public static final int ACCESSIBILITY_PERMISSION_REQ_CODE = 12345;
 

@@ -36,7 +36,7 @@ public class WidgetUpdateService extends Service {
 //        String endDate = PlanDBUtil.getPlanString(DB.COL_READINGPLAN_END_DATE);
 //        endDate = endDate.replace("/", ".");
 //        views.setTextViewText(R.id.appwidget_during, "~" + endDate);
-//        views.setTextColor(R.id.appwidget_title, getTextStatusColor(planManager));
+        views.setTextColor(R.id.appwidget_title, getTextStatusColor(planManager));
 
         Intent countIntent = new Intent(CheckBibleIntent.ACTION_COUNT);
         PendingIntent countPIntent = PendingIntent.getBroadcast(this, 0, countIntent, 0);

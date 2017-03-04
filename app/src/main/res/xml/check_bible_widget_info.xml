@@ -7,6 +7,8 @@
     android:previewImage="@drawable/checkbiblewidget"
     android:resizeMode="horizontal|vertical"
     android:updatePeriodMillis="0"
-    android:widgetCategory="home_screen|keyguard"></appwidget-provider><!--
+    android:widgetCategory="home_screen|keyguard">
+
+</appwidget-provider><!--
         android:configure="cba.org.checkbible.widget.CheckBibleWidgetConfigureActivity"
         -->

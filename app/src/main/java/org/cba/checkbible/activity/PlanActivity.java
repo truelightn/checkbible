@@ -93,7 +93,7 @@ public class PlanActivity extends AppCompatActivity {
         mStartM = calendar.get(Calendar.MONTH);
         mStartD = calendar.get(Calendar.DAY_OF_MONTH);
 
-        calendar.add(Calendar.MONTH, 2);
+        calendar.add(Calendar.MONTH, 3);
         mEndY = calendar.get(Calendar.YEAR);
         mEndM = calendar.get(Calendar.MONTH);
         mEndD = calendar.get(Calendar.DAY_OF_MONTH);
@@ -230,6 +230,11 @@ public class PlanActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
     private View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -247,9 +252,9 @@ public class PlanActivity extends AppCompatActivity {
 
                         mStartBtn.setText(startTime.replace("/", "."));
 
-                        // endBtn text를 설정한 startDate+2달로 변경
+                        // endBtn text를 설정한 startDate+3달로 변경
                         GregorianCalendar gCalendar = getCalendar(startTime);
-                        gCalendar.add(Calendar.MONTH, 2);
+                        gCalendar.add(Calendar.MONTH, 3);
                         mEndY = gCalendar.get(Calendar.YEAR);
                         mEndM = gCalendar.get(Calendar.MONTH);
                         mEndD = gCalendar.get(Calendar.DAY_OF_MONTH);
