@@ -166,7 +166,7 @@ public class PlanManager {
 
     public String getTodayString() {
         return "오늘 " + PlanDBUtil.getPlanInt(DB.COL_READINGPLAN_TODAY_READ_COUNT) + "장/"
-                + calculateTodayCount() + "장";
+                + PlanDBUtil.getPlanInt(DB.COL_READINGPLAN_TODAY_COUNT) + "장";
     }
 
     public String getTotalString() {
@@ -178,7 +178,7 @@ public class PlanManager {
         initCount();
         if (mTotalReadCount >= mTotalCount - count) {
             // 이순간 다읽음 처리해야함
-            mTodayReadCount = calculateTodayCount();
+            mTodayReadCount = PlanDBUtil.getPlanInt(DB.COL_READINGPLAN_TODAY_COUNT);
             mTotalReadCount = mTotalCount;
             mChapterReadCount = mBibleCount[getCurrentChapterPosition()];
             ArrayList<Integer> plan = PlanDBUtil.getPlanedChapterPosition(0);
@@ -259,6 +259,7 @@ public class PlanManager {
             SettingDBUtil.setSettingValue(Setting.TODAY, String.valueOf(today));
             mTodayReadCount = 0;
             PlanDBUtil.updateValue(DB.COL_READINGPLAN_TODAY_READ_COUNT, mTodayReadCount);
+            PlanDBUtil.updateValue(DB.COL_READINGPLAN_TODAY_COUNT, calculateTodayCount());
             return true;
         }
         return false;

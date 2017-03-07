@@ -11,6 +11,8 @@ import org.cba.checkbible.PlanManager;
 import org.cba.checkbible.R;
 import org.cba.checkbible.activity.MainActivity;
 import org.cba.checkbible.constant.CheckBibleIntent;
+import org.cba.checkbible.db.DB;
+import org.cba.checkbible.db.PlanDBUtil;
 
 /**
  * Implementation of App Widget functionality. App Widget Configuration
@@ -76,21 +78,21 @@ public class CheckBibleWidget extends AppWidgetProvider {
         super.onReceive(context, intent);
         String action = intent.getAction();
         switch (action) {
-        case AppWidgetManager.ACTION_APPWIDGET_UPDATE:
-            break;
-        case CheckBibleIntent.ACTION_START_MAIN_ACTIVITY:
-            MainActivity.start(context);
-            break;
-        case CheckBibleIntent.ACTION_COUNT:
-            int id = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
-                    AppWidgetManager.INVALID_APPWIDGET_ID);
-            PlanManager.getInstance(context).increaseCount(
-                PlanManager.getInstance(context).calculateTodayCount());
-            Intent i = new Intent(context, WidgetUpdateService.class);
-            context.startService(i);
-            break;
-        default:
-            break;
+            case AppWidgetManager.ACTION_APPWIDGET_UPDATE:
+                break;
+            case CheckBibleIntent.ACTION_START_MAIN_ACTIVITY:
+                MainActivity.start(context);
+                break;
+            case CheckBibleIntent.ACTION_COUNT:
+                int id = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
+                        AppWidgetManager.INVALID_APPWIDGET_ID);
+                PlanManager.getInstance(context).increaseCount(
+                        PlanDBUtil.getPlanInt(DB.COL_READINGPLAN_TODAY_COUNT));
+                Intent i = new Intent(context, WidgetUpdateService.class);
+                context.startService(i);
+                break;
+            default:
+                break;
         }
     }
 }

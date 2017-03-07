@@ -191,7 +191,7 @@ public class MainActivity extends AppCompatActivity {
                     refreshView();
                     break;
                 case R.id.today_btn:
-                    mPlanManager.increaseCount(mPlanManager.calculateTodayCount());
+                    mPlanManager.increaseCount(PlanDBUtil.getPlanInt(DB.COL_READINGPLAN_TODAY_COUNT));
                     refreshView();
                     break;
                 default:
@@ -248,7 +248,8 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
-// Detect Service를 수행하 코드
+
+    // Detect Service를 수행하 코드
     public static final int OVERLAY_PERMISSION_REQ_CODE = 1234;
     public static final int ACCESSIBILITY_PERMISSION_REQ_CODE = 12345;
 
@@ -284,7 +285,7 @@ public class MainActivity extends AppCompatActivity {
             case ACCESSIBILITY_PERMISSION_REQ_CODE:
                 if (isAccessibilitySettingsOn(CheckBibleApp.getContext())) {
                     Toast.makeText(MainActivity.this, "권한을 모두 획득하셨습니다. ", Toast.LENGTH_SHORT).show();
-                }else{
+                } else {
                     Toast.makeText(MainActivity.this, "권한을 획득하여 주세요 ", Toast.LENGTH_SHORT).show();
                 }
                 break;
