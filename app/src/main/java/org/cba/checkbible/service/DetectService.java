@@ -46,7 +46,7 @@ public class DetectService extends AccessibilityService {
                         isStopChurch = false;
                         Log.i("checkbible", "start Floating service");
                         startService(new Intent(getApplicationContext(), FloatingViewService.class));
-                    } else if(!isStopChurch){
+                    } else if (!ischurch && !isStopChurch) {
                         isStartChurch = false;
                         isStopChurch = true;
                         Log.i("checkbible", "stop Floating service");

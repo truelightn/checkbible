@@ -144,4 +144,10 @@
         <item>계</item>
     </string-array>
 
+    <string-array name="church_list">
+        <item>com.sungrak.app</item>
+        <item>cba.org.checkbible</item>
+        <item>com.sirma.mobile.bible.android</item>
+    </string-array>
+
 </resources>

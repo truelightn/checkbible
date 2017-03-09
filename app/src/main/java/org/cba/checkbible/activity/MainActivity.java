@@ -51,11 +51,9 @@ public class MainActivity extends AppCompatActivity {
 
     private PlanManager mPlanManager;
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        getOverlayDrawPermission();
         setContentView(R.layout.activity_main);
         mPlanManager = PlanManager.getInstance(this);
         initialView();
@@ -130,6 +128,10 @@ public class MainActivity extends AppCompatActivity {
 
         // set during ex: 16.10.16~16.12.31
         mDuringTextView.setText(mPlanManager.getDuringString());
+
+        // Today butn ex: today(3)
+        mCustomBtn.setText("+ " + PlanDBUtil.getPlanString(DB.COL_READINGPLAN_TODAY_COUNT));
+        mCustomBtn.setTextSize(15);
 
         // set chaptergrid
         ArrayList<Integer> totalList = new ArrayList<>();
@@ -206,9 +208,11 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.minus_btn:
                     break;
                 case R.id.plus_btn:
-
                     break;
                 case R.id.today_btn:
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        getOverlayDrawPermission();
+                    }
                     break;
                 default:
                     break;
