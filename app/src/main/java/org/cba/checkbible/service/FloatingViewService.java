@@ -112,11 +112,17 @@ public class FloatingViewService extends Service {
                 case R.id.appwidget_chapter:
                 case R.id.appwidget_today:
                     Log.e("checkbible", "selected view");
-                    mPlanManager.increaseCount(PlanDBUtil.getPlanInt(DB.COL_READINGPLAN_TODAY_COUNT));
+                    mPlanManager.increaseCount(1);
                     mChapter.setText(mPlanManager.getChapterString());
                     mToday.setText(mPlanManager.getTodayString());
                     break;
                 case R.id.appwidget_title:
+//                    mLinearLayout = new LinearLayout(mContext);
+//                    LayoutInflater layoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//                    View layoutView = layoutInflater.inflate(R.layout.check_bible_widget, mLinearLayout);
+//                    mTitle= (TextView) layoutView.findViewById(R.id.appwidget_title);
+//                    mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
+//                    mWindowManager.addView(mLinearLayout, mParams);
                     break;
                 default:
                     break;

@@ -146,6 +146,22 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        boolean bchange = false;
+        if (Settings.canDrawOverlays(this) && isAccessibilitySettingsOn(CheckBibleApp.getContext())) {
+            bchange = true;
+        }
+        if (bchange) {
+            menu.findItem(R.id.add_floating).setIcon(R.drawable.ic_bookmark_black_24dp);
+        } else {
+            menu.findItem(R.id.add_floating).setIcon(R.drawable.ic_bookmark_border_black_24dp);
+
+        }
+        return super.onPrepareOptionsMenu(menu);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -162,6 +178,11 @@ public class MainActivity extends AppCompatActivity {
 
         // noinspection SimplifiableIfStatement
         switch (id) {
+            case R.id.add_floating:
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    getOverlayDrawPermission();
+                }
+                break;
             case R.id.menu_reading_plan:
                 PlanActivity.start(this);
                 break;
@@ -210,9 +231,7 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.plus_btn:
                     break;
                 case R.id.today_btn:
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        getOverlayDrawPermission();
-                    }
+
                     break;
                 default:
                     break;
@@ -263,10 +282,10 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                     Uri.parse("package:" + getPackageName()));
             startActivityForResult(intent, OVERLAY_PERMISSION_REQ_CODE);
+        } else if (!isAccessibilitySettingsOn(CheckBibleApp.getContext())) {
+            getAccessibilityPermission();
         } else {
-            if (!isAccessibilitySettingsOn(CheckBibleApp.getContext())) {
-                getAccessibilityPermission();
-            }
+            getAccessibilityPermission();
         }
     }
 
@@ -288,10 +307,11 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case ACCESSIBILITY_PERMISSION_REQ_CODE:
                 if (isAccessibilitySettingsOn(CheckBibleApp.getContext())) {
-                    Toast.makeText(MainActivity.this, "권한을 모두 획득하셨습니다. ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Floating On", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(MainActivity.this, "권한을 획득하여 주세요 ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Floating Off", Toast.LENGTH_SHORT).show();
                 }
+                this.invalidateOptionsMenu();
                 break;
 
         }

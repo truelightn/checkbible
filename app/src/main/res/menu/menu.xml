@@ -3,6 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="org.cba.myapplication.MainActivity">
     <item
+        android:id="@+id/add_floating"
+        android:title="floating"
+        android:icon="@drawable/ic_bookmark_black_24dp"
+        app:showAsAction="always" />
+    <item
         android:id="@+id/menu_reading_plan"
         android:title="@string/reading_plan"
         android:icon="@drawable/add_plan_24dp"
