@@ -47,6 +47,8 @@ public class PlanActivity extends AppCompatActivity {
 
     private Button mStartBtn;
     private Button mEndBtn;
+    private CheckBox mExceptSATChk;
+    private CheckBox mExceptSUNChk;
     private CheckBox mOldTestamentChk;
     private CheckBox mNewTestamentChk;
     private CheckBox mMyChk;
@@ -77,6 +79,8 @@ public class PlanActivity extends AppCompatActivity {
 
         mStartBtn = V.get(this, R.id.startBtn);
         mEndBtn = V.get(this, R.id.endBtn);
+        mExceptSATChk = V.get(this, R.id.exceptSAT);
+        mExceptSUNChk = V.get(this, R.id.exceptSUN);
         mStartBtn.setOnClickListener(onClickListener);
         mEndBtn.setOnClickListener(onClickListener);
 
@@ -277,6 +281,12 @@ public class PlanActivity extends AppCompatActivity {
                         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                             String endTime = String.format("%d/%d/%d", year, monthOfYear + 1,
                                     dayOfMonth);
+                            GregorianCalendar startCalendar = getCalendar(mPlanItem.startTime);
+                            GregorianCalendar endCalendar = getCalendar(endTime);
+                            if (endCalendar.getTimeInMillis() - startCalendar.getTimeInMillis() < 0) {
+                                Toast.makeText(PlanActivity.this, "시작 이후의 날짜를 선택해주세요.", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
                             mPlanItem.endTime = endTime;
                             mEndBtn.setText(endTime.replace("/", "."));
                         }
@@ -345,6 +355,16 @@ public class PlanActivity extends AppCompatActivity {
                 mPlanItem.chapterReadCount = 1;
                 Log.d(TAG, "total : " + planedCount + " - chapter: " + planedChapter);
                 PlanDBUtil.setCurrentActiveRowToInActive();
+                if (mExceptSATChk.isChecked()) {
+                    if (mExceptSUNChk.isChecked()) {
+                        mPlanItem.exceptDay = 3;
+                    } else {
+                        mPlanItem.exceptDay = 1;
+                    }
+                } else if (mExceptSUNChk.isChecked()) {
+                    mPlanItem.exceptDay = 2;
+                }
+
                 mPlanItem.active = 1;
                 PlanDBUtil.addPlan(mPlanItem);
                 PlanDBUtil.updateValue(DB.COL_READINGPLAN_TODAY_COUNT, PlanManager.getInstance(getApplication()).calculateTodayCount());

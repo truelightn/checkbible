@@ -27,52 +27,89 @@
             android:id="@+id/startBtn"
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="wrap_content"
-            android:textSize="16sp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:text="Start" />
+            android:text="Start"
+            android:textSize="16sp" />
 
         <ImageView
+            android:id="@+id/imageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            app:srcCompat="@drawable/next_24dp"
-            android:id="@+id/imageView"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            app:srcCompat="@drawable/next_24dp" />
 
         <Button
             android:id="@+id/endBtn"
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="wrap_content"
-            android:textSize="16sp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:text="END" />
+            android:text="END"
+            android:textSize="16sp" />
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="-7dp"
+        android:orientation="horizontal"
+        android:paddingBottom="7dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <CheckBox
+                android:id="@+id/exceptSAT"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="토요일 제외" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <CheckBox
+                android:id="@+id/exceptSUN"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="일요일 제외" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
         android:orientation="horizontal">
 
         <CheckBox
             android:id="@+id/OldTestamentChk"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/oldtestament" />
 
         <CheckBox
             android:id="@+id/NewTestamentChk"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/newtestament" />
 
         <CheckBox
             android:id="@+id/MyChk"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/choice" />
@@ -83,11 +120,11 @@
         android:id="@+id/gridview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="10dp"
         android:columnWidth="90dp"
         android:gravity="center"
         android:horizontalSpacing="5dp"
         android:numColumns="auto_fit"
+        android:padding="10dp"
         android:stretchMode="columnWidth"
         android:verticalSpacing="10dp" />
 

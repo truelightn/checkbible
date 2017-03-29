@@ -243,8 +243,9 @@ public class MainActivity extends AppCompatActivity {
     public void setProgress() {
         int percent = (int) (((double) PlanDBUtil.getPlanInt(DB.COL_READINGPLAN_TOTAL_READ_COUNT) / (double) PlanDBUtil
                 .getPlanInt(DB.COL_READINGPLAN_TOTAL_COUNT)) * 100.0);
-        int totalPercent = 100 - (int) ((double) mPlanManager.getDuringDay()
-                / (double) mPlanManager.getTotalDuringDay() * 100.0);
+        int totalPercent = (int) ((((double) mPlanManager.getTotalDuringDay() -
+                (double) mPlanManager.getDuringDay()) * PlanDBUtil.getPlanInt(DB.COL_READINGPLAN_TODAY_READ_COUNT) / (double) PlanDBUtil
+                .getPlanInt(DB.COL_READINGPLAN_TOTAL_COUNT)) * 100.0);
         mProgress.setProgress(percent);
         mProgress.setSecondaryProgress(totalPercent);
         if (percent < (totalPercent - 5)) {

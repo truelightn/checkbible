@@ -60,8 +60,10 @@ public class WidgetUpdateService extends Service {
         int retValue;
         int percent = (int) (((double) PlanDBUtil.getPlanInt(DB.COL_READINGPLAN_TOTAL_READ_COUNT) / (double) PlanDBUtil
                 .getPlanInt(DB.COL_READINGPLAN_TOTAL_COUNT)) * 100.0);
-        int totalPercent = 100 - (int) ((double) planManager.getDuringDay()
-                / (double) planManager.getTotalDuringDay() * 100.0);
+        int totalPercent = (int) ((((double) planManager.getTotalDuringDay() -
+                (double) planManager.getDuringDay()) * PlanDBUtil.getPlanInt(DB.COL_READINGPLAN_TODAY_READ_COUNT) / (double) PlanDBUtil
+                .getPlanInt(DB.COL_READINGPLAN_TOTAL_COUNT)) * 100.0);
+
         if (percent < (totalPercent - 5)) {
             retValue = getResources().getColor(android.R.color.holo_red_dark);
             // red

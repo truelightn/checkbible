@@ -80,19 +80,41 @@ public class PlanManager {
     }
 
     public long getDuringDay() {
-        long oneDay = 24 * 60 * 60 * 1000;
+        Log.d("checkbible", "getDuringDay");
+        long retValue;
         GregorianCalendar endCalendar = getEndDate();
         GregorianCalendar todayCalendar = new GregorianCalendar();
-
-        return (endCalendar.getTimeInMillis() - todayCalendar.getTimeInMillis()) / oneDay + 2;
+        retValue = getDuringExceptDay(endCalendar, todayCalendar);
+        return retValue;
     }
 
     public long getTotalDuringDay() {
-        long oneDay = 24 * 60 * 60 * 1000;
+        Log.d("checkbible", "getTotalDuringDay");
+        long retValue;
         GregorianCalendar endCalendar = getEndDate();
         GregorianCalendar startCalendar = getStartDate();
+        retValue = getDuringExceptDay(endCalendar, startCalendar);
+        return retValue;
+    }
 
-        return (endCalendar.getTimeInMillis() - startCalendar.getTimeInMillis()) / oneDay + 2;
+    private long getDuringExceptDay(GregorianCalendar endCalendar, GregorianCalendar startCalendar) {
+        long retValue;
+        long totalCount = 1;
+        long satCount = 0;
+        int exceptDay = PlanDBUtil.getPlanInt(DB.COL_READINGPLAN_EXCEPT_DAY);
+        while (!startCalendar.after(endCalendar)) {
+            totalCount++;
+            if (Calendar.SATURDAY == startCalendar.get(Calendar.DAY_OF_WEEK) && (exceptDay == 1 || exceptDay == 3)) {
+                satCount++;
+            }
+            if (Calendar.SUNDAY == startCalendar.get(Calendar.DAY_OF_WEEK) && (exceptDay == 2 || exceptDay == 3)) {
+                satCount++;
+            }
+            startCalendar.add(Calendar.DATE, 1);
+        }
+        retValue = totalCount - satCount;
+        Log.d("checkbible", "totalCount [" + totalCount + "] - exception [" + satCount + "] = : resultCount [" +retValue+ "]");
+        return retValue;
     }
 
     public GregorianCalendar getEndDate() {
@@ -186,10 +208,12 @@ public class PlanManager {
             if (plan.isEmpty()) {
                 return;
             }
-            complete.add(plan.get(0));
-            plan.remove(0);
-            setChapter(DB.COL_READINGPLAN_COMPLETED_CHAPTER, complete);
-            setChapter(DB.COL_READINGPLAN_PLANED_CHAPTER, plan);
+            while (!plan.isEmpty()) {
+                complete.add(plan.get(0));
+                plan.remove(0);
+                setChapter(DB.COL_READINGPLAN_COMPLETED_CHAPTER, complete);
+                setChapter(DB.COL_READINGPLAN_PLANED_CHAPTER, plan);
+            }
 
             PlanDBUtil.updateValue(DB.COL_READINGPLAN_CHAPTER_READ_COUNT, mChapterReadCount);
             PlanDBUtil.updateValue(DB.COL_READINGPLAN_TODAY_READ_COUNT, mTodayReadCount);

@@ -21,6 +21,7 @@ public class PlanItem {
     public int totalReadCount;
     public String startTime = "";
     public String endTime = "";
+    public int exceptDay;
     public boolean complete;
     public int active;
 
@@ -83,6 +84,10 @@ public class PlanItem {
         active = i;
     }
 
+    public int getExceptDay() {
+        return exceptDay;
+    }
+
     public ContentValues getContentValues() {
         ContentValues values = new ContentValues();
         values.put(DB.COL_READINGPLAN_TITLE, title);
@@ -97,6 +102,7 @@ public class PlanItem {
         values.put(DB.COL_READINGPLAN_END_DATE, endTime);
         values.put(DB.COL_READINGPLAN_COMPLETE, complete ? 1 : 0);
         values.put(DB.COL_READINGPLAN_IS_ACTIVE, active);
+        values.put(DB.COL_READINGPLAN_EXCEPT_DAY, exceptDay);
         return values;
     }
 
@@ -114,6 +120,7 @@ public class PlanItem {
         this.endTime = getString(cursor, DB.COL_READINGPLAN_END_DATE);
         this.complete = getInt(cursor, DB.COL_READINGPLAN_COMPLETE) == 1;
         this.active = getInt(cursor, DB.COL_READINGPLAN_IS_ACTIVE);
+        this.exceptDay = getInt(cursor, DB.COL_READINGPLAN_EXCEPT_DAY);
     }
 
     public String getString(Cursor cursor, String col) {

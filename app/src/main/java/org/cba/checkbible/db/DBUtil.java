@@ -56,7 +56,7 @@ public class DBUtil {
 
     public static class CheckBibleDBOpenHelper extends SQLiteOpenHelper {
         static final String DB_NAME = "checkbible.db";
-        static final int DB_VERSION = 1;
+        static final int DB_VERSION = 2;
 
         public CheckBibleDBOpenHelper(Context context) {
             super(context, DB_NAME, null, DB_VERSION);
@@ -70,7 +70,25 @@ public class DBUtil {
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+            switch (oldVersion) {
+                case 1:
+                    if (newVersion <= 1) {
+                        return;
+                    }
+                    db.beginTransaction();
+                    try {
+                        db.execSQL("ALTER TABLE " + DB.TABLE_READINGPLAN + " ADD COLUMN " + DB.COL_READINGPLAN_EXCEPT_DAY + " INTEGER DEFAULT 0" + ";");
+                        db.setTransactionSuccessful();
+                    } catch (Exception e) {
 
+                    } finally {
+                        db.endTransaction();
+                    }
+                    // FALL-THROUGH
+                default:
+                    break;
+
+            }
         }
     }
 }

@@ -29,6 +29,9 @@ public class DB {
     public static final String COL_READINGPLAN_COMPLETE = "complete";
     public static final String COL_READINGPLAN_IS_ACTIVE = "is_active";
 
+    //ADD DB version 2
+    public static final String COL_READINGPLAN_EXCEPT_DAY = "except_day";
+
     // SQL
     public final static String CREATE_TABLE_READINGPLAN =
             "CREATE TABLE " + DB.TABLE_READINGPLAN + " ("
