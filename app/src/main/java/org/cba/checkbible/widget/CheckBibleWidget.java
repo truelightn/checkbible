@@ -23,9 +23,6 @@ public class CheckBibleWidget extends AppWidgetProvider {
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
 
-        // CharSequence widgetText =
-        // CheckBibleWidgetConfigureActivity.loadTitlePref(context,
-        // appWidgetId);
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.check_bible_widget);
         Intent intent = new Intent(context, WidgetUpdateService.class);
