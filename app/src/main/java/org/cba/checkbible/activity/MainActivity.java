@@ -12,6 +12,7 @@ import android.provider.Settings;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -243,9 +244,10 @@ public class MainActivity extends AppCompatActivity {
     public void setProgress() {
         int percent = (int) (((double) PlanDBUtil.getPlanInt(DB.COL_READINGPLAN_TOTAL_READ_COUNT) / (double) PlanDBUtil
                 .getPlanInt(DB.COL_READINGPLAN_TOTAL_COUNT)) * 100.0);
-        int totalPercent = (int) ((((double) mPlanManager.getTotalDuringDay() -
-                (double) mPlanManager.getDuringDay()) * PlanDBUtil.getPlanInt(DB.COL_READINGPLAN_TODAY_READ_COUNT) / (double) PlanDBUtil
+        long elapseDay = mPlanManager.getTotalDuringDay() - mPlanManager.getDuringDay();
+        int totalPercent = (int) ((elapseDay * PlanDBUtil.getPlanInt(DB.COL_READINGPLAN_TODAY_COUNT) / (double) PlanDBUtil
                 .getPlanInt(DB.COL_READINGPLAN_TOTAL_COUNT)) * 100.0);
+        Log.d("checkBible", "[" + percent + "]/[" + totalPercent + "]");
         mProgress.setProgress(percent);
         mProgress.setSecondaryProgress(totalPercent);
         if (percent < (totalPercent - 5)) {

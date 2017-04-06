@@ -92,7 +92,7 @@
 
     <string name="appwidget_text">EXAMPLE</string>
     <string name="configure">Configure</string>
-    <string name="add_widget">Add widget</string>
+    <string name="add_widget">위젯 추가</string>
 
     <string name="accessibility_service_description">성경을 읽을수 있는 APP의 실행을 check하기 위해 필요한 권한입니다. 이 외에 다른 목적으로 사용되지 않습니다.</string>
 </resources>

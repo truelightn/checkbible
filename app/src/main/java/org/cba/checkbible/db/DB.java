@@ -47,7 +47,8 @@ public class DB {
                     DB.COL_READINGPLAN_START_DATE + " text, " +
                     DB.COL_READINGPLAN_END_DATE + " text, " +
                     DB.COL_READINGPLAN_COMPLETE + " integer, " +
-                    DB.COL_READINGPLAN_IS_ACTIVE + " integer) ";
+                    DB.COL_READINGPLAN_IS_ACTIVE + " integer, " +
+                    DB.COL_READINGPLAN_EXCEPT_DAY + " integer) ";
 
     public final static String CREATE_TABLE_SETTING =
             "CREATE TABLE " + DB.TABLE_SETTING + " ("
