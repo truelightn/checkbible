@@ -4,11 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.view.ContextMenu;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,42 +19,49 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.Thing;
-
-import java.util.ArrayList;
-
 import org.cba.checkbible.PlanManager;
 import org.cba.checkbible.R;
 import org.cba.checkbible.afw.V;
+import org.cba.checkbible.db.Backup;
 import org.cba.checkbible.db.DB;
 import org.cba.checkbible.db.PlanDBUtil;
 import org.cba.checkbible.dto.PlanItem;
+
+import java.util.ArrayList;
 
 /**
  * Created by jinhwan.na on 2016-11-07.
  */
 
-public class LogActivity extends AppCompatActivity {
+public class LogActivity extends AppCompatActivity implements Backup.OnBackupListener {
     public static final String TAG = LogActivity.class.getSimpleName();
     ListView mListview;
     LogListViewAdapter mAdapter;
     private PlanManager mPlanManager;
+    Backup mBackup;
+    ArrayList<PlanItem> mPlanListView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log);
-        mPlanManager = PlanManager.getInstance(this);
-        mAdapter = new LogListViewAdapter(PlanDBUtil.getAllPlanItem());
-
-        TextView log_info = V.get(this,R.id.log_info_text_view);
+        TextView log_info = V.get(this, R.id.log_info_text_view);
         log_info.setText(Html.fromHtml(getResources().getString(R.string.log_info)));
+        mPlanManager = PlanManager.getInstance(this);
 
-        mListview = (ListView)findViewById(R.id.log_list_view);
+        setlistView();
+    }
+
+    private void setlistView() {
+        mPlanListView = PlanDBUtil.getAllPlanItem();
+        mAdapter = new LogListViewAdapter(mPlanListView);
+        mListview = (ListView) findViewById(R.id.log_list_view);
         mListview.setAdapter(mAdapter);
         mListview.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         registerForContextMenu(mListview);
+
+        mBackup = new Backup(this);
+        mBackup.setOnBackupListener(this);
 
         mAdapter.notifyDataSetChanged();
     }
@@ -67,6 +74,7 @@ public class LogActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -78,51 +86,37 @@ public class LogActivity extends AppCompatActivity {
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         getMenuInflater().inflate(R.menu.log_context_menu, menu);
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
-        PlanItem pi = (PlanItem)mAdapter.getItem(info.position);
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+        PlanItem pi = (PlanItem) mAdapter.getItem(info.position);
         menu.setHeaderTitle(pi.getTitle());
     }
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item
                 .getMenuInfo();
         int index = info.position; // AdapterView안에서 ContextMenu를 보여즈는 항목의 위치
-        PlanItem pi = (PlanItem)mAdapter.getItem(info.position);
+        PlanItem pi = (PlanItem) mAdapter.getItem(info.position);
         switch (item.getItemId()) {
-        case R.id.context_delete:
-            if (pi.getActive() == 1) {
-                Toast.makeText(LogActivity.this, "활성화된 계획은 삭제 할수 없습니다.", Toast.LENGTH_SHORT).show();
-                return false;
-            }
-            PlanDBUtil.removePlan(pi.getId());
-            mAdapter.remove(index);
-            mAdapter.notifyDataSetChanged();
-            break;
-        case R.id.context_select:
-            PlanDBUtil.setCurrentActiveRowToInActive();
-            PlanDBUtil.updateValueByID(DB.COL_READINGPLAN_IS_ACTIVE, 1, pi.getId());
-            mAdapter.changeActive(index);
-            mAdapter.notifyDataSetChanged();
-            break;
-        default:
-            return super.onContextItemSelected(item);
+            case R.id.context_delete:
+                if (pi.getActive() == 1) {
+                    Toast.makeText(LogActivity.this, "활성화된 계획은 삭제 할수 없습니다.", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+                PlanDBUtil.removePlan(pi.getId());
+                mAdapter.remove(index);
+                mAdapter.notifyDataSetChanged();
+                break;
+            case R.id.context_select:
+                PlanDBUtil.setCurrentActiveRowToInActive();
+                PlanDBUtil.updateValueByID(DB.COL_READINGPLAN_IS_ACTIVE, 1, pi.getId());
+                mAdapter.changeActive(index);
+                mAdapter.notifyDataSetChanged();
+                break;
+            default:
+                return super.onContextItemSelected(item);
         }
         return true;
-    }
-
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API. See
-     * https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    public Action getIndexApiAction() {
-        Thing object = new Thing.Builder().setName("Log Page") // TODO: Define a
-                                                               // title for the
-                                                               // content shown.
-                // TODO: Make sure this auto-generated URL is correct.
-                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]")).build();
-        return new Action.Builder(Action.TYPE_VIEW).setObject(object)
-                .setActionStatus(Action.STATUS_TYPE_COMPLETED).build();
     }
 
     public class LogListViewAdapter extends BaseAdapter {
@@ -250,6 +244,37 @@ public class LogActivity extends AppCompatActivity {
             mViewItemList.get(position).setActive(1);
         }
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.log_actionbar_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public void onFinishImport() {
+        Toast.makeText(this, "복원 완료하였습니다.", Toast.LENGTH_SHORT).show();
+        setlistView();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        switch (id) {
+            case R.id.backup:
+                mBackup.exportDB();
+                break;
+            case R.id.restore:
+                mBackup.showDialogListFile();
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
     public static void start(Context context) {
         Intent intent = new Intent(context, LogActivity.class);

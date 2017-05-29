@@ -95,4 +95,9 @@
     <string name="add_widget">위젯 추가</string>
 
     <string name="accessibility_service_description">성경을 읽을수 있는 APP의 실행을 check하기 위해 필요한 권한입니다. 이 외에 다른 목적으로 사용되지 않습니다.</string>
+    <string name="backup_data">Backup data</string>
+    <string name="backup_before_import">Do you want backup curren database before import an old databas?</string>
+    <string name="no">no</string>
+    <string name="yes">Yes</string>
+    <string name="select_file">Select file</string>
 </resources>
