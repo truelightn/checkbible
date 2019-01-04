@@ -3,12 +3,11 @@ package org.cba.checkbible.service;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.PixelFormat;
+import android.os.Build;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -19,6 +18,7 @@ import android.widget.TextView;
 
 import org.cba.checkbible.PlanManager;
 import org.cba.checkbible.R;
+import org.cba.checkbible.activity.MainActivity;
 import org.cba.checkbible.db.DB;
 import org.cba.checkbible.db.PlanDBUtil;
 import org.cba.checkbible.widget.WidgetUpdateService;
@@ -40,11 +40,17 @@ public class FloatingViewService extends Service {
     public void onCreate() {
         super.onCreate();
         mPlanManager = PlanManager.getInstance(this);
+        int LAYOUT_FLAG;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            LAYOUT_FLAG = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+        } else {
+            LAYOUT_FLAG = WindowManager.LayoutParams.TYPE_PHONE;
+        }
 
         mParams = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.WRAP_CONTENT,
-                WindowManager.LayoutParams.TYPE_PHONE,
+                LAYOUT_FLAG,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT);
 
@@ -99,6 +105,23 @@ public class FloatingViewService extends Service {
         mChapter.setOnClickListener(onClickListener);
         mToday.setOnClickListener(onClickListener);
         mTitle.setOnClickListener(onClickListener);
+
+        mToday.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                mPlanManager.increaseCount(PlanDBUtil.getPlanInt(DB.COL_READINGPLAN_TODAY_COUNT));
+                mChapter.setText(mPlanManager.getChapterString());
+                mToday.setText(mPlanManager.getTodayString());
+                return true;
+            }
+        });
+        mTitle.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                MainActivity.start(getApplication());
+                return true;
+            }
+        });
 
     }
 
